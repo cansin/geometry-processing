@@ -1,0 +1,18 @@
+{
+    "name": "ceng789_a1",
+    "version": "1.0.0",
+    "description": "CENG 789 - Digital Geometry Processing - Assignment I",
+    "author": "Cansin Yildiz <cansinyildiz@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "devDependencies": {
+        "clean-webpack-plugin": "^1.0.1",
+        "eslint": "^5.14.1",
+        "eslint-config-prettier": "^4.1.0",
+        "eslint-plugin-prettier": "^3.0.1",
+        "html-webpack-plugin": "^3.2.0",
+        "prettier": "^1.16.4",
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.2.3"
+    }
+}
