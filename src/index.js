@@ -9,6 +9,8 @@ import {
 } from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import dragon from "./models/dragon.obj";
+import uvGridSm from "./textures/UV_Grid_Sm.jpg";
+import "./index.less";
 
 let container;
 let camera, scene, renderer;
@@ -53,7 +55,7 @@ function init() {
     };
     // texture
     const textureLoader = new TextureLoader(manager);
-    const texture = textureLoader.load("textures/UV_Grid_Sm.jpg");
+    const texture = textureLoader.load(uvGridSm);
     // model
     function onProgress(xhr) {
         if (xhr.lengthComputable) {

@@ -9,7 +9,9 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(["build/*"]),
         new HtmlWebpackPlugin({
-            title: "CENG 789 - Digital Geometry Processing - Assignment I",
+            favicon: "favicon.ico",
+            title:
+                "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignment I",
         }),
     ],
     output: {
@@ -19,11 +21,25 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(off|obj)$/,
+                test: /\.(jpg|off|obj)$/,
                 use: [
                     {
                         loader: "file-loader",
                         options: {},
+                    },
+                ],
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    {
+                        loader: "style-loader",
+                    },
+                    {
+                        loader: "css-loader",
+                    },
+                    {
+                        loader: "less-loader",
                     },
                 ],
             },
