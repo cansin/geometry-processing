@@ -1,11 +1,10 @@
 import {
-    BoxGeometry,
-    Mesh,
-    MeshBasicMaterial,
     PerspectiveCamera,
     Scene,
     WebGLRenderer,
 } from "three";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import dragon from "./models/dragon.obj";
 
 const scene = new Scene();
 const camera = new PerspectiveCamera(
@@ -19,18 +18,31 @@ const renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new BoxGeometry(1, 1, 1);
-const material = new MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new Mesh(geometry, material);
-scene.add(cube);
+// instantiate a loader
+const loader = new OBJLoader();
+
+// load a resource
+loader.load(
+    // resource URL
+    dragon,
+    // called when resource is loaded
+    function(object) {
+        scene.add(object);
+    },
+    // called when loading is in progresses
+    function(xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+    },
+    // called when loading has errors
+    function() {
+        console.log("An error happened");
+    },
+);
 
 camera.position.z = 5;
 
 const animate = function() {
     requestAnimationFrame(animate);
-
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
 };

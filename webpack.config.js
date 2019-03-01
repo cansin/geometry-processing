@@ -16,4 +16,17 @@ module.exports = {
         filename: "[name].bundle.js",
         path: path.resolve(__dirname, "build"),
     },
+    module: {
+        rules: [
+            {
+                test: /\.(off|obj)$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {},
+                    },
+                ],
+            },
+        ],
+    },
 };
