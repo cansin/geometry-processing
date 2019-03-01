@@ -6,5 +6,7 @@ module.exports = {
     parserOptions: {
         sourceType: "module",
     },
-    rules: {},
+    rules: {
+        "no-console": "off",
+    },
 };
