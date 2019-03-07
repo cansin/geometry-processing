@@ -75,25 +75,15 @@ function renderWireframe(mesh) {
 }
 
 function renderShortestPath(path) {
-    const material = new LineBasicMaterial({
-        color: 0xff0000,
-        linewidth: 2,
-    });
-
-
     const geometry = new Geometry();
     path.forEach(s => {
         geometry.vertices.push(new Vector3(...s.split(",").map(Number)));
     });
 
-    const line = new LineSegments(geometry, material);
+    const line = new MeshLine();
+    line.setGeometry(geometry);
 
-    scene.add(line);
-    //
-    // const line = new MeshLine();
-    // line.setGeometry(geometry);
-    //
-    // scene.add(new Mesh(line.geometry, meshLineMaterial));
+    scene.add(new Mesh(line.geometry, meshLineMaterial));
 }
 
 loader.load(url, object => {
@@ -101,7 +91,8 @@ loader.load(url, object => {
 
     object.traverse(child => {
         if (child instanceof Mesh) {
-            child.material.opacity = 0.5;
+            child.material.opacity = 0.75;
+            child.material.transparent = true;
             child.material.color.setHex(0xcccccc);
 
             renderWireframe(child);
