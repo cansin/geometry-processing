@@ -8,10 +8,21 @@ function vertexToString(v) {
 
 export default function findShortestPath(mesh) {
     let { geometry } = mesh;
+    let startTime;
+
+    startTime = new Date();
+    console.log("Creating naive geometry...");
 
     if (geometry && !geometry.isGeometry) {
-        geometry = new Geometry.fromBufferGeometry(geometry);
+        geometry = new Geometry().fromBufferGeometry(geometry);
+        geometry.mergeVertices();
     }
+
+    console.log(`\tdone in ${new Date() - startTime}ms.`);
+
+
+    startTime = new Date();
+    console.log(`Adding vertices to the graph...`);
 
     const { faces, vertices } = geometry;
     const graph = new Graph(false);
@@ -20,8 +31,13 @@ export default function findShortestPath(mesh) {
         graph.addVertex(vertexToString(v));
     });
 
-    // Adopted from three/src/geometries/WireframeGeometry.js:31
+    console.log(`\tdone in ${new Date() - startTime}ms.`);
 
+
+    startTime = new Date();
+    console.log(`Adding edges to the graph...`);
+
+    // Adopted from three/src/geometries/WireframeGeometry.js:31
     const keys = ["a", "b", "c"];
 
     for (let i = 0, l = faces.length; i < l; i++) {
@@ -38,6 +54,12 @@ export default function findShortestPath(mesh) {
         }
     }
 
+    console.log(`\tdone in ${new Date() - startTime}ms.`);
+
+
+    startTime = new Date();
+    console.log(`Performing Dijkstra...`);
+
     const source = vertexToString(
         vertices[Math.floor(Math.random() * vertices.length)],
     );
@@ -46,6 +68,12 @@ export default function findShortestPath(mesh) {
     );
 
     const { previous: prev } = dijkstra(graph, source);
+
+    console.log(`\tdone in ${new Date() - startTime}ms.`);
+
+
+    startTime = new Date();
+    console.log(`Traversing shortest path...`);
 
     // 1  S ← empty sequence
     // 2  u ← target
@@ -63,6 +91,8 @@ export default function findShortestPath(mesh) {
             u = prev[u];
         }
     }
+
+    console.log(`\tdone in ${new Date() - startTime}ms.`);
 
     return S;
 }

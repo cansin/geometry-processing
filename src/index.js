@@ -5,9 +5,11 @@ import {
     LineSegments,
     LoadingManager,
     Mesh,
+    MeshPhongMaterial,
     PerspectiveCamera,
     PointLight,
     Scene,
+    SphereBufferGeometry,
     Vector2,
     Vector3,
     WebGLRenderer,
@@ -20,7 +22,9 @@ import { TrackballControls } from "three/examples/jsm/controls/TrackballControls
 import findShortestPath from "./shortest_path";
 import { OFFLoader } from "./off_loader";
 import horse0 from "./meshes1/1) use for geodesic/fprint matrix/horse0.off";
+import man0 from "./meshes1/1) use for geodesic/fprint matrix/man0.off";
 import dragon from "./meshes1/1) use for geodesic/timing/dragon.obj";
+import centaur from "./meshes1/1) use for geodesic/timing/centaur.off";
 import "./index.less";
 
 // camera
@@ -76,14 +80,24 @@ function renderWireframe(mesh) {
 
 function renderShortestPath(path) {
     const geometry = new Geometry();
-    path.forEach(s => {
-        geometry.vertices.push(new Vector3(...s.split(",").map(Number)));
+    path.forEach(vertexString => {
+        geometry.vertices.push(
+            new Vector3(...vertexString.split(",").map(Number)),
+        );
     });
 
     const line = new MeshLine();
     line.setGeometry(geometry);
 
     scene.add(new Mesh(line.geometry, meshLineMaterial));
+}
+
+function renderVertex(vertexString) {
+    var geometry = new SphereBufferGeometry(2);
+    geometry.translate(...vertexString.split(",").map(Number));
+    var material = new MeshPhongMaterial({ color: 0x00ff00 });
+    var sphere = new Mesh(geometry, material);
+    scene.add(sphere);
 }
 
 loader.load(url, object => {
@@ -99,6 +113,8 @@ loader.load(url, object => {
 
             const path = findShortestPath(child);
             renderShortestPath(path);
+            renderVertex(path[0]);
+            renderVertex(path[path.length - 1]);
         }
     });
 });
