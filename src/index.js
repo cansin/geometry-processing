@@ -11,8 +11,10 @@ import {
 } from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { OFFLoader } from "./off_loader";
 
-import dragon from "./models/dragon.obj";
+import horse0 from "./meshes1/1) use for geodesic/fprint matrix/horse0.off";
+import dragon from "./meshes1/1) use for geodesic/timing/dragon.obj";
 import "./index.less";
 
 let object;
@@ -51,8 +53,8 @@ const manager = new LoadingManager(
 );
 
 // model
-const loader = new OBJLoader(manager);
-loader.load(dragon, obj => {
+const loader = new OFFLoader(manager);
+loader.load(horse0, obj => {
     object = obj;
 
     object.traverse(child => {
@@ -61,6 +63,17 @@ loader.load(dragon, obj => {
         }
     });
 });
+
+// const loader = new OBJLoader(manager);
+// loader.load(dragon, obj => {
+//     object = obj;
+//
+//     object.traverse(child => {
+//         if (child instanceof Mesh) {
+//             child.material.color.setHex(0xcccccc);
+//         }
+//     });
+// });
 
 //
 const renderer = new WebGLRenderer();
