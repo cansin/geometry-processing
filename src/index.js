@@ -1,10 +1,12 @@
 import {
     AmbientLight,
+    LineSegments,
     LoadingManager,
     PerspectiveCamera,
     PointLight,
     Scene,
     WebGLRenderer,
+    WireframeGeometry,
 } from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
@@ -33,6 +35,10 @@ scene.add(camera);
 const manager = new LoadingManager(
     () => {
         scene.add(object);
+
+        const wireframe = new WireframeGeometry(object.children[0].geometry);
+        const line = new LineSegments(wireframe);
+        scene.add(line);
     },
     (item, loaded, total) => {
         console.log(item, loaded, total);
