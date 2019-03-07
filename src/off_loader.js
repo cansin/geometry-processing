@@ -57,8 +57,15 @@ Object.assign(OFFLoader.prototype, {
                 for (let f = vertexCount; f < vertexCount + faceCount; f++) {
                     const [n, ...datum] = data[f].split(/\s+/).map(Number);
                     const [i1, i2, i3] = datum.splice(0, n);
+
                     const v1 = geometry.vertices[i1];
                     const v2 = geometry.vertices[i2];
+                    const v3 = geometry.vertices[i3];
+
+                    const d1 = new Vector3().subVectors(v2, v1);
+                    const d2 = new Vector3().subVectors(v3, v2);
+                    const normal = new Vector3().crossVectors(d1, d2);
+
                     const colors = datum.splice(n);
                     if (colors) {
                         areColorsExist = true;
@@ -66,12 +73,6 @@ Object.assign(OFFLoader.prototype, {
                     if (n !== 3) {
                         areNonTriangularFacesExist = true;
                     }
-
-                    const normal = new Vector3(
-                        v2.x - v1.x,
-                        v2.y - v1.y,
-                        v2.z - v1.z,
-                    );
 
                     geometry.faces.push(new Face3(i1, i2, i3, normal));
                 }
