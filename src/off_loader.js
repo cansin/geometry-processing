@@ -5,7 +5,6 @@ import {
     Geometry,
     Mesh,
     MeshPhongMaterial,
-    Object3D,
     Vector3,
 } from "three";
 
@@ -16,88 +15,68 @@ function OFFLoader(manager) {
 Object.assign(OFFLoader.prototype, {
     load: function(url, onLoad, onProgress, onError) {
         const loader = new FileLoader(this.manager);
+        let areColorsExist = false;
+        let areNonTriangularFacesExist = false;
 
         loader.load(
             url,
-            function(data) {
-                function vector(x, y, z) {
-                    return new Vector3(x, y, z);
+            function(rawData) {
+                const [off, counts, ...data] = rawData.split(/\r\n?|\n/);
+
+                // Line 1
+                //     OFF
+                if (off !== "OFF") {
+                    return null;
                 }
 
-                function face3(a, b, c, normals) {
-                    return new Face3(a, b, c, normals);
+                // Line 2
+                //     vertex_count face_count edge_count
+                const [vertexCount, faceCount] = counts
+                    .split(/\s+/)
+                    .map(Number);
+
+                const geometry = new Geometry();
+
+                // One line for each vertex:
+                //     x y z
+                //     for vertex 0, 1, ..., vertex_count-1
+                for (let v = 0; v < vertexCount; v++) {
+                    const [x, y, z, ...colors] = data[v]
+                        .split(/\s+/)
+                        .map(Number);
+                    if (colors) {
+                        areColorsExist = true;
+                    }
+
+                    geometry.vertices.push(new Vector3(x, y, z));
                 }
 
-                function calcNormal(v1, v2, v3) {
-                    // cross product - calculate 2 vectors, then cross
-                    const vector1 = [v1.x - v2.x, v1.y - v2.y, v1.z - v2.z];
+                // One line for each polygonal face:
+                //     n v1 v2 ... vn,
+                //     the number of vertices, and the vertex indices for each face.
+                for (let f = vertexCount; f < vertexCount + faceCount; f++) {
+                    const [n, ...datum] = data[f].split(/\s+/).map(Number);
+                    const [i1, i2, i3] = datum.splice(0, n);
+                    const v1 = geometry.vertices[i1];
+                    const v2 = geometry.vertices[i2];
+                    const colors = datum.splice(n);
+                    if (colors) {
+                        areColorsExist = true;
+                    }
+                    if (n !== 3) {
+                        areNonTriangularFacesExist = true;
+                    }
 
-                    const vector2 = [v3.x - v2.x, v3.y - v2.y, v3.z - v2.z];
-
-                    const xProduct = vector(
-                        vector1[1] * vector2[2] - vector1[2] * vector2[1],
-                        vector1[2] * vector2[0] - vector1[0] * vector2[2],
-                        vector1[0] * vector2[1] - vector1[1] * vector2[0],
+                    const normal = new Vector3(
+                        v2.x - v1.x,
+                        v2.y - v1.y,
+                        v2.z - v1.z,
                     );
-                    return xProduct;
+
+                    geometry.faces.push(new Face3(i1, i2, i3, normal));
                 }
 
-                const group = new Object3D();
-                const vertices = [];
-
-                const pattern = /OFF/g;
-                const result = pattern.exec(data);
-
-                data = data.split("\n");
-
-                // 1st line: OFF
-                if (result == null) return null;
-
-                // 2nd line: vertex_count face_count edge_count
-                const str = data[1].toString().replace("\r", "");
-                const listCount = str.split(" ");
-                const countVertex = parseInt(listCount[0]);
-                const countFace = parseInt(listCount[1]);
-
-                // list of vertex
-                for (let cv = 0; cv < countVertex; cv++) {
-                    const str = data[cv + 2].toString().replace("\r", "");
-                    const listVertex = str.split(" ");
-                    vertices.push(
-                        vector(
-                            parseFloat(listVertex[0]),
-                            parseFloat(listVertex[1]),
-                            parseFloat(listVertex[2]),
-                        ),
-                    );
-                }
-
-                // list of faces
-                for (let cf = 0; cf < countFace; cf++) {
-                    const str = data[cf + countVertex + 2]
-                        .toString()
-                        .replace("\r", "");
-                    const listFace = str.split(" ");
-
-                    const geometry = new Geometry();
-                    geometry.vertices = vertices;
-
-                    const v1 = parseInt(listFace[1]);
-                    const v2 = parseInt(listFace[2]);
-                    const v3 = parseInt(listFace[3]);
-                    // flat shading
-                    const n = calcNormal(
-                        vertices[v1],
-                        vertices[v2],
-                        vertices[v3],
-                    );
-                    const f = face3(v1, v2, v3, [n, n, n]);
-
-                    geometry.faces.push(f);
-                    group.add(new Mesh(geometry, new MeshPhongMaterial()));
-                }
-
-                onLoad(group);
+                onLoad(new Mesh(geometry, new MeshPhongMaterial()));
             },
             onProgress,
             onError,
