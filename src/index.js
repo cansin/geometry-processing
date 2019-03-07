@@ -2,6 +2,7 @@ import {
     AmbientLight,
     LineSegments,
     LoadingManager,
+    Mesh,
     PerspectiveCamera,
     PointLight,
     Scene,
@@ -35,10 +36,14 @@ scene.add(camera);
 const manager = new LoadingManager(
     () => {
         scene.add(object);
-
-        const wireframe = new WireframeGeometry(object.children[0].geometry);
-        const line = new LineSegments(wireframe);
-        scene.add(line);
+        object.traverse(child => {
+            if (child instanceof Mesh) {
+                const wireframe = new WireframeGeometry(child.geometry);
+                const line = new LineSegments(wireframe);
+                line.material.color.setHex(0xcc0000);
+                scene.add(line);
+            }
+        });
     },
     (item, loaded, total) => {
         console.log(item, loaded, total);
@@ -49,6 +54,12 @@ const manager = new LoadingManager(
 const loader = new OBJLoader(manager);
 loader.load(dragon, obj => {
     object = obj;
+
+    object.traverse(child => {
+        if (child instanceof Mesh) {
+            child.material.color.setHex(0xcccccc);
+        }
+    });
 });
 
 //
