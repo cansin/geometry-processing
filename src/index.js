@@ -1,5 +1,5 @@
 import {
-    AmbientLight,
+    AmbientLight, FaceNormalsHelper,
     LineSegments,
     LoadingManager,
     Mesh,
@@ -44,6 +44,9 @@ const manager = new LoadingManager(
                 const line = new LineSegments(wireframe);
                 line.material.color.setHex(0xcc0000);
                 scene.add(line);
+
+                const normals = new FaceNormalsHelper(child, 2, 0x00ff00, 1);
+                scene.add(normals);
             }
         });
     },
@@ -54,7 +57,12 @@ const manager = new LoadingManager(
 
 // model
 const loader = new OFFLoader(manager);
-loader.load(horse0, obj => {
+const url = horse0;
+
+// const loader = new OBJLoader(manager);
+// const url = dragon;
+
+loader.load(url, obj => {
     object = obj;
 
     object.traverse(child => {
@@ -63,17 +71,6 @@ loader.load(horse0, obj => {
         }
     });
 });
-
-// const loader = new OBJLoader(manager);
-// loader.load(dragon, obj => {
-//     object = obj;
-//
-//     object.traverse(child => {
-//         if (child instanceof Mesh) {
-//             child.material.color.setHex(0xcccccc);
-//         }
-//     });
-// });
 
 //
 const renderer = new WebGLRenderer();
