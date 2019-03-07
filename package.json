@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "algorithms": "^0.10.0",
-        "three": "^0.102.0"
+        "three": "^0.102.0",
+        "three.meshline": "^1.2.0"
     }
 }

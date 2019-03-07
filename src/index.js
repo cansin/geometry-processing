@@ -1,25 +1,27 @@
 import {
     AmbientLight,
-    FaceNormalsHelper,
+    Geometry,
+    LineBasicMaterial,
     LineSegments,
     LoadingManager,
     Mesh,
     PerspectiveCamera,
     PointLight,
     Scene,
+    Vector2,
+    Vector3,
     WebGLRenderer,
     WireframeGeometry,
 } from "three";
+import { MeshLine, MeshLineMaterial } from "three.meshline";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 
-import dijkstra from "./dijkstra";
+import findShortestPath from "./shortest_path";
 import { OFFLoader } from "./off_loader";
 import horse0 from "./meshes1/1) use for geodesic/fprint matrix/horse0.off";
 import dragon from "./meshes1/1) use for geodesic/timing/dragon.obj";
 import "./index.less";
-
-let object;
 
 // camera
 const camera = new PerspectiveCamera(
@@ -36,24 +38,20 @@ const scene = new Scene();
 scene.add(new AmbientLight(0xcccccc, 0.4));
 scene.add(camera);
 
+const meshLineMaterial = new MeshLineMaterial({
+    color: 0xff0000,
+    lineWidth: 2,
+    resolution: new Vector2(window.innerWidth, window.innerHeight),
+});
+
 // manager
 const manager = new LoadingManager(
-    () => {
-        scene.add(object);
-        object.traverse(child => {
-            if (child instanceof Mesh) {
-                const wireframe = new WireframeGeometry(child.geometry);
-                const line = new LineSegments(wireframe);
-                line.material.color.setHex(0xcc0000);
-                scene.add(line);
-
-                const normals = new FaceNormalsHelper(child, 2, 0x00ff00, 1);
-                scene.add(normals);
-            }
-        });
-    },
+    () => {},
     (item, loaded, total) => {
         console.log(item, loaded, total);
+    },
+    item => {
+        console.error(item);
     },
 );
 
@@ -64,14 +62,52 @@ const url = horse0;
 // const loader = new OBJLoader(manager);
 // const url = dragon;
 
-loader.load(url, obj => {
-    object = obj;
+function renderWireframe(mesh) {
+    const material = new LineBasicMaterial({
+        color: 0xffffff,
+    });
+
+    const geometry = new WireframeGeometry(mesh.geometry);
+
+    const line = new LineSegments(geometry, material);
+
+    scene.add(line);
+}
+
+function renderShortestPath(path) {
+    const material = new LineBasicMaterial({
+        color: 0xff0000,
+        linewidth: 2,
+    });
+
+
+    const geometry = new Geometry();
+    path.forEach(s => {
+        geometry.vertices.push(new Vector3(...s.split(",").map(Number)));
+    });
+
+    const line = new LineSegments(geometry, material);
+
+    scene.add(line);
+    //
+    // const line = new MeshLine();
+    // line.setGeometry(geometry);
+    //
+    // scene.add(new Mesh(line.geometry, meshLineMaterial));
+}
+
+loader.load(url, object => {
+    scene.add(object);
 
     object.traverse(child => {
         if (child instanceof Mesh) {
+            child.material.opacity = 0.5;
             child.material.color.setHex(0xcccccc);
 
-            dijkstra(child);
+            renderWireframe(child);
+
+            const path = findShortestPath(child);
+            renderShortestPath(path);
         }
     });
 });
@@ -87,6 +123,10 @@ const controls = new TrackballControls(camera, renderer.domElement);
 
 //
 window.addEventListener("resize", () => {
+    meshLineMaterial.resolution = new Vector2(
+        window.innerWidth,
+        window.innerHeight,
+    );
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
