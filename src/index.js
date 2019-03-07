@@ -39,7 +39,6 @@ const manager = new LoadingManager(() => {
     object.traverse(child => {
         if (child.isMesh) child.material.map = texture;
     });
-    object.position.y = -95;
     scene.add(object);
 });
 manager.onProgress = (item, loaded, total) => {
