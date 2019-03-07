@@ -1,5 +1,6 @@
 import {
-    AmbientLight, FaceNormalsHelper,
+    AmbientLight,
+    FaceNormalsHelper,
     LineSegments,
     LoadingManager,
     Mesh,
@@ -11,8 +12,9 @@ import {
 } from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import { OFFLoader } from "./off_loader";
 
+import dijkstra from "./dijkstra";
+import { OFFLoader } from "./off_loader";
 import horse0 from "./meshes1/1) use for geodesic/fprint matrix/horse0.off";
 import dragon from "./meshes1/1) use for geodesic/timing/dragon.obj";
 import "./index.less";
@@ -68,6 +70,8 @@ loader.load(url, obj => {
     object.traverse(child => {
         if (child instanceof Mesh) {
             child.material.color.setHex(0xcccccc);
+
+            dijkstra(child);
         }
     });
 });

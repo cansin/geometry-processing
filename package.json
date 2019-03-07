@@ -22,6 +22,7 @@
         "webpack-dev-server": "^3.2.1"
     },
     "dependencies": {
+        "algorithms": "^0.10.0",
         "three": "^0.102.0"
     }
 }

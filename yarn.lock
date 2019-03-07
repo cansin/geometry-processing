@@ -222,6 +222,11 @@ ajv@^6.1.0, ajv@^6.5.5, ajv@^6.9.1:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+algorithms@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/algorithms/-/algorithms-0.10.0.tgz#f93ffd435d79fd3fc0b32e28ef3629240b71b720"
+  integrity sha1-+T/9Q115/T/Asy4o7zYpJAtxtyA=
+
 ansi-colors@^3.0.0:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-3.2.3.tgz#57d35b8686e851e2cc04c403f1c00203976a1813"
