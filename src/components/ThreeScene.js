@@ -26,7 +26,6 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { ASSIGNMENTS } from "./Store";
 
 @observer
 class ThreeScene extends Component {
@@ -98,6 +97,10 @@ class ThreeScene extends Component {
     loadObject() {
         const { assignment, model, setTiming } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
+        let startTime;
+
+        startTime = new Date();
+        console.log(`Loading Object...`);
         loader.load(model, object => {
             while (this.scene.children.length > 0) {
                 this.scene.remove(this.scene.children[0]);
@@ -106,25 +109,35 @@ class ThreeScene extends Component {
             this.scene.add(this.camera);
 
             this.scene.add(object);
+            console.log(`\tdone in ${new Date() - startTime}ms.`);
 
             object.traverse(child => {
                 if (child instanceof Mesh) {
+                    child.geometry.normalize();
+                    child.geometry.scale(75, 75, 75);
+
                     child.material.opacity = 0.75;
                     child.material.transparent = true;
                     child.material.color.setHex(0xcccccc);
 
                     this.renderWireframe(child);
 
-                    if (assignment === ASSIGNMENTS.Geodesic) {
+                    if (assignment === "Geodesic") {
+                        console.log("Calculating Geodesic...");
                         const { path, timing } = findShortestPath(child);
                         setTiming(timing);
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
-                    } else if (assignment === ASSIGNMENTS.Bilateral) {
-                        // do nothing
-                    } else if (assignment === ASSIGNMENTS.IsoCurve) {
-                        // do nothing
+                    } else if (assignment === "Bilateral") {
+                        console.log("Calculating Bilateral Descriptor...");
+                        const { path, timing } = findShortestPath(child);
+                        setTiming(timing);
+                        this.renderShortestPath(path);
+                        this.renderVertex(path[0]);
+                        this.renderVertex(path[path.length - 1]);
+                    } else if (assignment === "IsoCurve") {
+                        console.log("Calculating Iso-Curve Descriptor...");
                     }
                 }
             });
@@ -190,13 +203,17 @@ class ThreeScene extends Component {
     }
 
     render() {
-        const { model } = this.props.store;
+        const { assignment, model } = this.props.store;
         return (
             <Paper style={{ height: "100%" }}>
                 <Grid container style={{ height: "100%" }}>
                     <div
-                        aria-label={model}
-                        style={{ width: "100%", height: "100%" }}
+                        aria-label={`${assignment} ${model}`}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            minHeight: 600,
+                        }}
                         ref={mount => {
                             this.mount = mount;
                         }}

@@ -3,7 +3,6 @@ import { unstable_Box as Box } from "@material-ui/core/Box";
 
 import ThreeScene from "./ThreeScene";
 import ModeChooser from "./ModeChooser";
-import Logs from "./Logs";
 import Store from "./Store";
 
 export default class App extends Component {
@@ -20,9 +19,6 @@ export default class App extends Component {
                 </Box>
                 <Box p={1} flexGrow={1}>
                     <ThreeScene store={this.store} />
-                </Box>
-                <Box p={1}>
-                    <Logs />
                 </Box>
             </Box>
         );

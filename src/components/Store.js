@@ -27,8 +27,8 @@ import autobind from "autobind-decorator";
 
 export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic",
-    IsoCurve: "Iso-Curve Descriptor",
     Bilateral: "Bilateral Descriptor",
+    IsoCurve: "Iso-Curve Descriptor",
 });
 
 export const MODELS = Object.freeze({
