@@ -54,6 +54,13 @@ export default class ThreeScene extends Component {
             this.renderer.domElement,
         );
 
+        // ADD MATERIALS
+        this.meshLineMaterial = new MeshLineMaterial({
+            color: 0xff0000,
+            lineWidth: 1,
+            resolution: new Vector2(window.innerWidth, window.innerHeight),
+        });
+
         // ADD LOADERS
         this.loadingManager = new LoadingManager(
             () => {},
@@ -65,11 +72,13 @@ export default class ThreeScene extends Component {
             },
         );
 
-        // this.loader = new OFFLoader(this.loadingManager);
-        // this.url = horse0;
+        this.loader = new OFFLoader(this.loadingManager);
+        this.url = horse0;
 
-        this.loader = new OBJLoader(this.loadingManager);
-        this.url = dragon;
+        // this.loader = new OBJLoader(this.loadingManager);
+        // this.url = dragon;
+
+        window.addEventListener("resize", this.handleResize.bind(this));
 
         // START RENDERING
         this.loadObject();
@@ -105,6 +114,16 @@ export default class ThreeScene extends Component {
         this.mount.removeChild(this.renderer.domElement);
     }
 
+    handleResize() {
+        this.meshLineMaterial.resolution = new Vector2(
+            this.mount.clientWidth,
+            this.mount.clientHeight,
+        );
+        this.camera.aspect = this.mount.clientWidth / this.mount.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.mount.clientWidth, this.mount.clientHeight);
+    }
+
     animate() {
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
@@ -124,12 +143,6 @@ export default class ThreeScene extends Component {
     }
 
     renderShortestPath(path) {
-        const material = new MeshLineMaterial({
-            color: 0xff0000,
-            lineWidth: 1,
-            resolution: new Vector2(window.innerWidth, window.innerHeight),
-        });
-
         const geometry = new Geometry();
         path.forEach(vertexString => {
             geometry.vertices.push(
@@ -140,14 +153,17 @@ export default class ThreeScene extends Component {
         const line = new MeshLine();
         line.setGeometry(geometry);
 
-        this.scene.add(new Mesh(line.geometry, material));
+        this.scene.add(new Mesh(line.geometry, this.meshLineMaterial));
     }
 
     renderVertex(vertexString) {
-        var geometry = new SphereBufferGeometry(1);
+        const material = new MeshPhongMaterial({ color: 0x00ff00 });
+
+        const geometry = new SphereBufferGeometry(1);
         geometry.translate(...vertexString.split(",").map(Number));
-        var material = new MeshPhongMaterial({ color: 0x00ff00 });
-        var sphere = new Mesh(geometry, material);
+
+        const sphere = new Mesh(geometry, material);
+
         this.scene.add(sphere);
     }
 
@@ -162,13 +178,3 @@ export default class ThreeScene extends Component {
         );
     }
 }
-
-// window.addEventListener("resize", () => {
-//     meshLineMaterial.resolution = new Vector2(
-//         window.innerWidth,
-//         window.innerHeight,
-//     );
-//     camera.aspect = window.innerWidth / window.innerHeight;
-//     camera.updateProjectionMatrix();
-//     renderer.setSize(window.innerWidth, window.innerHeight);
-// });
