@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import {
     AmbientLight,
     Geometry,
@@ -16,16 +16,21 @@ import {
     WebGLRenderer,
     WireframeGeometry,
 } from "three";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+// import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { MeshLine, MeshLineMaterial } from "three.meshline";
 import { findShortestPath } from "../algorithms/shortest_path";
-import horse0 from "../meshes1/1) use for geodesic/fprint matrix/horse0.off";
-import dragon from "../meshes1/1) use for geodesic/timing/dragon.obj";
+import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 
-export default class ThreeScene extends Component {
+@observer
+class ThreeScene extends Component {
+    static propTypes = {
+        store: PropTypes.object.isRequired,
+    };
+
     componentDidMount() {
         // ADD SCENE
         this.scene = new Scene();
@@ -73,10 +78,6 @@ export default class ThreeScene extends Component {
         );
 
         this.loader = new OFFLoader(this.loadingManager);
-        this.url = horse0;
-
-        // this.loader = new OBJLoader(this.loadingManager);
-        // this.url = dragon;
 
         window.addEventListener("resize", this.handleResize.bind(this));
 
@@ -88,8 +89,12 @@ export default class ThreeScene extends Component {
         }
     }
 
+    componentDidUpdate() {
+        this.loadObject();
+    }
+
     loadObject() {
-        this.loader.load(this.url, object => {
+        this.loader.load(this.props.store.model, object => {
             this.scene.add(object);
 
             object.traverse(child => {
@@ -169,12 +174,17 @@ export default class ThreeScene extends Component {
 
     render() {
         return (
-            <div
-                style={{ width: "100%", height: "100%" }}
-                ref={mount => {
-                    this.mount = mount;
-                }}
-            />
+            <Fragment>
+                {this.props.store.model}
+                <div
+                    style={{ height: "100%" }}
+                    ref={mount => {
+                        this.mount = mount;
+                    }}
+                />
+            </Fragment>
         );
     }
 }
+
+export default ThreeScene;
