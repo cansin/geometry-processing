@@ -25,6 +25,7 @@ import horse0 from "./meshes1/1) use for geodesic/fprint matrix/horse0.off";
 import man0 from "./meshes1/1) use for geodesic/fprint matrix/man0.off";
 import dragon from "./meshes1/1) use for geodesic/timing/dragon.obj";
 import centaur from "./meshes1/1) use for geodesic/timing/centaur.off";
+import weirdSphere from "./meshes1/1) use for geodesic/timing/weirdSphere.off";
 import "./index.less";
 
 // camera
@@ -44,7 +45,7 @@ scene.add(camera);
 
 const meshLineMaterial = new MeshLineMaterial({
     color: 0xff0000,
-    lineWidth: 2,
+    lineWidth: 1,
     resolution: new Vector2(window.innerWidth, window.innerHeight),
 });
 
@@ -60,11 +61,11 @@ const manager = new LoadingManager(
 );
 
 // model
-const loader = new OFFLoader(manager);
-const url = horse0;
+// const loader = new OFFLoader(manager);
+// const url = horse0;
 
-// const loader = new OBJLoader(manager);
-// const url = dragon;
+const loader = new OBJLoader(manager);
+const url = dragon;
 
 function renderWireframe(mesh) {
     const material = new LineBasicMaterial({
@@ -93,7 +94,7 @@ function renderShortestPath(path) {
 }
 
 function renderVertex(vertexString) {
-    var geometry = new SphereBufferGeometry(2);
+    var geometry = new SphereBufferGeometry(1);
     geometry.translate(...vertexString.split(",").map(Number));
     var material = new MeshPhongMaterial({ color: 0x00ff00 });
     var sphere = new Mesh(geometry, material);

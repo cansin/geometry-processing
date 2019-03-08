@@ -1,6 +1,7 @@
-import { dijkstra } from "algorithms/graph";
 import { Graph } from "algorithms/data_structures";
 import { Geometry } from "three";
+
+import { dijkstra } from "./dijkstra";
 
 function vertexToString(v) {
     return `${v.x},${v.y},${v.z}`;
@@ -35,7 +36,7 @@ export default function findShortestPath(mesh) {
     startTime = new Date();
     console.log(`Adding edges to the graph...`);
 
-    // Adopted from three/src/geometries/WireframeGeometry.js:31
+    // Adopted from `three/src/geometries/WireframeGeometry.js:31`
     const keys = ["a", "b", "c"];
 
     for (let i = 0, l = faces.length; i < l; i++) {
@@ -67,7 +68,7 @@ export default function findShortestPath(mesh) {
         vertices[Math.floor(Math.random() * vertices.length)],
     );
 
-    const { previous: prev } = dijkstra(graph, source);
+    const { previous } = dijkstra(graph, source, target);
 
     console.log(`\tdone in ${new Date() - startTime}ms.`);
 
@@ -84,10 +85,10 @@ export default function findShortestPath(mesh) {
     const S = [];
     let u = target;
 
-    if (prev[u] || u === source) {
+    if (previous.get(u) || u === source) {
         while (u) {
             S.unshift(u);
-            u = prev[u];
+            u = previous.get(u);
         }
     }
 
