@@ -16,7 +16,7 @@ import {
     WebGLRenderer,
     WireframeGeometry,
 } from "three";
-// import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 
 import { OFFLoader } from "../loaders/OFFLoader";
@@ -77,7 +77,8 @@ class ThreeScene extends Component {
             },
         );
 
-        this.loader = new OFFLoader(this.loadingManager);
+        this.offLoader = new OFFLoader(this.loadingManager);
+        this.objLoader = new OBJLoader(this.loadingManager);
 
         window.addEventListener("resize", this.handleResize.bind(this));
 
@@ -94,7 +95,9 @@ class ThreeScene extends Component {
     }
 
     loadObject() {
-        this.loader.load(this.props.store.model, object => {
+        const { model } = this.props.store;
+        const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
+        loader.load(this.props.store.model, object => {
             this.scene.add(object);
 
             object.traverse(child => {
@@ -174,15 +177,13 @@ class ThreeScene extends Component {
 
     render() {
         return (
-            <Fragment>
-                {this.props.store.model}
-                <div
-                    style={{ height: "100%" }}
-                    ref={mount => {
-                        this.mount = mount;
-                    }}
-                />
-            </Fragment>
+            <div
+                aria-label={this.props.store.model}
+                style={{ height: "100%" }}
+                ref={mount => {
+                    this.mount = mount;
+                }}
+            />
         );
     }
 }
