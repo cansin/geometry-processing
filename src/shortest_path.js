@@ -20,7 +20,6 @@ export default function findShortestPath(mesh) {
 
     console.log(`\tdone in ${new Date() - startTime}ms.`);
 
-
     startTime = new Date();
     console.log(`Adding vertices to the graph...`);
 
@@ -32,7 +31,6 @@ export default function findShortestPath(mesh) {
     });
 
     console.log(`\tdone in ${new Date() - startTime}ms.`);
-
 
     startTime = new Date();
     console.log(`Adding edges to the graph...`);
@@ -46,16 +44,18 @@ export default function findShortestPath(mesh) {
         for (let j = 0; j < 3; j++) {
             const vertexIndex1 = face[keys[j]];
             const vertexIndex2 = face[keys[(j + 1) % 3]];
+            const vertex1 = vertices[Math.min(vertexIndex1, vertexIndex2)];
+            const vertex2 = vertices[Math.max(vertexIndex1, vertexIndex2)];
 
             graph.addEdge(
-                vertexToString(vertices[Math.min(vertexIndex1, vertexIndex2)]),
-                vertexToString(vertices[Math.max(vertexIndex1, vertexIndex2)]),
+                vertexToString(vertex1),
+                vertexToString(vertex2),
+                vertex1.distanceTo(vertex2),
             );
         }
     }
 
     console.log(`\tdone in ${new Date() - startTime}ms.`);
-
 
     startTime = new Date();
     console.log(`Performing Dijkstra...`);
@@ -70,7 +70,6 @@ export default function findShortestPath(mesh) {
     const { previous: prev } = dijkstra(graph, source);
 
     console.log(`\tdone in ${new Date() - startTime}ms.`);
-
 
     startTime = new Date();
     console.log(`Traversing shortest path...`);
