@@ -14,6 +14,11 @@ function findMinDistant(Q, distance) {
 }
 
 export function dijkstra(graph, source, target = undefined) {
+    let startTime;
+
+    startTime = new Date();
+    console.log("\tInitializing Dijkstra sets...");
+
     // 1  function Dijkstra(Graph, source):
     // 2
     // 3      create vertex set Q
@@ -35,6 +40,11 @@ export function dijkstra(graph, source, target = undefined) {
 
     distance.set(source, 0);
 
+    console.log(`\t\tdone in ${new Date() - startTime}ms.`);
+
+    startTime = new Date();
+    console.log(`\tFinding shortest paths...`);
+
     // 11
     // 12      while Q is not empty:
     // 13          u ← vertex in Q with min dist[u]
@@ -47,6 +57,7 @@ export function dijkstra(graph, source, target = undefined) {
         Q.delete(u);
 
         if (target && u === target) {
+            console.log(`\t\tTarget given, exiting early...`);
             break;
         }
 
@@ -64,6 +75,8 @@ export function dijkstra(graph, source, target = undefined) {
             }
         });
     }
+
+    console.log(`\t\tdone in ${new Date() - startTime}ms.`);
 
     // 22
     // 23      return dist[], prev[]

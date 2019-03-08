@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const HtmlWebpackTemplate = require("html-webpack-template");
 
 module.exports = {
     entry: {
@@ -9,9 +10,13 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(["build/*"]),
         new HtmlWebpackPlugin({
+            inject: false,
+            template: HtmlWebpackTemplate,
             favicon: "favicon.ico",
             title:
                 "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignment I",
+            xhtml: true,
+            appMountId: "app",
         }),
     ],
     output: {
@@ -20,6 +25,13 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                },
+            },
             {
                 test: /\.(jpg|off|obj)$/,
                 use: [

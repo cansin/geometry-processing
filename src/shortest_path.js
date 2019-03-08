@@ -7,7 +7,7 @@ function vertexToString(v) {
     return `${v.x},${v.y},${v.z}`;
 }
 
-export default function findShortestPath(mesh) {
+export function findShortestPath(mesh) {
     let { geometry } = mesh;
     let startTime;
 
