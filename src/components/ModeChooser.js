@@ -8,6 +8,8 @@ import Input from "@material-ui/core/Input";
 import { observer } from "mobx-react";
 import autobind from "autobind-decorator";
 import { ASSIGNMENTS, MODELS } from "./Store";
+import Paper from "@material-ui/core/Paper";
+import { unstable_Box as Box } from "@material-ui/core/Box";
 
 @observer
 class ModeChooser extends Component {
@@ -26,42 +28,57 @@ class ModeChooser extends Component {
     }
 
     render() {
-        const { assignment, model } = this.props.store;
+        const { assignment, model, timing } = this.props.store;
         return (
-            <form autoComplete="off">
-                <FormControl>
-                    <InputLabel htmlFor="assignment">Assignment</InputLabel>
-                    <Select
-                        value={assignment}
-                        onChange={this.handleAssignmentChange}
-                        input={<Input name="assignment" id="assignment" />}
-                        autoWidth>
-                        {Object.entries(ASSIGNMENTS).map(
-                            ([value, tag], key) => (
-                                <MenuItem key={key} value={value}>
-                                    {tag}
-                                </MenuItem>
-                            ),
-                        )}
-                    </Select>
-                </FormControl>
-                <FormControl>
-                    <InputLabel htmlFor="model">Model</InputLabel>
-                    <Select
-                        value={model}
-                        onChange={this.handleModelChange}
-                        input={<Input name="model" id="model" />}
-                        autoWidth>
-                        {Object.entries(MODELS[assignment]).map(
-                            ([tag, value], key) => (
-                                <MenuItem key={key} value={value}>
-                                    {tag}
-                                </MenuItem>
-                            ),
-                        )}
-                    </Select>
-                </FormControl>
-            </form>
+            <Paper>
+                <Box display="flex" alignItems="center">
+                    <Box p={1}>
+                        <FormControl>
+                            <InputLabel htmlFor="assignment">
+                                Assignment
+                            </InputLabel>
+                            <Select
+                                value={assignment}
+                                onChange={this.handleAssignmentChange}
+                                input={
+                                    <Input name="assignment" id="assignment" />
+                                }
+                                autoWidth>
+                                {Object.entries(ASSIGNMENTS).map(
+                                    ([value, tag], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ),
+                                )}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box p={1}>
+                        <FormControl>
+                            <InputLabel htmlFor="model">Model</InputLabel>
+                            <Select
+                                value={model}
+                                onChange={this.handleModelChange}
+                                input={<Input name="model" id="model" />}
+                                autoWidth>
+                                {Object.entries(MODELS[assignment]).map(
+                                    ([tag, value], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ),
+                                )}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box p={1}>
+                        {timing !== undefined
+                            ? `The operation took ${timing}ms.`
+                            : "Loading..."}
+                    </Box>
+                </Box>
+            </Paper>
         );
     }
 }

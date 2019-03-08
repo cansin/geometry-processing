@@ -68,7 +68,7 @@ export function findShortestPath(mesh) {
         vertices[Math.floor(Math.random() * vertices.length)],
     );
 
-    const { previous } = dijkstra(graph, source, target);
+    const { previous, timing } = dijkstra(graph, source, target);
 
     console.log(`\tdone in ${new Date() - startTime}ms.`);
 
@@ -94,5 +94,8 @@ export function findShortestPath(mesh) {
 
     console.log(`\tdone in ${new Date() - startTime}ms.`);
 
-    return S;
+    return {
+        path: S,
+        timing,
+    };
 }

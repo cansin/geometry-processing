@@ -23,6 +23,7 @@ import horsePartialHole from "../meshes1/3) use for bilateral descriptor/horse_p
 import centaur2 from "../meshes1/3) use for bilateral descriptor/centaur2.off";
 import cat1 from "../meshes1/3) use for bilateral descriptor/cat1.off";
 import cat from "../meshes1/3) use for bilateral descriptor/cat.off";
+import autobind from "autobind-decorator";
 
 export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic",
@@ -53,15 +54,24 @@ export const MODELS = Object.freeze({
 export default class Store {
     @observable assignment = ASSIGNMENTS.Geodesic;
     @observable model = MODELS.Geodesic.horse0;
+    @observable timing = undefined;
 
     @action
     setAssignment(value) {
         this.assignment = value;
         this.model = Object.values(MODELS[this.assignment])[0];
+        this.timing = undefined;
     }
 
     @action
     setModel(value) {
         this.model = value;
+        this.timing = undefined;
+    }
+
+    @autobind
+    @action
+    setTiming(value) {
+        this.timing = value;
     }
 }

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import {
     AmbientLight,
     Geometry,
@@ -24,6 +24,8 @@ import { MeshLine, MeshLineMaterial } from "three.meshline";
 import { findShortestPath } from "../algorithms/shortest_path";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 
 @observer
 class ThreeScene extends Component {
@@ -93,9 +95,9 @@ class ThreeScene extends Component {
     }
 
     loadObject() {
-        const { model } = this.props.store;
+        const { model, setTiming } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
-        loader.load(this.props.store.model, object => {
+        loader.load(model, object => {
             while (this.scene.children.length > 0) {
                 this.scene.remove(this.scene.children[0]);
             }
@@ -112,7 +114,8 @@ class ThreeScene extends Component {
 
                     this.renderWireframe(child);
 
-                    const path = findShortestPath(child);
+                    const { path, timing } = findShortestPath(child);
+                    setTiming(timing);
                     this.renderShortestPath(path);
                     this.renderVertex(path[0]);
                     this.renderVertex(path[path.length - 1]);
@@ -180,14 +183,19 @@ class ThreeScene extends Component {
     }
 
     render() {
+        const { model } = this.props.store;
         return (
-            <div
-                aria-label={this.props.store.model}
-                style={{ height: "100%" }}
-                ref={mount => {
-                    this.mount = mount;
-                }}
-            />
+            <Paper style={{ height: "100%" }}>
+                <Grid container style={{ height: "100%" }}>
+                    <div
+                        aria-label={model}
+                        style={{ width: "100%", height: "100%" }}
+                        ref={mount => {
+                            this.mount = mount;
+                        }}
+                    />
+                </Grid>
+            </Paper>
         );
     }
 }

@@ -76,12 +76,14 @@ export function dijkstra(graph, source, target = undefined) {
         });
     }
 
-    console.log(`\t\tdone in ${new Date() - startTime}ms.`);
+    const timing = new Date() - startTime;
+    console.log(`\t\tdone in ${timing}ms.`);
 
     // 22
     // 23      return dist[], prev[]
     return {
         distance,
         previous,
+        timing,
     };
 }
