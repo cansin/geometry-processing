@@ -34,7 +34,6 @@ class ThreeScene extends Component {
     componentDidMount() {
         // ADD SCENE
         this.scene = new Scene();
-        this.scene.add(new AmbientLight(0xcccccc, 0.4));
 
         // ADD CAMERA
         this.camera = new PerspectiveCamera(
@@ -45,7 +44,6 @@ class ThreeScene extends Component {
         );
         this.camera.position.z = 250;
         this.camera.add(new PointLight(0xffffff, 0.8));
-        this.scene.add(this.camera);
 
         // ADD RENDERER
         this.renderer = new WebGLRenderer();
@@ -98,6 +96,12 @@ class ThreeScene extends Component {
         const { model } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         loader.load(this.props.store.model, object => {
+            while (this.scene.children.length > 0) {
+                this.scene.remove(this.scene.children[0]);
+            }
+            this.scene.add(new AmbientLight(0xcccccc, 0.4));
+            this.scene.add(this.camera);
+
             this.scene.add(object);
 
             object.traverse(child => {
