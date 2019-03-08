@@ -26,6 +26,7 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import { ASSIGNMENTS } from "./Store";
 
 @observer
 class ThreeScene extends Component {
@@ -95,7 +96,7 @@ class ThreeScene extends Component {
     }
 
     loadObject() {
-        const { model, setTiming } = this.props.store;
+        const { assignment, model, setTiming } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         loader.load(model, object => {
             while (this.scene.children.length > 0) {
@@ -114,11 +115,17 @@ class ThreeScene extends Component {
 
                     this.renderWireframe(child);
 
-                    const { path, timing } = findShortestPath(child);
-                    setTiming(timing);
-                    this.renderShortestPath(path);
-                    this.renderVertex(path[0]);
-                    this.renderVertex(path[path.length - 1]);
+                    if (assignment === ASSIGNMENTS.Geodesic) {
+                        const { path, timing } = findShortestPath(child);
+                        setTiming(timing);
+                        this.renderShortestPath(path);
+                        this.renderVertex(path[0]);
+                        this.renderVertex(path[path.length - 1]);
+                    } else if (assignment === ASSIGNMENTS.Bilateral) {
+                        // do nothing
+                    } else if (assignment === ASSIGNMENTS.IsoCurve) {
+                        // do nothing
+                    }
                 }
             });
         });
