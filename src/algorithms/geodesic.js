@@ -13,8 +13,10 @@ function findMinDistant(Q, distance) {
     return u;
 }
 
-export function dijkstra(graph, source, target = undefined) {
-    let startTime;
+function dijkstra(graph, source, target = undefined) {
+    let startTime,
+        elapsedTime,
+        totalTime = 0;
 
     startTime = new Date();
     console.log("\tInitializing Dijkstra sets...");
@@ -40,7 +42,9 @@ export function dijkstra(graph, source, target = undefined) {
 
     distance.set(source, 0);
 
-    console.log(`\t\tdone in ${new Date() - startTime}ms.`);
+    elapsedTime = new Date() - startTime;
+    totalTime += elapsedTime;
+    console.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
     console.log(`\tFinding shortest paths...`);
@@ -76,14 +80,60 @@ export function dijkstra(graph, source, target = undefined) {
         });
     }
 
-    const timing = new Date() - startTime;
-    console.log(`\t\tdone in ${timing}ms.`);
+    elapsedTime = new Date() - startTime;
+    totalTime += elapsedTime;
+    console.log(`\tdone in ${elapsedTime}ms.`);
 
     // 22
     // 23      return dist[], prev[]
     return {
         distance,
         previous,
-        timing,
+        timing: totalTime,
+    };
+}
+
+function traverse(previous, source, target) {
+    let startTime,
+        elapsedTime,
+        totalTime = 0;
+
+    // 1  S ← empty sequence
+    // 2  u ← target
+    // 3  if prev[u] is defined or u = source:          // Do something only if the vertex is reachable
+    // 4      while u is defined:                       // Construct the shortest path with a stack S
+    // 5          insert u at the beginning of S        // Push the vertex onto the stack
+    // 6          u ← prev[u]                           // Traverse from target to source
+    startTime = new Date();
+    console.log(`Traversing shortest path...`);
+
+    const S = [];
+    let u = target;
+
+    if (previous.get(u) || u === source) {
+        while (u) {
+            S.unshift(u);
+            u = previous.get(u);
+        }
+    }
+
+    elapsedTime = new Date() - startTime;
+    totalTime += elapsedTime;
+    console.log(`\tdone in ${elapsedTime}ms.`);
+
+    return {
+        S,
+        timing: totalTime,
+    };
+}
+
+export function findGeodesicDistance(graph, source, target) {
+    const { previous, timing: dijkstraTime } = dijkstra(graph, source, target);
+
+    const { S, timing: traverseTime } = traverse(previous, source, target);
+
+    return {
+        path: S,
+        timing: dijkstraTime + traverseTime,
     };
 }

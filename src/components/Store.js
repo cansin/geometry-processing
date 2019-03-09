@@ -26,7 +26,7 @@ import cat from "../meshes1/3) use for bilateral descriptor/cat.off";
 import autobind from "autobind-decorator";
 
 export const ASSIGNMENTS = Object.freeze({
-    Geodesic: "Geodesic",
+    Geodesic: "Geodesic Distance",
     Bilateral: "Bilateral Descriptor",
     IsoCurve: "Iso-Curve Descriptor",
 });
@@ -52,7 +52,7 @@ export const MODELS = Object.freeze({
 });
 
 export default class Store {
-    @observable assignment = ASSIGNMENTS.Geodesic;
+    @observable assignment = "Geodesic";
     @observable model = MODELS.Geodesic.horse0;
     @observable timing = undefined;
 

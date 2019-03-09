@@ -21,11 +21,16 @@ import { TrackballControls } from "three/examples/jsm/controls/TrackballControls
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { MeshLine, MeshLineMaterial } from "three.meshline";
-import { findShortestPath } from "../algorithms/shortest_path";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import {
+    createNaiveGeometry,
+    generateGraph,
+} from "../algorithms/generate_graph";
+import { choosePoints } from "../algorithms/choose_points";
+import { findGeodesicDistance } from "../algorithms/geodesic";
 
 @observer
 class ThreeScene extends Component {
@@ -62,7 +67,7 @@ class ThreeScene extends Component {
         // ADD MATERIALS
         this.meshLineMaterial = new MeshLineMaterial({
             color: 0xff0000,
-            lineWidth: 1,
+            lineWidth: 0.75,
             resolution: new Vector2(window.innerWidth, window.innerHeight),
         });
 
@@ -113,31 +118,82 @@ class ThreeScene extends Component {
 
             object.traverse(child => {
                 if (child instanceof Mesh) {
+                    if (child.geometry && !child.geometry.isGeometry) {
+                        child.geometry = new Geometry().fromBufferGeometry(
+                            child.geometry,
+                        );
+                        child.geometry.mergeVertices();
+                    }
+
                     child.geometry.normalize();
                     child.geometry.scale(75, 75, 75);
 
-                    child.material.opacity = 0.75;
+                    child.material.opacity = 0.95;
                     child.material.transparent = true;
                     child.material.color.setHex(0xcccccc);
 
                     this.renderWireframe(child);
 
                     if (assignment === "Geodesic") {
-                        console.log("Calculating Geodesic...");
-                        const { path, timing } = findShortestPath(child);
-                        setTiming(timing);
+                        let startTime,
+                            elapsedTime,
+                            totalTime = 0;
+
+                        startTime = new Date();
+                        console.log("🌟 Calculating Geodesic Distance...");
+                        const { geometry } = createNaiveGeometry(child);
+                        const { graph } = generateGraph(geometry);
+
+                        const { source, target } = choosePoints(geometry);
+
+                        const { path } = findGeodesicDistance(
+                            graph,
+                            source,
+                            target,
+                        );
+
+                        elapsedTime = new Date() - startTime;
+                        totalTime += elapsedTime;
+                        console.log(
+                            `✅ Geodesic Distance calculated in ${elapsedTime}ms.`,
+                        );
+
+                        setTiming(totalTime);
+
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
                     } else if (assignment === "Bilateral") {
-                        console.log("Calculating Bilateral Descriptor...");
-                        const { path, timing } = findShortestPath(child);
-                        setTiming(timing);
+                        let startTime,
+                            elapsedTime,
+                            totalTime = 0;
+
+                        startTime = new Date();
+                        console.log("🌟 Calculating Bilateral Descriptor...");
+                        const { geometry } = createNaiveGeometry(child);
+                        const { graph } = generateGraph(geometry);
+
+                        const { source, target } = choosePoints(geometry);
+
+                        const { path } = findGeodesicDistance(
+                            graph,
+                            source,
+                            target,
+                        );
+
+                        elapsedTime = new Date() - startTime;
+                        totalTime += elapsedTime;
+                        console.log(
+                            `✅ Bilateral Descriptor calculated in ${elapsedTime}ms.`,
+                        );
+
+                        setTiming(totalTime);
+
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
                     } else if (assignment === "IsoCurve") {
-                        console.log("Calculating Iso-Curve Descriptor...");
+                        console.log("🌟 Calculating Iso-Curve Descriptor...");
                     }
                 }
             });
@@ -194,7 +250,7 @@ class ThreeScene extends Component {
     renderVertex(vertexString) {
         const material = new MeshPhongMaterial({ color: 0x00ff00 });
 
-        const geometry = new SphereBufferGeometry(1);
+        const geometry = new SphereBufferGeometry(0.75);
         geometry.translate(...vertexString.split(",").map(Number));
 
         const sphere = new Mesh(geometry, material);
