@@ -13,7 +13,7 @@ function findMinDistant(Q, distance) {
     return u;
 }
 
-function dijkstra(graph, source, target = undefined) {
+export function dijkstra(graph, source, target = undefined) {
     let startTime,
         elapsedTime,
         totalTime = 0;

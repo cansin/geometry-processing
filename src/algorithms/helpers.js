@@ -1,11 +1,33 @@
 import { Graph } from "algorithms/data_structures";
 import { Geometry } from "three";
 
-export function vertexToString(v) {
-    return `${v.x},${v.y},${v.z}`;
+function choosePoints({ vertices }) {
+    let startTime,
+        elapsedTime,
+        totalTime = 0;
+
+    startTime = new Date();
+    console.log(`Choosing points...`);
+
+    const source = vertexToString(
+        vertices[Math.floor(Math.random() * vertices.length)],
+    );
+    const target = vertexToString(
+        vertices[Math.floor(Math.random() * vertices.length)],
+    );
+
+    elapsedTime = new Date() - startTime;
+    totalTime += elapsedTime;
+    console.log(`\tdone in ${elapsedTime}ms.`);
+
+    return {
+        source,
+        target,
+        timing: totalTime,
+    };
 }
 
-export function createNaiveGeometry(mesh) {
+function createNaiveGeometry(mesh) {
     let { geometry } = mesh;
     let startTime,
         elapsedTime,
@@ -29,7 +51,7 @@ export function createNaiveGeometry(mesh) {
     };
 }
 
-export function generateGraph({ faces, vertices }) {
+function generateGraph({ faces, vertices }) {
     let startTime,
         elapsedTime,
         totalTime = 0;
@@ -77,5 +99,23 @@ export function generateGraph({ faces, vertices }) {
     return {
         graph,
         timing: totalTime,
+    };
+}
+
+function vertexToString(v) {
+    return `${v.x},${v.y},${v.z}`;
+}
+
+export function prepareDataStructures(mesh) {
+    const { geometry } = createNaiveGeometry(mesh);
+    const { graph } = generateGraph(geometry);
+
+    const { source, target } = choosePoints(geometry);
+
+    return {
+        geometry,
+        graph,
+        source,
+        target,
     };
 }

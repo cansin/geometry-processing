@@ -25,12 +25,10 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import {
-    createNaiveGeometry,
-    generateGraph,
-} from "../algorithms/generate_graph";
-import { choosePoints } from "../algorithms/choose_points";
+import { prepareDataStructures } from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic";
+import { findBilateralMap } from "../algorithms/bilateral_map";
+import { ASSIGNMENTS } from "./Store";
 
 @observer
 class ThreeScene extends Component {
@@ -133,18 +131,16 @@ class ThreeScene extends Component {
                     child.material.color.setHex(0xcccccc);
 
                     this.renderWireframe(child);
+                    let startTime,
+                        elapsedTime,
+                        totalTime = 0;
+                    startTime = new Date();
+                    console.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
-                    if (assignment === "Geodesic") {
-                        let startTime,
-                            elapsedTime,
-                            totalTime = 0;
-
-                        startTime = new Date();
-                        console.log("🌟 Calculating Geodesic Distance...");
-                        const { geometry } = createNaiveGeometry(child);
-                        const { graph } = generateGraph(geometry);
-
-                        const { source, target } = choosePoints(geometry);
+                    if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
+                        const { graph, source, target } = prepareDataStructures(
+                            child,
+                        );
 
                         const { path } = findGeodesicDistance(
                             graph,
@@ -152,28 +148,15 @@ class ThreeScene extends Component {
                             target,
                         );
 
-                        elapsedTime = new Date() - startTime;
-                        totalTime += elapsedTime;
-                        console.log(
-                            `✅ Geodesic Distance calculated in ${elapsedTime}ms.`,
-                        );
-
-                        setTiming(totalTime);
-
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
-                    } else if (assignment === "Bilateral") {
-                        let startTime,
-                            elapsedTime,
-                            totalTime = 0;
-
-                        startTime = new Date();
-                        console.log("🌟 Calculating Bilateral Descriptor...");
-                        const { geometry } = createNaiveGeometry(child);
-                        const { graph } = generateGraph(geometry);
-
-                        const { source, target } = choosePoints(geometry);
+                    } else if (
+                        ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral
+                    ) {
+                        const { graph, source, target } = prepareDataStructures(
+                            child,
+                        );
 
                         const { path } = findGeodesicDistance(
                             graph,
@@ -181,20 +164,20 @@ class ThreeScene extends Component {
                             target,
                         );
 
-                        elapsedTime = new Date() - startTime;
-                        totalTime += elapsedTime;
-                        console.log(
-                            `✅ Bilateral Descriptor calculated in ${elapsedTime}ms.`,
-                        );
-
-                        setTiming(totalTime);
-
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
-                    } else if (assignment === "IsoCurve") {
-                        console.log("🌟 Calculating Iso-Curve Descriptor...");
+                    } else if (
+                        ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve
+                    ) {
+                        // do nothing
                     }
+
+                    elapsedTime = new Date() - startTime;
+                    totalTime += elapsedTime;
+                    console.log(`✅ Total time ${elapsedTime}ms.`);
+
+                    setTiming(totalTime);
                 }
             });
         });
