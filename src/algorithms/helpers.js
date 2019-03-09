@@ -1,5 +1,5 @@
 import { Geometry } from "three";
-import Graph from "./Graph";
+import UndirectedWeightedGraph from "./UndirectedWeightedGraph";
 
 function choosePoints({ vertices }) {
     let startTime, elapsedTime;
@@ -50,7 +50,7 @@ function generateGraph({ faces, vertices }) {
     startTime = new Date();
     console.log(`Adding vertices to the graph...`);
 
-    const graph = new Graph(false);
+    const graph = new UndirectedWeightedGraph();
 
     vertices.forEach(v => {
         graph.addVertex(v);
