@@ -158,7 +158,7 @@ class ThreeScene extends Component {
                             child,
                         );
 
-                        const { path } = findGeodesicDistance(
+                        const { path } = findBilateralMap(
                             graph,
                             source,
                             target,
@@ -218,10 +218,8 @@ class ThreeScene extends Component {
 
     renderShortestPath(path) {
         const geometry = new Geometry();
-        path.forEach(vertexString => {
-            geometry.vertices.push(
-                new Vector3(...vertexString.split(",").map(Number)),
-            );
+        path.forEach(vertex => {
+            geometry.vertices.push(vertex);
         });
 
         const line = new MeshLine();
@@ -230,11 +228,11 @@ class ThreeScene extends Component {
         this.scene.add(new Mesh(line.geometry, this.meshLineMaterial));
     }
 
-    renderVertex(vertexString) {
+    renderVertex(vertex) {
         const material = new MeshPhongMaterial({ color: 0x00ff00 });
 
         const geometry = new SphereBufferGeometry(0.75);
-        geometry.translate(...vertexString.split(",").map(Number));
+        geometry.translate(vertex.x, vertex.y, vertex.z);
 
         const sphere = new Mesh(geometry, material);
 

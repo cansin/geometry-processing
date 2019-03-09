@@ -1,5 +1,5 @@
-import { Graph } from "algorithms/data_structures";
 import { Geometry } from "three";
+import Graph from "./Graph";
 
 function choosePoints({ vertices }) {
     let startTime,
@@ -9,12 +9,8 @@ function choosePoints({ vertices }) {
     startTime = new Date();
     console.log(`Choosing points...`);
 
-    const source = vertexToString(
-        vertices[Math.floor(Math.random() * vertices.length)],
-    );
-    const target = vertexToString(
-        vertices[Math.floor(Math.random() * vertices.length)],
-    );
+    const source = vertices[Math.floor(Math.random() * vertices.length)];
+    const target = vertices[Math.floor(Math.random() * vertices.length)];
 
     elapsedTime = new Date() - startTime;
     totalTime += elapsedTime;
@@ -62,7 +58,7 @@ function generateGraph({ faces, vertices }) {
     const graph = new Graph(false);
 
     vertices.forEach(v => {
-        graph.addVertex(vertexToString(v));
+        graph.addVertex(v);
     });
 
     elapsedTime = new Date() - startTime;
@@ -84,11 +80,7 @@ function generateGraph({ faces, vertices }) {
             const vertex1 = vertices[Math.min(vertexIndex1, vertexIndex2)];
             const vertex2 = vertices[Math.max(vertexIndex1, vertexIndex2)];
 
-            graph.addEdge(
-                vertexToString(vertex1),
-                vertexToString(vertex2),
-                vertex1.distanceTo(vertex2),
-            );
+            graph.addEdge(vertex1, vertex2, vertex1.distanceTo(vertex2));
         }
     }
 
@@ -100,10 +92,6 @@ function generateGraph({ faces, vertices }) {
         graph,
         timing: totalTime,
     };
-}
-
-function vertexToString(v) {
-    return `${v.x},${v.y},${v.z}`;
 }
 
 export function prepareDataStructures(mesh) {

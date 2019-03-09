@@ -799,6 +799,16 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@tyriar/binary-heap@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@tyriar/binary-heap/-/binary-heap-1.0.5.tgz#0a7d2852599d79fd74853af585e17f2981683b01"
+  integrity sha1-Cn0oUlmdef10hTr1heF/KYFoOwE=
+
+"@tyriar/fibonacci-heap@^2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@tyriar/fibonacci-heap/-/fibonacci-heap-2.0.9.tgz#df3dcbdb1b9182168601f6318366157ee16666e9"
+  integrity sha512-bYuSNomfn4hu2tPiDN+JZtnzCpSpbJ/PNeulmocDy3xN2X5OkJL65zo6rPZp65cPPhLF9vfT/dgE+RtFRCSxOA==
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -1002,11 +1012,6 @@ ajv@^6.1.0, ajv@^6.5.5, ajv@^6.9.1:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
-
-algorithms@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/algorithms/-/algorithms-0.10.0.tgz#f93ffd435d79fd3fc0b32e28ef3629240b71b720"
-  integrity sha1-+T/9Q115/T/Asy4o7zYpJAtxtyA=
 
 ansi-colors@^3.0.0:
   version "3.2.3"

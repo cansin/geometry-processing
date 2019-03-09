@@ -1,17 +1,4 @@
-function findMinDistant(Q, distance) {
-    let u = undefined;
-    let minDistance = Infinity;
-
-    Q.forEach(v => {
-        const vDistance = distance.get(v);
-        if (vDistance < minDistance) {
-            minDistance = vDistance;
-            u = v;
-        }
-    });
-
-    return u;
-}
+import MinSet from "./MinSet";
 
 export function dijkstra(graph, source, target = undefined) {
     let startTime,
@@ -24,7 +11,7 @@ export function dijkstra(graph, source, target = undefined) {
     // 1  function Dijkstra(Graph, source):
     // 2
     // 3      create vertex set Q
-    const Q = new Set();
+    const Q = new MinSet();
     const distance = new Map();
     const previous = new Map();
 
@@ -35,12 +22,11 @@ export function dijkstra(graph, source, target = undefined) {
     // 8          add v to Q
     // 10      dist[source] ← 0
     graph.vertices.forEach(v => {
-        distance.set(v, Infinity);
+        const vDistance = v === source ? 0 : Infinity;
+        distance.set(v, vDistance);
         previous.set(v, undefined);
-        Q.add(v);
+        Q.insert(vDistance, v);
     });
-
-    distance.set(source, 0);
 
     elapsedTime = new Date() - startTime;
     totalTime += elapsedTime;
@@ -55,10 +41,8 @@ export function dijkstra(graph, source, target = undefined) {
     // 14
     // 15          remove u from Q
     let u = undefined;
-    while (Q.size) {
-        u = findMinDistant(Q, distance);
-
-        Q.delete(u);
+    while (!Q.isEmpty()) {
+        u = Q.extractMinimum();
 
         if (target && u === target) {
             console.log(`\t\tTarget given, exiting early...`);
@@ -74,6 +58,7 @@ export function dijkstra(graph, source, target = undefined) {
         graph.neighbors(u).forEach(v => {
             const alt = distance.get(u) + graph.edge(u, v);
             if (alt < distance.get(v)) {
+                Q.decreaseKey(v, alt);
                 distance.set(v, alt);
                 previous.set(v, u);
             }
