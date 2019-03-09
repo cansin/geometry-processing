@@ -1,3 +1,4 @@
+import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 import MinSet from "./MinSet";
 
 export function dijkstra(graph, source, target = undefined) {
@@ -14,6 +15,7 @@ export function dijkstra(graph, source, target = undefined) {
     const Q = new MinSet();
     const distance = new Map();
     const previous = new Map();
+    const nodeMapping = new Map();
 
     // 4
     // 5      for each vertex v in Graph:
@@ -25,7 +27,7 @@ export function dijkstra(graph, source, target = undefined) {
         const vDistance = v === source ? 0 : Infinity;
         distance.set(v, vDistance);
         previous.set(v, undefined);
-        Q.insert(vDistance, v);
+        nodeMapping.set(v, Q.insert(vDistance, v));
     });
 
     elapsedTime = new Date() - startTime;
@@ -42,7 +44,8 @@ export function dijkstra(graph, source, target = undefined) {
     // 15          remove u from Q
     let u = undefined;
     while (!Q.isEmpty()) {
-        u = Q.extractMinimum();
+        const node = Q.extractMinimum();
+        u = node.value;
 
         if (target && u === target) {
             console.log(`\t\tTarget given, exiting early...`);
@@ -58,7 +61,7 @@ export function dijkstra(graph, source, target = undefined) {
         graph.neighbors(u).forEach(v => {
             const alt = distance.get(u) + graph.edge(u, v);
             if (alt < distance.get(v)) {
-                Q.decreaseKey(v, alt);
+                Q.decreaseKey(nodeMapping.get(v), alt);
                 distance.set(v, alt);
                 previous.set(v, u);
             }

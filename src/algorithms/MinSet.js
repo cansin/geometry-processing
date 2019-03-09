@@ -4,14 +4,14 @@ export default class MinSet {
         this.distance = new Map();
     }
 
-    decreaseKey(value, newKey) {
+    decreaseKey({ value }, newKey) {
         this.distance.set(value, newKey);
     }
 
     extractMinimum() {
         const u = this.findMinimum();
 
-        this.Q.delete(u);
+        this.Q.delete(u.value);
 
         return u;
     }
@@ -28,12 +28,20 @@ export default class MinSet {
             }
         });
 
-        return u;
+        return {
+            key: minDistance,
+            value: u,
+        };
     }
 
     insert(key, value) {
         this.distance.set(value, key);
         this.Q.add(value);
+
+        return {
+            key,
+            value,
+        };
     }
 
     isEmpty() {
