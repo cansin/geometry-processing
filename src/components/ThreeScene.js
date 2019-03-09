@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import {
     AmbientLight,
+    Color,
+    FaceColors,
     Geometry,
-    LineBasicMaterial,
-    LineSegments,
     LoadingManager,
     Mesh,
     MeshPhongMaterial,
@@ -13,7 +13,6 @@ import {
     SphereBufferGeometry,
     Vector2,
     WebGLRenderer,
-    WireframeGeometry,
 } from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
@@ -24,10 +23,7 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import {
-    createNormalizedNaiveGeometry,
-    prepareDataStructures,
-} from "../algorithms/helpers";
+import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "./Store";
@@ -59,10 +55,7 @@ class ThreeScene extends Component {
         this.mount.appendChild(this.renderer.domElement);
 
         // ADD CONTROLS
-        this.controls = new TrackballControls(
-            this.camera,
-            this.renderer.domElement,
-        );
+        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
 
         // ADD MATERIALS
         this.meshLineMaterial = new MeshLineMaterial({
@@ -116,8 +109,6 @@ class ThreeScene extends Component {
             this.scene.add(new AmbientLight(0xcccccc, 0.4));
             this.scene.add(this.camera);
 
-            this.scene.add(object);
-
             elapsedTime = new Date() - startTime;
             totalTime += elapsedTime;
             console.log(`\tdone in ${elapsedTime}ms.`);
@@ -126,48 +117,53 @@ class ThreeScene extends Component {
                 if (child instanceof Mesh) {
                     child.geometry = createNormalizedNaiveGeometry(child);
 
-                    child.material.opacity = 0.95;
-                    child.material.transparent = true;
                     child.material.color.setHex(0xcccccc);
 
-                    this.renderWireframe(child);
                     startTime = new Date();
                     console.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
                     if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
-                        const { graph, source, target } = prepareDataStructures(
-                            child,
-                        );
+                        const { graph, source, target } = prepareDataStructures(child);
 
-                        const { path } = findGeodesicDistance(
-                            graph,
-                            source,
-                            target,
-                            qType,
-                        );
+                        const { path } = findGeodesicDistance(graph, source, target, true, qType);
 
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
-                    } else if (
-                        ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral
-                    ) {
-                        const { graph, source, target } = prepareDataStructures(
-                            child,
-                        );
+                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
+                        const { graph, source, target } = prepareDataStructures(child);
 
-                        const { path } = findBilateralMap(
+                        const { scalarField, minDistance, maxDistance, path } = findBilateralMap(
                             graph,
                             source,
                             target,
                         );
 
+                        child.material.vertexColors = FaceColors;
+
+                        child.geometry.faces.forEach(face => {
+                            const v1 = child.geometry.vertices[face.a],
+                                v2 = child.geometry.vertices[face.b],
+                                v3 = child.geometry.vertices[face.c];
+
+                            const color1 =
+                                    (scalarField.get(v1) - minDistance) /
+                                    (maxDistance - minDistance),
+                                color2 =
+                                    (scalarField.get(v2) - minDistance) /
+                                    (maxDistance - minDistance),
+                                color3 =
+                                    (scalarField.get(v3) - minDistance) /
+                                    (maxDistance - minDistance),
+                                color = (color1 + color2 + color3) / 3.0;
+
+                            face.color = new Color(color, 0.0, 1 - color);
+                        });
+
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
-                    } else if (
-                        ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve
-                    ) {
+                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
                         // do nothing
                     }
 
@@ -178,6 +174,8 @@ class ThreeScene extends Component {
                     setTiming(totalTime);
                 }
             });
+
+            this.scene.add(object);
         });
     }
 
@@ -200,18 +198,6 @@ class ThreeScene extends Component {
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
         this.frameId = window.requestAnimationFrame(this.animate.bind(this));
-    }
-
-    renderWireframe(mesh) {
-        const material = new LineBasicMaterial({
-            color: 0xffffff,
-        });
-
-        const geometry = new WireframeGeometry(mesh.geometry);
-
-        const line = new LineSegments(geometry, material);
-
-        this.scene.add(line);
     }
 
     renderShortestPath(path) {

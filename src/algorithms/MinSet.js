@@ -1,11 +1,11 @@
 export default class MinSet {
     constructor() {
         this.Q = new Set();
-        this.distance = new Map();
+        this.distances = new Map();
     }
 
     decreaseKey({ value }, newKey) {
-        this.distance.set(value, newKey);
+        this.distances.set(value, newKey);
     }
 
     extractMinimum() {
@@ -21,7 +21,7 @@ export default class MinSet {
         let minDistance = Infinity;
 
         this.Q.forEach(v => {
-            const vDistance = this.distance.get(v);
+            const vDistance = this.distances.get(v);
             if (vDistance < minDistance) {
                 minDistance = vDistance;
                 u = v;
@@ -35,7 +35,7 @@ export default class MinSet {
     }
 
     insert(key, value) {
-        this.distance.set(value, key);
+        this.distances.set(value, key);
         this.Q.add(value);
 
         return {

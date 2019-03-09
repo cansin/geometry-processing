@@ -3,11 +3,15 @@ import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
 import { Q_TYPES } from "../components/Store";
 
-function dijkstra(graph, source, target = undefined, qType = "FibonacciHeap") {
+export function dijkstra(graph, source, targets, logs = true, qType = "FibonacciHeap") {
+    if (!(targets instanceof Array)) {
+        targets = [targets];
+    }
+
     let startTime, elapsedTime;
 
     startTime = new Date();
-    console.log("\tInitializing Dijkstra sets...");
+    logs && console.log("\tInitializing Dijkstra sets...");
 
     // 1  function Dijkstra(Graph, source):
     // 2
@@ -15,20 +19,20 @@ function dijkstra(graph, source, target = undefined, qType = "FibonacciHeap") {
     let Q;
     switch (Q_TYPES[qType]) {
         case Q_TYPES.Set:
-            console.log("\t\tUsing a Set.");
+            logs && console.log("\t\tUsing a Set.");
             Q = new MinSet();
             break;
         case Q_TYPES.MinHeap:
-            console.log("\t\tUsing a Min Heap.");
+            logs && console.log("\t\tUsing a Min Heap.");
             Q = new BinaryHeap();
             break;
         case Q_TYPES.FibonacciHeap:
-            console.log("\t\tUsing a Fibonacci Heap.");
+            logs && console.log("\t\tUsing a Fibonacci Heap.");
             Q = new FibonacciHeap();
             break;
     }
 
-    const distance = new Map();
+    const distances = new Map();
     const previous = new Map();
     const nodeMapping = new Map();
 
@@ -40,16 +44,16 @@ function dijkstra(graph, source, target = undefined, qType = "FibonacciHeap") {
     // 10      dist[source] ← 0
     graph.vertices.forEach(v => {
         const vDistance = v === source ? 0 : Infinity;
-        distance.set(v, vDistance);
+        distances.set(v, vDistance);
         previous.set(v, undefined);
         nodeMapping.set(v, Q.insert(vDistance, v));
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logs && console.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    console.log(`\tFinding shortest paths...`);
+    logs && console.log(`\tFinding shortest paths...`);
 
     // 11
     // 12      while Q is not empty:
@@ -61,8 +65,8 @@ function dijkstra(graph, source, target = undefined, qType = "FibonacciHeap") {
         const node = Q.extractMinimum();
         u = node.value;
 
-        if (target && u === target) {
-            console.log(`\t\tTarget given, exiting early...`);
+        if (targets.length && targets.includes(u)) {
+            logs && console.log(`\t\tTarget given, exiting early...`);
             break;
         }
 
@@ -73,27 +77,28 @@ function dijkstra(graph, source, target = undefined, qType = "FibonacciHeap") {
         // 20                  dist[v] ← alt
         // 21                  prev[v] ← u
         graph.neighbors(u).forEach(v => {
-            const alt = distance.get(u) + graph.edge(u, v);
-            if (alt < distance.get(v)) {
+            const alt = distances.get(u) + graph.edge(u, v);
+            if (alt < distances.get(v)) {
                 Q.decreaseKey(nodeMapping.get(v), alt);
-                distance.set(v, alt);
+                distances.set(v, alt);
                 previous.set(v, u);
             }
         });
     }
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logs && console.log(`\tdone in ${elapsedTime}ms.`);
 
     // 22
     // 23      return dist[], prev[]
     return {
-        distance,
+        distances,
         previous,
+        target: u,
     };
 }
 
-function traverse(previous, source, target) {
+function traverse(distances, previous, source, target, logs) {
     let startTime, elapsedTime;
 
     // 1  S ← empty sequence
@@ -103,7 +108,7 @@ function traverse(previous, source, target) {
     // 5          insert u at the beginning of S        // Push the vertex onto the stack
     // 6          u ← prev[u]                           // Traverse from target to source
     startTime = new Date();
-    console.log(`Traversing shortest path...`);
+    logs && console.log(`Traversing shortest path...`);
 
     const S = [];
     let u = target;
@@ -116,25 +121,16 @@ function traverse(previous, source, target) {
     }
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logs && console.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
-        S,
+        distances: distances.get(target),
+        path: S,
     };
 }
 
-export function findGeodesicDistance(graph, source, target, qType) {
-    const { previous, timing: dijkstraTime } = dijkstra(
-        graph,
-        source,
-        target,
-        qType,
-    );
+export function findGeodesicDistance(graph, source, target, logs = true, qType = "FibonacciHeap") {
+    const { distances, previous } = dijkstra(graph, source, target, logs, qType);
 
-    const { S, timing: traverseTime } = traverse(previous, source, target);
-
-    return {
-        path: S,
-        timing: dijkstraTime + traverseTime,
-    };
+    return traverse(distances, previous, source, target);
 }

@@ -31,9 +31,7 @@ Object.assign(OFFLoader.prototype, {
 
                 // Line 2
                 //     vertex_count face_count edge_count
-                const [vertexCount, faceCount] = counts
-                    .split(/\s+/)
-                    .map(Number);
+                const [vertexCount, faceCount] = counts.split(/\s+/).map(Number);
 
                 const geometry = new Geometry();
 
@@ -41,9 +39,7 @@ Object.assign(OFFLoader.prototype, {
                 //     x y z
                 //     for vertex 0, 1, ..., vertex_count-1
                 for (let v = 0; v < vertexCount; v++) {
-                    const [x, y, z, ...colors] = data[v]
-                        .split(/\s+/)
-                        .map(Number);
+                    const [x, y, z, ...colors] = data[v].split(/\s+/).map(Number);
                     if (colors) {
                         areColorsExist = true;
                     }

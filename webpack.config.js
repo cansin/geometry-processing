@@ -13,8 +13,7 @@ module.exports = {
             inject: false,
             template: HtmlWebpackTemplate,
             favicon: "favicon.ico",
-            title:
-                "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignment I",
+            title: "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignment I",
             xhtml: true,
             appMountId: "app",
         }),

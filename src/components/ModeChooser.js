@@ -39,23 +39,17 @@ class ModeChooser extends Component {
                 <Box display="flex" alignItems="center">
                     <Box p={1}>
                         <FormControl>
-                            <InputLabel htmlFor="assignment">
-                                Assignment
-                            </InputLabel>
+                            <InputLabel htmlFor="assignment">Assignment</InputLabel>
                             <Select
                                 value={assignment}
                                 onChange={this.handleAssignmentChange}
-                                input={
-                                    <Input name="assignment" id="assignment" />
-                                }
+                                input={<Input name="assignment" id="assignment" />}
                                 autoWidth>
-                                {Object.entries(ASSIGNMENTS).map(
-                                    ([value, tag], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ),
-                                )}
+                                {Object.entries(ASSIGNMENTS).map(([value, tag], key) => (
+                                    <MenuItem key={key} value={value}>
+                                        {tag}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Box>
@@ -67,13 +61,11 @@ class ModeChooser extends Component {
                                 onChange={this.handleModelChange}
                                 input={<Input name="model" id="model" />}
                                 autoWidth>
-                                {Object.entries(MODELS[assignment]).map(
-                                    ([tag, value], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ),
-                                )}
+                                {Object.entries(MODELS[assignment]).map(([tag, value], key) => (
+                                    <MenuItem key={key} value={value}>
+                                        {tag}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Box>
@@ -86,21 +78,17 @@ class ModeChooser extends Component {
                                     onChange={this.handleQTypeChange}
                                     input={<Input name="q-type" id="q-type" />}
                                     autoWidth>
-                                    {Object.entries(Q_TYPES).map(
-                                        ([value, tag], key) => (
-                                            <MenuItem key={key} value={value}>
-                                                {tag}
-                                            </MenuItem>
-                                        ),
-                                    )}
+                                    {Object.entries(Q_TYPES).map(([value, tag], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Box>
                     )}
                     <Box p={1}>
-                        {timing !== undefined
-                            ? `The operation took ${timing}ms.`
-                            : "Loading..."}
+                        {timing !== undefined ? `The operation took ${timing}ms.` : "Loading..."}
                     </Box>
                 </Box>
             </Paper>
