@@ -9,9 +9,7 @@ export function dijkstra(
     target = undefined,
     qType = "FibonacciHeap",
 ) {
-    let startTime,
-        elapsedTime,
-        totalTime = 0;
+    let startTime, elapsedTime;
 
     startTime = new Date();
     console.log("\tInitializing Dijkstra sets...");
@@ -53,7 +51,6 @@ export function dijkstra(
     });
 
     elapsedTime = new Date() - startTime;
-    totalTime += elapsedTime;
     console.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
@@ -91,7 +88,6 @@ export function dijkstra(
     }
 
     elapsedTime = new Date() - startTime;
-    totalTime += elapsedTime;
     console.log(`\tdone in ${elapsedTime}ms.`);
 
     // 22
@@ -99,14 +95,11 @@ export function dijkstra(
     return {
         distance,
         previous,
-        timing: totalTime,
     };
 }
 
 function traverse(previous, source, target) {
-    let startTime,
-        elapsedTime,
-        totalTime = 0;
+    let startTime, elapsedTime;
 
     // 1  S ← empty sequence
     // 2  u ← target
@@ -128,12 +121,10 @@ function traverse(previous, source, target) {
     }
 
     elapsedTime = new Date() - startTime;
-    totalTime += elapsedTime;
     console.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         S,
-        timing: totalTime,
     };
 }
 

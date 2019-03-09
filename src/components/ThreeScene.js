@@ -24,7 +24,10 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { prepareDataStructures } from "../algorithms/helpers";
+import {
+    createNormalizedNaiveGeometry,
+    prepareDataStructures,
+} from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "./Store";
@@ -121,26 +124,11 @@ class ThreeScene extends Component {
 
             object.traverse(child => {
                 if (child instanceof Mesh) {
-                    startTime = new Date();
-                    console.log("Creating naive geometry...");
-
-                    if (child.geometry && !child.geometry.isGeometry) {
-                        child.geometry = new Geometry().fromBufferGeometry(
-                            child.geometry,
-                        );
-                        child.geometry.mergeVertices();
-                    }
-
-                    child.geometry.normalize();
-                    child.geometry.scale(75, 75, 75);
+                    child.geometry = createNormalizedNaiveGeometry(child);
 
                     child.material.opacity = 0.95;
                     child.material.transparent = true;
                     child.material.color.setHex(0xcccccc);
-
-                    elapsedTime = new Date() - startTime;
-                    totalTime += elapsedTime;
-                    console.log(`\tdone in ${elapsedTime}ms.`);
 
                     this.renderWireframe(child);
                     startTime = new Date();

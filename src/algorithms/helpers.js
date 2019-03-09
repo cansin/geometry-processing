@@ -2,9 +2,7 @@ import { Geometry } from "three";
 import Graph from "./Graph";
 
 function choosePoints({ vertices }) {
-    let startTime,
-        elapsedTime,
-        totalTime = 0;
+    let startTime, elapsedTime;
 
     startTime = new Date();
     console.log(`Choosing points...`);
@@ -13,20 +11,41 @@ function choosePoints({ vertices }) {
     const target = vertices[Math.floor(Math.random() * vertices.length)];
 
     elapsedTime = new Date() - startTime;
-    totalTime += elapsedTime;
     console.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         source,
         target,
-        timing: totalTime,
     };
 }
 
+export function createNormalizedNaiveGeometry({ geometry }) {
+    let startTime, elapsedTime;
+
+    startTime = new Date();
+    console.log("Creating naive geometry...");
+
+    if (geometry && !geometry.isGeometry) {
+        geometry = new Geometry().fromBufferGeometry(geometry);
+        geometry.mergeVertices();
+    }
+
+    if (geometry && !geometry.isGeometry) {
+        geometry = new Geometry().fromBufferGeometry(geometry);
+        geometry.mergeVertices();
+    }
+
+    geometry.normalize();
+    geometry.scale(75, 75, 75);
+
+    elapsedTime = new Date() - startTime;
+    console.log(`\tdone in ${elapsedTime}ms.`);
+
+    return geometry;
+}
+
 function generateGraph({ faces, vertices }) {
-    let startTime,
-        elapsedTime,
-        totalTime = 0;
+    let startTime, elapsedTime;
 
     startTime = new Date();
     console.log(`Adding vertices to the graph...`);
@@ -38,7 +57,6 @@ function generateGraph({ faces, vertices }) {
     });
 
     elapsedTime = new Date() - startTime;
-    totalTime += elapsedTime;
     console.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
@@ -61,12 +79,10 @@ function generateGraph({ faces, vertices }) {
     }
 
     elapsedTime = new Date() - startTime;
-    totalTime += elapsedTime;
     console.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         graph,
-        timing: totalTime,
     };
 }
 
