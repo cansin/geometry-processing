@@ -31,6 +31,12 @@ export const ASSIGNMENTS = Object.freeze({
     IsoCurve: "Iso-Curve Descriptor",
 });
 
+export const Q_TYPES = Object.freeze({
+    Set: "Set",
+    MinHeap: "Min Heap",
+    FibonacciHeap: "Fibonacci Heap",
+});
+
 export const MODELS = Object.freeze({
     Geodesic: { horse0, man0, centaur, dragon, man, weirdSphere },
     IsoCurve: { man0, dragon, man4, man3, gorilla, woman, man2 },
@@ -54,13 +60,23 @@ export const MODELS = Object.freeze({
 export default class Store {
     @observable assignment = "Geodesic";
     @observable model = MODELS.Geodesic.horse0;
+    @observable qType = "Set";
     @observable timing = undefined;
 
     @action
     setAssignment(value) {
         this.assignment = value;
         this.model = Object.values(MODELS[this.assignment])[0];
+        this.qType =
+            ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Geodesic
+                ? "Set"
+                : undefined;
         this.timing = undefined;
+    }
+
+    @action
+    setQType(value) {
+        this.qType = value;
     }
 
     @action

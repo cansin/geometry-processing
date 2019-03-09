@@ -12,7 +12,6 @@ import {
     Scene,
     SphereBufferGeometry,
     Vector2,
-    Vector3,
     WebGLRenderer,
     WireframeGeometry,
 } from "three";
@@ -98,7 +97,7 @@ class ThreeScene extends Component {
     }
 
     loadObject() {
-        const { assignment, model, setTiming } = this.props.store;
+        const { assignment, model, qType, setTiming } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         let startTime;
 
@@ -146,6 +145,7 @@ class ThreeScene extends Component {
                             graph,
                             source,
                             target,
+                            qType,
                         );
 
                         this.renderShortestPath(path);
@@ -240,12 +240,12 @@ class ThreeScene extends Component {
     }
 
     render() {
-        const { assignment, model } = this.props.store;
+        const { assignment, model, qType } = this.props.store;
         return (
             <Paper style={{ height: "100%" }}>
                 <Grid container style={{ height: "100%" }}>
                     <div
-                        aria-label={`${assignment} ${model}`}
+                        aria-label={`${assignment} ${model} ${qType}`}
                         style={{
                             width: "100%",
                             height: "100%",

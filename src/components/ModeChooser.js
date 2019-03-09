@@ -7,7 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
 import { observer } from "mobx-react";
 import autobind from "autobind-decorator";
-import { ASSIGNMENTS, MODELS } from "./Store";
+import { ASSIGNMENTS, MODELS, Q_TYPES } from "./Store";
 import Paper from "@material-ui/core/Paper";
 import { unstable_Box as Box } from "@material-ui/core/Box";
 
@@ -27,8 +27,13 @@ class ModeChooser extends Component {
         this.props.store.setModel(event.target.value);
     }
 
+    @autobind
+    handleQTypeChange(event) {
+        this.props.store.setQType(event.target.value);
+    }
+
     render() {
-        const { assignment, model, timing } = this.props.store;
+        const { assignment, model, qType, timing } = this.props.store;
         return (
             <Paper>
                 <Box display="flex" alignItems="center">
@@ -72,6 +77,26 @@ class ModeChooser extends Component {
                             </Select>
                         </FormControl>
                     </Box>
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic && (
+                        <Box p={1}>
+                            <FormControl>
+                                <InputLabel htmlFor="q-type">Q Type</InputLabel>
+                                <Select
+                                    value={qType}
+                                    onChange={this.handleQTypeChange}
+                                    input={<Input name="q-type" id="q-type" />}
+                                    autoWidth>
+                                    {Object.entries(Q_TYPES).map(
+                                        ([value, tag], key) => (
+                                            <MenuItem key={key} value={value}>
+                                                {tag}
+                                            </MenuItem>
+                                        ),
+                                    )}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    )}
                     <Box p={1}>
                         {timing !== undefined
                             ? `The operation took ${timing}ms.`
