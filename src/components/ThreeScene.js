@@ -99,9 +99,12 @@ class ThreeScene extends Component {
     loadObject() {
         const { assignment, model, qType, setTiming } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
-        let startTime;
+        let startTime,
+            elapsedTime,
+            totalTime = 0;
 
         startTime = new Date();
+        console.clear();
         console.log(`Loading Object...`);
         loader.load(model, object => {
             while (this.scene.children.length > 0) {
@@ -111,10 +114,16 @@ class ThreeScene extends Component {
             this.scene.add(this.camera);
 
             this.scene.add(object);
-            console.log(`\tdone in ${new Date() - startTime}ms.`);
+
+            elapsedTime = new Date() - startTime;
+            totalTime += elapsedTime;
+            console.log(`\tdone in ${elapsedTime}ms.`);
 
             object.traverse(child => {
                 if (child instanceof Mesh) {
+                    startTime = new Date();
+                    console.log("Creating naive geometry...");
+
                     if (child.geometry && !child.geometry.isGeometry) {
                         child.geometry = new Geometry().fromBufferGeometry(
                             child.geometry,
@@ -129,10 +138,11 @@ class ThreeScene extends Component {
                     child.material.transparent = true;
                     child.material.color.setHex(0xcccccc);
 
+                    elapsedTime = new Date() - startTime;
+                    totalTime += elapsedTime;
+                    console.log(`\tdone in ${elapsedTime}ms.`);
+
                     this.renderWireframe(child);
-                    let startTime,
-                        elapsedTime,
-                        totalTime = 0;
                     startTime = new Date();
                     console.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
@@ -175,7 +185,7 @@ class ThreeScene extends Component {
 
                     elapsedTime = new Date() - startTime;
                     totalTime += elapsedTime;
-                    console.log(`✅ Total time ${elapsedTime}ms.`);
+                    console.log(`✅ Total time ${totalTime}ms.`);
 
                     setTiming(totalTime);
                 }

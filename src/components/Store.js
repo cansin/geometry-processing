@@ -60,7 +60,7 @@ export const MODELS = Object.freeze({
 export default class Store {
     @observable assignment = "Geodesic";
     @observable model = MODELS.Geodesic.horse0;
-    @observable qType = "Set";
+    @observable qType = "FibonacciHeap";
     @observable timing = undefined;
 
     @action

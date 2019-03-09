@@ -23,30 +23,6 @@ function choosePoints({ vertices }) {
     };
 }
 
-function createNaiveGeometry(mesh) {
-    let { geometry } = mesh;
-    let startTime,
-        elapsedTime,
-        totalTime = 0;
-
-    startTime = new Date();
-    console.log("Creating naive geometry...");
-
-    if (geometry && !geometry.isGeometry) {
-        geometry = new Geometry().fromBufferGeometry(geometry);
-        geometry.mergeVertices();
-    }
-
-    elapsedTime = new Date() - startTime;
-    totalTime += elapsedTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
-
-    return {
-        geometry,
-        timing: totalTime,
-    };
-}
-
 function generateGraph({ faces, vertices }) {
     let startTime,
         elapsedTime,
@@ -94,8 +70,7 @@ function generateGraph({ faces, vertices }) {
     };
 }
 
-export function prepareDataStructures(mesh) {
-    const { geometry } = createNaiveGeometry(mesh);
+export function prepareDataStructures({ geometry }) {
     const { graph } = generateGraph(geometry);
 
     const { source, target } = choosePoints(geometry);
