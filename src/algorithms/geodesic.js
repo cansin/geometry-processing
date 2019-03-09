@@ -3,7 +3,12 @@ import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
 import { Q_TYPES } from "../components/Store";
 
-export function dijkstra(graph, source, target = undefined, qType = "Set") {
+export function dijkstra(
+    graph,
+    source,
+    target = undefined,
+    qType = "FibonacciHeap",
+) {
     let startTime,
         elapsedTime,
         totalTime = 0;
