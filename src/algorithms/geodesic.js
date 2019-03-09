@@ -11,7 +11,7 @@ export function dijkstra(graph, source, targets, logs = true, qType = "Fibonacci
     let startTime, elapsedTime;
 
     startTime = new Date();
-    logs && console.log("\tInitializing Dijkstra sets...");
+    logs && console.log("Initializing Dijkstra sets...");
 
     // 1  function Dijkstra(Graph, source):
     // 2
@@ -19,15 +19,15 @@ export function dijkstra(graph, source, targets, logs = true, qType = "Fibonacci
     let Q;
     switch (Q_TYPES[qType]) {
         case Q_TYPES.Set:
-            logs && console.log("\t\tUsing a Set.");
+            logs && console.log("\tUsing a Set.");
             Q = new MinSet();
             break;
         case Q_TYPES.MinHeap:
-            logs && console.log("\t\tUsing a Min Heap.");
+            logs && console.log("\tUsing a Min Heap.");
             Q = new BinaryHeap();
             break;
         case Q_TYPES.FibonacciHeap:
-            logs && console.log("\t\tUsing a Fibonacci Heap.");
+            logs && console.log("\tUsing a Fibonacci Heap.");
             Q = new FibonacciHeap();
             break;
     }
@@ -53,7 +53,7 @@ export function dijkstra(graph, source, targets, logs = true, qType = "Fibonacci
     logs && console.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    logs && console.log(`\tFinding shortest paths...`);
+    logs && console.log(`Finding shortest paths...`);
 
     // 11
     // 12      while Q is not empty:
@@ -66,7 +66,7 @@ export function dijkstra(graph, source, targets, logs = true, qType = "Fibonacci
         u = node.value;
 
         if (targets.length && targets.includes(u)) {
-            logs && console.log(`\t\tTarget given, exiting early...`);
+            logs && console.log(`\tTarget given, exiting early...`);
             break;
         }
 
@@ -124,7 +124,7 @@ function traverse(distances, previous, source, target, logs) {
     logs && console.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
-        distances: distances.get(target),
+        distance: distances.get(target),
         path: S,
     };
 }

@@ -1,7 +1,7 @@
 import { dijkstra, findGeodesicDistance } from "./geodesic";
 
 export function findBilateralMap(graph, p, q) {
-    const { path } = findGeodesicDistance(graph, p, q);
+    const { distance: distancePQ, path } = findGeodesicDistance(graph, p, q);
 
     const G = new Map();
     let minDistance = Infinity,
@@ -14,12 +14,12 @@ export function findBilateralMap(graph, p, q) {
 
     graph.vertices.forEach(x => {
         const { distances, target } = dijkstra(graph, x, path, false);
-        const distance = distances.get(target);
+        const distance = distances.get(target) / distancePQ;
 
         minDistance = Math.min(distance, minDistance);
         maxDistance = Math.max(distance, maxDistance);
 
-        G.set(x, distances.get(target));
+        G.set(x, distance > 0.3 ? Infinity : distance);
     });
 
     elapsedTime = new Date() - startTime;
