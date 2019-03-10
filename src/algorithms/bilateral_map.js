@@ -2,7 +2,7 @@ import { dijkstra, traverse } from "./geodesic";
 
 export function findBilateralMap(graph, p, q) {
     const { distances: distancesP, previous: previousP } = dijkstra(graph, p);
-    const { distances: distancesQ, previous: previousQ } = dijkstra(graph, q);
+    const { distances: distancesQ } = dijkstra(graph, q);
     const { distance: distancePQ, path: pathPQ } = traverse(distancesP, previousP, p, q);
 
     const G = new Map();
