@@ -51,6 +51,18 @@ export function findBilateralMap(graph, p, q) {
     elapsedTime = new Date() - startTime;
     console.log(`\tdone in ${elapsedTime}ms.`);
 
+    startTime = new Date();
+    console.log(`Divide the ROI into bins...`);
+
+    G.forEach((distance, x) => {
+        if (distance !== Infinity) {
+            G.set(x, Math.floor((distancesP.get(x) * 20.0) / distancePQ)) / 20.0;
+        }
+    });
+
+    elapsedTime = new Date() - startTime;
+    console.log(`\tdone in ${elapsedTime}ms.`);
+
     return {
         path: pathPQ,
         scalarField: G,

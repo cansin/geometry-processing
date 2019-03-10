@@ -155,12 +155,12 @@ class ThreeScene extends Component {
                                 color3 =
                                     (scalarField.get(v3) - minDistance) /
                                     (maxDistance - minDistance),
-                                average = (color1 + color2 + color3) / 3.0;
+                                max = Math.max(color1, color2, color3);
 
                             let color = new Color(0xcccccc);
-                            if (average !== Infinity) {
-                                color = new Color(average, 0, 1 - average);
-                                color.setHSL((1 - average) * (2.0 / 3.0), 1.0, 0.5);
+                            if (max !== Infinity) {
+                                color = new Color(max, 0, 1 - max);
+                                color.setHSL((1 - max) * (2.0 / 3.0), 1.0, 0.5);
                             }
 
                             face.color = color;
