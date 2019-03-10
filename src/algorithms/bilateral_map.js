@@ -1,6 +1,7 @@
 import { dijkstra, traverse } from "./geodesic";
+import { Color } from "three";
 
-export function findBilateralMap(graph, p, q) {
+export function findBilateralMap(geometry, graph, p, q) {
     const { distances: distancesP, previous: previousP } = dijkstra(graph, p);
     const { distances: distancesQ } = dijkstra(graph, q);
     const { distance: distancePQ, path: pathPQ } = traverse(distancesP, previousP, p, q);
@@ -54,15 +55,23 @@ export function findBilateralMap(graph, p, q) {
     startTime = new Date();
     console.log(`Divide the ROI into bins...`);
 
-    G.forEach((distance, x) => {
-        if (distance !== Infinity) {
-            G.set(
-                x,
-                Math.floor((distancesP.get(x) * 20.0) / distancePQ) % 2 == 0
-                    ? minDistance
-                    : maxDistance,
-            );
+    geometry.faces.forEach(face => {
+        const v1 = geometry.vertices[face.a],
+            v2 = geometry.vertices[face.b],
+            v3 = geometry.vertices[face.c];
+
+        const color = new Color(0xcccccc);
+
+        if (G.get(v1) !== Infinity && G.get(v2) !== Infinity && G.get(v3) !== Infinity) {
+            const distance1 = (distancesP.get(v1) * 20.0) / distancePQ,
+                distance2 = (distancesP.get(v2) * 20.0) / distancePQ,
+                distance3 = (distancesP.get(v3) * 20.0) / distancePQ,
+                hue = Math.floor((distance1 + distance2 + distance3) / 3.0);
+
+            color.setHSL((1 - (hue % 2)) * (2.0 / 3.0), 1.0, 0.5);
         }
+
+        face.color = color;
     });
 
     elapsedTime = new Date() - startTime;

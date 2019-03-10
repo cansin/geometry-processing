@@ -133,38 +133,9 @@ class ThreeScene extends Component {
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
                         const { graph, source, target } = prepareDataStructures(child);
 
-                        const { scalarField, minDistance, maxDistance, path } = findBilateralMap(
-                            graph,
-                            source,
-                            target,
-                        );
-
                         child.material.vertexColors = FaceColors;
 
-                        child.geometry.faces.forEach(face => {
-                            const v1 = child.geometry.vertices[face.a],
-                                v2 = child.geometry.vertices[face.b],
-                                v3 = child.geometry.vertices[face.c];
-
-                            const color1 =
-                                    (scalarField.get(v1) - minDistance) /
-                                    (maxDistance - minDistance),
-                                color2 =
-                                    (scalarField.get(v2) - minDistance) /
-                                    (maxDistance - minDistance),
-                                color3 =
-                                    (scalarField.get(v3) - minDistance) /
-                                    (maxDistance - minDistance),
-                                max = Math.max(color1, color2, color3);
-
-                            let color = new Color(0xcccccc);
-                            if (max !== Infinity) {
-                                color = new Color(max, 0, 1 - max);
-                                color.setHSL((1 - max) * (2.0 / 3.0), 1.0, 0.5);
-                            }
-
-                            face.color = color;
-                        });
+                        const { path } = findBilateralMap(child.geometry, graph, source, target);
 
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
