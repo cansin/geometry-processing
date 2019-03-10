@@ -67,7 +67,7 @@ export default class Store {
     setAssignment(value) {
         this.assignment = value;
         this.model = Object.values(MODELS[this.assignment])[0];
-        this.qType = ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Geodesic ? "Set" : undefined;
+        this.qType = ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Geodesic ? "Geodesic" : undefined;
         this.timing = undefined;
     }
 

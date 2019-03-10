@@ -56,7 +56,12 @@ export function findBilateralMap(graph, p, q) {
 
     G.forEach((distance, x) => {
         if (distance !== Infinity) {
-            G.set(x, Math.floor((distancesP.get(x) * 20.0) / distancePQ)) / 20.0;
+            G.set(
+                x,
+                Math.floor((distancesP.get(x) * 20.0) / distancePQ) % 2 == 0
+                    ? minDistance
+                    : maxDistance,
+            );
         }
     });
 
