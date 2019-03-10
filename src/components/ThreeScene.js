@@ -159,7 +159,8 @@ class ThreeScene extends Component {
 
                             let color = new Color(0xcccccc);
                             if (average !== Infinity) {
-                                color = new Color(average, 0.0, 1 - average);
+                                color = new Color(average, 0, 1 - average);
+                                color.setHSL((1 - average) * (2.0 / 3.0), 1.0, 0.5);
                             }
 
                             face.color = color;

@@ -3,7 +3,7 @@ import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
 import { Q_TYPES } from "../components/Store";
 
-export function dijkstra(graph, source, targets, logs = true, qType = "FibonacciHeap") {
+export function dijkstra(graph, source, targets = [], logs = true, qType = "FibonacciHeap") {
     if (!(targets instanceof Array)) {
         targets = [targets];
     }
@@ -98,7 +98,7 @@ export function dijkstra(graph, source, targets, logs = true, qType = "Fibonacci
     };
 }
 
-function traverse(distances, previous, source, target, logs) {
+export function traverse(distances, previous, source, target, logs = true) {
     let startTime, elapsedTime;
 
     // 1  S ← empty sequence
