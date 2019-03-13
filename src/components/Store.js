@@ -29,6 +29,7 @@ export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic Distance",
     Bilateral: "Bilateral Descriptor",
     IsoCurve: "Iso-Curve Descriptor",
+    FarthestPoint: "Farthest Point Sampling",
 });
 
 export const Q_TYPES = Object.freeze({
@@ -55,6 +56,21 @@ export const MODELS = Object.freeze({
         cat1,
         cat,
     },
+    FarthestPoint: {
+        princetonHuman32Incomplete,
+        princetonHuman30,
+        neptune,
+        human,
+        humanWithShortcut,
+        horse2,
+        horse1,
+        horsePartialHole2,
+        horsePartialHole,
+        centaur2,
+        centaur,
+        cat1,
+        cat,
+    },
 });
 
 export default class Store {
@@ -67,7 +83,8 @@ export default class Store {
     setAssignment(value) {
         this.assignment = value;
         this.model = Object.values(MODELS[this.assignment])[0];
-        this.qType = ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Geodesic ? "Geodesic" : undefined;
+        this.qType =
+            ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Geodesic ? "FibonacciHeap" : undefined;
         this.timing = undefined;
     }
 

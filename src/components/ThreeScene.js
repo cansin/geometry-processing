@@ -26,6 +26,7 @@ import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorit
 import { findGeodesicDistance } from "../algorithms/geodesic";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "./Store";
+import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 
 @observer
 class ThreeScene extends Component {
@@ -121,17 +122,15 @@ class ThreeScene extends Component {
                     startTime = new Date();
                     console.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
-                    if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
-                        const { graph, source, target } = prepareDataStructures(child);
+                    const { graph, source, target } = prepareDataStructures(child);
 
+                    if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
                         const { path } = findGeodesicDistance(graph, source, target, qType);
 
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
-                        const { graph, source, target } = prepareDataStructures(child);
-
                         child.material.vertexColors = FaceColors;
 
                         const { path } = findBilateralMap(child.geometry, graph, source, target);
@@ -139,6 +138,12 @@ class ThreeScene extends Component {
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
+                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint) {
+                        const { farthestPoints } = farthestPointSampling(graph, source, 100);
+
+                        farthestPoints.forEach(vertex => {
+                            this.renderVertex(vertex);
+                        });
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
                         // do nothing
                     }
