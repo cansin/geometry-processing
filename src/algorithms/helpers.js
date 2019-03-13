@@ -30,11 +30,6 @@ export function createNormalizedNaiveGeometry({ geometry }) {
         geometry.mergeVertices();
     }
 
-    if (geometry && !geometry.isGeometry) {
-        geometry = new Geometry().fromBufferGeometry(geometry);
-        geometry.mergeVertices();
-    }
-
     geometry.normalize();
     geometry.scale(75, 75, 75);
 
