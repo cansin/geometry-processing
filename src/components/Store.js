@@ -73,7 +73,7 @@ export const MODELS = Object.freeze({
     },
 });
 
-export default class Store {
+class Store {
     @observable assignment = "Geodesic";
     @observable model = MODELS.Geodesic.horse0;
     @observable qType = "FibonacciHeap";
@@ -83,8 +83,7 @@ export default class Store {
     setAssignment(value) {
         this.assignment = value;
         this.model = Object.values(MODELS[this.assignment])[0];
-        this.qType =
-            ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Geodesic ? "FibonacciHeap" : undefined;
+        this.qType = "FibonacciHeap";
         this.timing = undefined;
     }
 
@@ -105,3 +104,5 @@ export default class Store {
         this.timing = value;
     }
 }
+
+export default new Store();

@@ -125,7 +125,7 @@ class ThreeScene extends Component {
                     const { graph, source, target } = prepareDataStructures(child);
 
                     if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
-                        const { path } = findGeodesicDistance(graph, source, target, qType);
+                        const { path } = findGeodesicDistance(graph, source, target);
 
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);

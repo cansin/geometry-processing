@@ -1,9 +1,9 @@
 import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
-import { Q_TYPES } from "../components/Store";
+import store, { Q_TYPES } from "../components/Store";
 
-export function dijkstra(graph, source, targets = [], qType = "FibonacciHeap") {
+export function dijkstra(graph, source, targets = [], logs = true) {
     if (!(targets instanceof Array)) {
         targets = [targets];
     }
@@ -11,23 +11,23 @@ export function dijkstra(graph, source, targets = [], qType = "FibonacciHeap") {
     let startTime, elapsedTime;
 
     startTime = new Date();
-    console.log("Initializing Dijkstra sets...");
+    logs && console.log("Initializing Dijkstra sets...");
 
     // 1  function Dijkstra(Graph, source):
     // 2
     // 3      create vertex set Q
     let Q;
-    switch (Q_TYPES[qType]) {
+    switch (Q_TYPES[store.qType]) {
         case Q_TYPES.Set:
-            console.log("\tUsing a Set.");
+            logs && console.log("\tUsing a Set.");
             Q = new MinSet();
             break;
         case Q_TYPES.MinHeap:
-            console.log("\tUsing a Min Heap.");
+            logs && console.log("\tUsing a Min Heap.");
             Q = new BinaryHeap();
             break;
         case Q_TYPES.FibonacciHeap:
-            console.log("\tUsing a Fibonacci Heap.");
+            logs && console.log("\tUsing a Fibonacci Heap.");
             Q = new FibonacciHeap();
             break;
     }
@@ -50,10 +50,10 @@ export function dijkstra(graph, source, targets = [], qType = "FibonacciHeap") {
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logs && console.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    console.log(`Finding shortest paths...`);
+    logs && console.log(`Finding shortest paths...`);
 
     // 11
     // 12      while Q is not empty:
@@ -66,7 +66,7 @@ export function dijkstra(graph, source, targets = [], qType = "FibonacciHeap") {
         u = node.value;
 
         if (targets.length && targets.includes(u)) {
-            console.log(`\tTarget given, exiting early...`);
+            logs && console.log(`\tTarget given, exiting early...`);
             break;
         }
 
@@ -87,7 +87,7 @@ export function dijkstra(graph, source, targets = [], qType = "FibonacciHeap") {
     }
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logs && console.log(`\tdone in ${elapsedTime}ms.`);
 
     // 22
     // 23      return dist[], prev[]
@@ -129,8 +129,8 @@ export function traverse(distances, previous, source, target) {
     };
 }
 
-export function findGeodesicDistance(graph, source, target, qType = "FibonacciHeap") {
-    const { distances, previous } = dijkstra(graph, source, target, qType);
+export function findGeodesicDistance(graph, source, target) {
+    const { distances, previous } = dijkstra(graph, source, target);
 
     return traverse(distances, previous, source, target);
 }
