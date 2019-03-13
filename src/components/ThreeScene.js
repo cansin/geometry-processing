@@ -27,6 +27,7 @@ import { findGeodesicDistance } from "../algorithms/geodesic_distance";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "./constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
+import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
 
 @observer
 class ThreeScene extends Component {
@@ -140,8 +141,8 @@ class ThreeScene extends Component {
                         const { path } = findGeodesicDistance(graph, qType, source, target);
 
                         this.renderShortestPath(path);
-                        this.renderVertex(path[0]);
-                        this.renderVertex(path[path.length - 1]);
+                        this.renderVertex(source);
+                        this.renderVertex(target);
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
                         child.material.vertexColors = FaceColors;
 
@@ -163,7 +164,14 @@ class ThreeScene extends Component {
                             this.renderVertex(vertex);
                         });
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
-                        // do nothing
+                        const { distances, previous } = findIsoCurveSignature(
+                            child.geometry,
+                            graph,
+                            qType,
+                            source,
+                        );
+
+                        this.renderVertex(source);
                     }
 
                     elapsedTime = new Date() - startTime;

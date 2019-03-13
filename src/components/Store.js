@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import autobind from "autobind-decorator";
 import { ASSIGNMENTS, MODELS } from "./constants";
 
@@ -8,7 +8,10 @@ class Store {
     @observable qType = "FibonacciHeap";
     @observable timing = undefined;
     @observable vertexSelection = "FarthestPoint";
-    @observable vertexCount = 2;
+
+    @computed get vertexCount() {
+        return ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Bilateral ? 100 : 2;
+    }
 
     @action
     setAssignment(value) {
@@ -16,7 +19,6 @@ class Store {
         this.model = Object.values(MODELS[this.assignment])[0];
         this.qType = "FibonacciHeap";
         this.vertexSelection = "FarthestPoint";
-        this.vertexCount = ASSIGNMENTS[value] === ASSIGNMENTS.Bilateral ? 100 : 2;
         this.timing = undefined;
     }
 
