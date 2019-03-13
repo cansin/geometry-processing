@@ -205,12 +205,12 @@ class ThreeScene extends Component {
     }
 
     render() {
-        const { assignment, model, qType } = this.props.store;
+        const { assignment, model, qType, vertexSelection } = this.props.store;
         return (
             <Paper style={{ height: "100%" }}>
                 <Grid container style={{ height: "100%" }}>
                     <div
-                        aria-label={`${assignment} ${model} ${qType}`}
+                        aria-label={`${assignment} ${model} ${qType} ${vertexSelection}`}
                         style={{
                             width: "100%",
                             height: "100%",

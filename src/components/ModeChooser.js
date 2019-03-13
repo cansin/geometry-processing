@@ -7,7 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
 import { observer } from "mobx-react";
 import autobind from "autobind-decorator";
-import { ASSIGNMENTS, MODELS, Q_TYPES } from "./Store";
+import { ASSIGNMENTS, MODELS, Q_TYPES, VERTEX_SELECTIONS } from "./Store";
 import Paper from "@material-ui/core/Paper";
 import { unstable_Box as Box } from "@material-ui/core/Box";
 
@@ -32,8 +32,13 @@ class ModeChooser extends Component {
         this.props.store.setQType(event.target.value);
     }
 
+    @autobind
+    handleVertexSelectionChange(event) {
+        this.props.store.setVertexSelection(event.target.value);
+    }
+
     render() {
-        const { assignment, model, qType, timing } = this.props.store;
+        const { assignment, model, qType, vertexSelection, timing } = this.props.store;
         return (
             <Paper>
                 <Box display="flex" alignItems="center">
@@ -78,6 +83,22 @@ class ModeChooser extends Component {
                                 input={<Input name="q-type" id="q-type" />}
                                 autoWidth>
                                 {Object.entries(Q_TYPES).map(([value, tag], key) => (
+                                    <MenuItem key={key} value={value}>
+                                        {tag}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box p={1}>
+                        <FormControl>
+                            <InputLabel htmlFor="vertex-selection">Vertices</InputLabel>
+                            <Select
+                                value={vertexSelection}
+                                onChange={this.handleVertexSelectionChange}
+                                input={<Input name="vertex-selection" id="vertex-selection" />}
+                                autoWidth>
+                                {Object.entries(VERTEX_SELECTIONS).map(([value, tag], key) => (
                                     <MenuItem key={key} value={value}>
                                         {tag}
                                     </MenuItem>
