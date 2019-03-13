@@ -1,4 +1,4 @@
-import { dijkstra } from "./geodesic";
+import { dijkstra } from "./geodesic_distance";
 import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 
 export function farthestPointSampling(graph, qType, source, count) {

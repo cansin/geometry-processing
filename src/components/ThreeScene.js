@@ -23,7 +23,7 @@ import { observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
-import { findGeodesicDistance } from "../algorithms/geodesic";
+import { findGeodesicDistance } from "../algorithms/geodesic_distance";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "./constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
