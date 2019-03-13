@@ -3,7 +3,7 @@ import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
 import { Q_TYPES } from "../components/Store";
 
-export function dijkstra(graph, source, targets = [], logs = true, qType = "FibonacciHeap") {
+export function dijkstra(graph, source, targets = [], qType = "FibonacciHeap") {
     if (!(targets instanceof Array)) {
         targets = [targets];
     }
@@ -11,7 +11,7 @@ export function dijkstra(graph, source, targets = [], logs = true, qType = "Fibo
     let startTime, elapsedTime;
 
     startTime = new Date();
-    logs && console.log("Initializing Dijkstra sets...");
+    console.log("Initializing Dijkstra sets...");
 
     // 1  function Dijkstra(Graph, source):
     // 2
@@ -19,15 +19,15 @@ export function dijkstra(graph, source, targets = [], logs = true, qType = "Fibo
     let Q;
     switch (Q_TYPES[qType]) {
         case Q_TYPES.Set:
-            logs && console.log("\tUsing a Set.");
+            console.log("\tUsing a Set.");
             Q = new MinSet();
             break;
         case Q_TYPES.MinHeap:
-            logs && console.log("\tUsing a Min Heap.");
+            console.log("\tUsing a Min Heap.");
             Q = new BinaryHeap();
             break;
         case Q_TYPES.FibonacciHeap:
-            logs && console.log("\tUsing a Fibonacci Heap.");
+            console.log("\tUsing a Fibonacci Heap.");
             Q = new FibonacciHeap();
             break;
     }
@@ -50,10 +50,10 @@ export function dijkstra(graph, source, targets = [], logs = true, qType = "Fibo
     });
 
     elapsedTime = new Date() - startTime;
-    logs && console.log(`\tdone in ${elapsedTime}ms.`);
+    console.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    logs && console.log(`Finding shortest paths...`);
+    console.log(`Finding shortest paths...`);
 
     // 11
     // 12      while Q is not empty:
@@ -66,7 +66,7 @@ export function dijkstra(graph, source, targets = [], logs = true, qType = "Fibo
         u = node.value;
 
         if (targets.length && targets.includes(u)) {
-            logs && console.log(`\tTarget given, exiting early...`);
+            console.log(`\tTarget given, exiting early...`);
             break;
         }
 
@@ -87,7 +87,7 @@ export function dijkstra(graph, source, targets = [], logs = true, qType = "Fibo
     }
 
     elapsedTime = new Date() - startTime;
-    logs && console.log(`\tdone in ${elapsedTime}ms.`);
+    console.log(`\tdone in ${elapsedTime}ms.`);
 
     // 22
     // 23      return dist[], prev[]
@@ -98,7 +98,7 @@ export function dijkstra(graph, source, targets = [], logs = true, qType = "Fibo
     };
 }
 
-export function traverse(distances, previous, source, target, logs = true) {
+export function traverse(distances, previous, source, target) {
     let startTime, elapsedTime;
 
     // 1  S ← empty sequence
@@ -108,7 +108,7 @@ export function traverse(distances, previous, source, target, logs = true) {
     // 5          insert u at the beginning of S        // Push the vertex onto the stack
     // 6          u ← prev[u]                           // Traverse from target to source
     startTime = new Date();
-    logs && console.log(`Traversing shortest path...`);
+    console.log(`Traversing shortest path...`);
 
     const S = [];
     let u = target;
@@ -121,7 +121,7 @@ export function traverse(distances, previous, source, target, logs = true) {
     }
 
     elapsedTime = new Date() - startTime;
-    logs && console.log(`\tdone in ${elapsedTime}ms.`);
+    console.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         distance: distances.get(target),
@@ -129,8 +129,8 @@ export function traverse(distances, previous, source, target, logs = true) {
     };
 }
 
-export function findGeodesicDistance(graph, source, target, logs = true, qType = "FibonacciHeap") {
-    const { distances, previous } = dijkstra(graph, source, target, logs, qType);
+export function findGeodesicDistance(graph, source, target, qType = "FibonacciHeap") {
+    const { distances, previous } = dijkstra(graph, source, target, qType);
 
     return traverse(distances, previous, source, target);
 }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
     AmbientLight,
-    Color,
     FaceColors,
     Geometry,
     LoadingManager,
@@ -125,7 +124,7 @@ class ThreeScene extends Component {
                     if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
                         const { graph, source, target } = prepareDataStructures(child);
 
-                        const { path } = findGeodesicDistance(graph, source, target, true, qType);
+                        const { path } = findGeodesicDistance(graph, source, target, qType);
 
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
