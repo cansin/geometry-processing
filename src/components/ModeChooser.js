@@ -69,24 +69,22 @@ class ModeChooser extends Component {
                             </Select>
                         </FormControl>
                     </Box>
-                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic && (
-                        <Box p={1}>
-                            <FormControl>
-                                <InputLabel htmlFor="q-type">Q Type</InputLabel>
-                                <Select
-                                    value={qType}
-                                    onChange={this.handleQTypeChange}
-                                    input={<Input name="q-type" id="q-type" />}
-                                    autoWidth>
-                                    {Object.entries(Q_TYPES).map(([value, tag], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    )}
+                    <Box p={1}>
+                        <FormControl>
+                            <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
+                            <Select
+                                value={qType}
+                                onChange={this.handleQTypeChange}
+                                input={<Input name="q-type" id="q-type" />}
+                                autoWidth>
+                                {Object.entries(Q_TYPES).map(([value, tag], key) => (
+                                    <MenuItem key={key} value={value}>
+                                        {tag}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
                     <Box p={1}>
                         {timing !== undefined ? `The operation took ${timing}ms.` : "Loading..."}
                     </Box>
