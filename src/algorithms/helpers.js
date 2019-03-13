@@ -1,7 +1,7 @@
 import { Geometry } from "three";
 import UndirectedWeightedGraph from "./UndirectedWeightedGraph";
 import { farthestPointSampling } from "./farthest_point_sampling";
-import store, { VERTEX_SELECTIONS } from "../components/Store";
+import { VERTEX_SELECTIONS } from "../components/constants";
 
 function choosePointsRandomly({ vertices }) {
     let startTime, elapsedTime;
@@ -21,10 +21,13 @@ function choosePointsRandomly({ vertices }) {
     };
 }
 
-function chooseFarthestPoints({ vertices }, graph) {
-    const { vertexCount } = store;
-
-    const [source, target] = farthestPointSampling(graph, vertices[0], vertexCount).farthestPoints;
+function chooseFarthestPoints({ vertices }, graph, qType, vertexCount) {
+    const [source, target] = farthestPointSampling(
+        graph,
+        qType,
+        vertices[0],
+        vertexCount,
+    ).farthestPoints;
 
     return {
         source,
@@ -94,9 +97,7 @@ function generateGraph({ faces, vertices }) {
     };
 }
 
-export function prepareDataStructures({ geometry }) {
-    const { vertexSelection } = store;
-
+export function prepareDataStructures({ geometry }, qType, vertexSelection, vertexCount) {
     const { graph } = generateGraph(geometry);
 
     let choosePoints;
@@ -107,7 +108,7 @@ export function prepareDataStructures({ geometry }) {
         choosePoints = chooseFarthestPoints;
     }
 
-    const { source, target } = choosePoints(geometry, graph);
+    const { source, target } = choosePoints(geometry, graph, qType, vertexCount);
 
     return {
         geometry,

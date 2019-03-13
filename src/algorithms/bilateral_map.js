@@ -1,9 +1,9 @@
 import { dijkstra, traverse } from "./geodesic";
 import { Color } from "three";
 
-export function findBilateralMap(geometry, graph, p, q) {
-    const { distances: distancesP, previous: previousP } = dijkstra(graph, p);
-    const { distances: distancesQ } = dijkstra(graph, q);
+export function findBilateralMap(geometry, graph, qType, p, q) {
+    const { distances: distancesP, previous: previousP } = dijkstra(graph, qType, p);
+    const { distances: distancesQ } = dijkstra(graph, qType, q);
     const { distance: distancePQ, path: pathPQ } = traverse(distancesP, previousP, p, q);
 
     const G = new Map();

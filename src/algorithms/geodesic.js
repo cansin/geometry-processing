@@ -1,9 +1,9 @@
 import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
-import store, { Q_TYPES } from "../components/Store";
+import { Q_TYPES } from "../components/constants";
 
-export function dijkstra(graph, source, targets = [], logs = true) {
+export function dijkstra(graph, qType, source, targets = [], logs = true) {
     if (!(targets instanceof Array)) {
         targets = [targets];
     }
@@ -17,7 +17,7 @@ export function dijkstra(graph, source, targets = [], logs = true) {
     // 2
     // 3      create vertex set Q
     let Q;
-    switch (Q_TYPES[store.qType]) {
+    switch (Q_TYPES[qType]) {
         case Q_TYPES.Set:
             logs && console.log("\tUsing a Set.");
             Q = new MinSet();
@@ -129,8 +129,8 @@ export function traverse(distances, previous, source, target) {
     };
 }
 
-export function findGeodesicDistance(graph, source, target) {
-    const { distances, previous } = dijkstra(graph, source, target);
+export function findGeodesicDistance(graph, qType, source, target) {
+    const { distances, previous } = dijkstra(graph, qType, source, target);
 
     return traverse(distances, previous, source, target);
 }

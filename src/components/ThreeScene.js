@@ -25,7 +25,7 @@ import Grid from "@material-ui/core/Grid";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic";
 import { findBilateralMap } from "../algorithms/bilateral_map";
-import { ASSIGNMENTS } from "./Store";
+import { ASSIGNMENTS } from "./constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 
 @observer
@@ -93,7 +93,14 @@ class ThreeScene extends Component {
     }
 
     loadObject() {
-        const { assignment, model, qType, setTiming } = this.props.store;
+        const {
+            assignment,
+            model,
+            qType,
+            vertexSelection,
+            vertexCount,
+            setTiming,
+        } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         let startTime,
             elapsedTime,
@@ -122,10 +129,15 @@ class ThreeScene extends Component {
                     startTime = new Date();
                     console.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
-                    const { graph, source, target } = prepareDataStructures(child);
+                    const { graph, source, target } = prepareDataStructures(
+                        child,
+                        qType,
+                        vertexSelection,
+                        vertexCount,
+                    );
 
                     if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
-                        const { path } = findGeodesicDistance(graph, source, target);
+                        const { path } = findGeodesicDistance(graph, qType, source, target);
 
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
@@ -133,13 +145,19 @@ class ThreeScene extends Component {
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
                         child.material.vertexColors = FaceColors;
 
-                        const { path } = findBilateralMap(child.geometry, graph, source, target);
+                        const { path } = findBilateralMap(
+                            child.geometry,
+                            graph,
+                            qType,
+                            source,
+                            target,
+                        );
 
                         this.renderShortestPath(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint) {
-                        const { farthestPoints } = farthestPointSampling(graph, source, 100);
+                        const { farthestPoints } = farthestPointSampling(graph, qType, source, 100);
 
                         farthestPoints.forEach(vertex => {
                             this.renderVertex(vertex);

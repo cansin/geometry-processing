@@ -7,9 +7,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
 import { observer } from "mobx-react";
 import autobind from "autobind-decorator";
-import { ASSIGNMENTS, MODELS, Q_TYPES, VERTEX_SELECTIONS } from "./Store";
+import { ASSIGNMENTS } from "./constants";
 import Paper from "@material-ui/core/Paper";
 import { unstable_Box as Box } from "@material-ui/core/Box";
+import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "./constants";
 
 @observer
 class ModeChooser extends Component {
@@ -75,7 +76,7 @@ class ModeChooser extends Component {
                         </FormControl>
                     </Box>
                     <Box p={1}>
-                        <FormControl>
+                        <FormControl style={{ minWidth: 110 }}>
                             <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
                             <Select
                                 value={qType}
