@@ -1,7 +1,7 @@
 import { Geometry } from "three";
 import UndirectedWeightedGraph from "./UndirectedWeightedGraph";
 import { farthestPointSampling } from "./farthest_point_sampling";
-import { VERTEX_SELECTIONS } from "../components/constants";
+import { VERTEX_SELECTIONS } from "../constants";
 
 function choosePointsRandomly({ vertices }) {
     let startTime, elapsedTime;

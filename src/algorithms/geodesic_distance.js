@@ -1,7 +1,7 @@
 import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
-import { Q_TYPES } from "../components/constants";
+import { Q_TYPES } from "../constants";
 
 export function dijkstra(graph, qType, source, targets = [], logs = true) {
     if (!(targets instanceof Array)) {

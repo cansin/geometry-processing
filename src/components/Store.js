@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx";
 import autobind from "autobind-decorator";
-import { ASSIGNMENTS, MODELS } from "./constants";
+import { ASSIGNMENTS, MODELS } from "../constants";
 
 class Store {
     @observable assignment = "Geodesic";
