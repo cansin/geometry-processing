@@ -3,6 +3,8 @@ import {
     AmbientLight,
     FaceColors,
     Geometry,
+    Line,
+    LineBasicMaterial,
     LoadingManager,
     Mesh,
     MeshPhongMaterial,
@@ -140,7 +142,7 @@ class ThreeScene extends Component {
                     if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
                         const { path } = findGeodesicDistance(graph, qType, source, target);
 
-                        this.renderShortestPath(path);
+                        this.renderPathAsMeshLine(path);
                         this.renderVertex(source);
                         this.renderVertex(target);
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
@@ -154,7 +156,7 @@ class ThreeScene extends Component {
                             target,
                         );
 
-                        this.renderShortestPath(path);
+                        this.renderPathAsMeshLine(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint) {
@@ -164,7 +166,7 @@ class ThreeScene extends Component {
                             this.renderVertex(vertex);
                         });
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
-                        const { distances, previous } = findIsoCurveSignature(
+                        const { isoCurves } = findIsoCurveSignature(
                             child.geometry,
                             graph,
                             qType,
@@ -172,6 +174,12 @@ class ThreeScene extends Component {
                         );
 
                         this.renderVertex(source);
+
+                        isoCurves.forEach(edges => {
+                            edges.forEach(edge => {
+                                this.renderPathAsLine(edge.vertices);
+                            });
+                        });
                     }
 
                     elapsedTime = new Date() - startTime;
@@ -207,7 +215,7 @@ class ThreeScene extends Component {
         this.frameId = window.requestAnimationFrame(this.animate.bind(this));
     }
 
-    renderShortestPath(path) {
+    renderPathAsMeshLine(path) {
         const geometry = new Geometry();
         path.forEach(vertex => {
             geometry.vertices.push(vertex);
@@ -217,6 +225,20 @@ class ThreeScene extends Component {
         line.setGeometry(geometry);
 
         this.scene.add(new Mesh(line.geometry, this.meshLineMaterial));
+    }
+
+    renderPathAsLine(path) {
+        const geometry = new Geometry();
+        path.forEach(vertex => {
+            geometry.vertices.push(vertex);
+        });
+
+        const material = new LineBasicMaterial({
+            color: 0x0000ff,
+        });
+
+        const line = new Line(geometry, material);
+        this.scene.add(line);
     }
 
     renderVertex(vertex) {
