@@ -127,6 +127,8 @@ class ThreeScene extends Component {
                 if (child instanceof Mesh) {
                     child.geometry = createNormalizedNaiveGeometry(child);
 
+                    child.material.transparent = true;
+                    child.material.opacity = 0.90;
                     child.material.color.setHex(0xcccccc);
 
                     startTime = new Date();
