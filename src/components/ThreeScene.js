@@ -177,7 +177,7 @@ class ThreeScene extends Component {
 
                         isoCurves.forEach(edges => {
                             edges.forEach(edge => {
-                                this.renderPathAsLine(edge.vertices);
+                                this.renderPathAsMeshLine(edge.vertices);
                             });
                         });
                     }

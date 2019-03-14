@@ -53,7 +53,11 @@ export function findIsoCurveSignature(geometry, graph, qType, p) {
                 });
 
                 edges.forEach(edge => {
-                    if (!edge.isIntersected) {
+                    if (
+                        !edge.isIntersected &&
+                        distances.get(edge.vertices[0]) < isoDistance &&
+                        distances.get(edge.vertices[1]) < isoDistance
+                    ) {
                         isoCurve.push(edge);
                     }
                 });
