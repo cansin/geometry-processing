@@ -34,12 +34,11 @@
         "webpack-dev-server": "^3.2.1"
     },
     "dependencies": {
-        "@material-ui/core": "^4.0.0-alpha.2",
-        "@material-ui/styles": "^4.0.0-alpha.2",
+        "@material-ui/core": "^3.9.2",
+        "@material-ui/icons": "^3.0.2",
         "@tyriar/binary-heap": "^1.0.5",
         "@tyriar/fibonacci-heap": "^2.0.9",
         "autobind-decorator": "^2.4.0",
-        "jss": "10.0.0-alpha.3",
         "mobx": "^5.9.0",
         "mobx-react": "^5.4.3",
         "prop-types": "^15.7.2",

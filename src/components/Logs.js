@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import { unstable_Box as Box } from "@material-ui/core/Box";
 
 @inject("store")
 @observer
@@ -16,9 +15,7 @@ class Logs extends Component {
         const { logs } = this.props.store;
         return (
             <Paper>
-                <Box p={1}>
-                    <Typography component="pre">{logs}</Typography>
-                </Box>
+                <Typography component="pre">{logs}</Typography>
             </Paper>
         );
     }

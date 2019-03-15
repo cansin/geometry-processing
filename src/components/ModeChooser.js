@@ -8,7 +8,7 @@ import Input from "@material-ui/core/Input";
 import { inject, observer } from "mobx-react";
 import autobind from "autobind-decorator";
 import Paper from "@material-ui/core/Paper";
-import { unstable_Box as Box } from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 
 import { ASSIGNMENTS } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
@@ -44,8 +44,8 @@ class ModeChooser extends Component {
         const { assignment, model, qType, vertexSelection } = this.props.store;
         return (
             <Paper>
-                <Box display="flex" alignItems="center">
-                    <Box p={1}>
+                <Grid container>
+                    <Grid item>
                         <FormControl>
                             <InputLabel htmlFor="assignment">Assignment</InputLabel>
                             <Select
@@ -60,8 +60,8 @@ class ModeChooser extends Component {
                                 ))}
                             </Select>
                         </FormControl>
-                    </Box>
-                    <Box p={1}>
+                    </Grid>
+                    <Grid item>
                         <FormControl>
                             <InputLabel htmlFor="model">Model</InputLabel>
                             <Select
@@ -76,8 +76,8 @@ class ModeChooser extends Component {
                                 ))}
                             </Select>
                         </FormControl>
-                    </Box>
-                    <Box p={1}>
+                    </Grid>
+                    <Grid item>
                         <FormControl style={{ minWidth: 110 }}>
                             <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
                             <Select
@@ -92,8 +92,8 @@ class ModeChooser extends Component {
                                 ))}
                             </Select>
                         </FormControl>
-                    </Box>
-                    <Box p={1}>
+                    </Grid>
+                    <Grid item>
                         <FormControl>
                             <InputLabel htmlFor="vertex-selection">Vertices</InputLabel>
                             <Select
@@ -108,8 +108,8 @@ class ModeChooser extends Component {
                                 ))}
                             </Select>
                         </FormControl>
-                    </Box>
-                </Box>
+                    </Grid>
+                </Grid>
             </Paper>
         );
     }
