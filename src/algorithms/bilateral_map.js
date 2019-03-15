@@ -67,6 +67,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
     startTime = new Date();
     logger && logger.log(`Divide the ROI into bins...`);
 
+    const bilateralMap = [];
     geometry.faces.forEach(face => {
         const v1 = geometry.vertices[face.a],
             v2 = geometry.vertices[face.b],
@@ -81,6 +82,18 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
                 hue = Math.floor((distance1 + distance2 + distance3) / 3.0);
 
             color.setHSL((1 - (hue % 2)) * (2.0 / 3.0), 1.0, 0.5);
+
+            // Calcuate the area using Heron's formula
+            const e1 = v1.distanceTo(v2),
+                e2 = v2.distanceTo(v3),
+                e3 = v1.distanceTo(v3);
+            const s = (e1 + e2 + e3) / 2.0;
+            bilateralMap[hue] = {
+                name: hue,
+                value:
+                    ((bilateralMap[hue] && bilateralMap[hue].value) || 0) +
+                    Math.sqrt(s * (s - e1) * (s - e2) * (s - e3)),
+            };
         }
 
         face.color = color;
@@ -94,5 +107,6 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
         scalarField: G,
         minDistance,
         maxDistance,
+        bilateralMap,
     };
 }

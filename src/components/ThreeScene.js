@@ -19,6 +19,10 @@ import { TrackballControls } from "three/examples/jsm/controls/TrackballControls
 import { MeshLine, MeshLineMaterial } from "three.meshline";
 import PropTypes from "prop-types";
 import { inject, observer } from "mobx-react";
+import LineChart from "recharts/es6/chart/LineChart";
+import BarChart from "recharts/es6/chart/BarChart";
+import Bar from "recharts/es6/cartesian/Bar";
+import ChartLine from "recharts/es6/cartesian/Line";
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
@@ -139,7 +143,7 @@ class ThreeScene extends Component {
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
                         child.material.vertexColors = FaceColors;
 
-                        const { path } = findBilateralMap({
+                        const { bilateralMap, path } = findBilateralMap({
                             geometry: child.geometry,
                             graph,
                             qType,
@@ -151,17 +155,12 @@ class ThreeScene extends Component {
                         this.renderPathAsMeshLine(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
-                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint) {
-                        const { farthestPoints } = farthestPointSampling({
-                            graph,
-                            qType,
-                            source,
-                            count: 100,
-                            logger,
-                        });
 
-                        farthestPoints.forEach(vertex => {
-                            this.renderVertex(vertex);
+                        this.props.store.setChartData({
+                            name: "Bilateral Descriptor",
+                            cartesian: Bar,
+                            chart: BarChart,
+                            data: bilateralMap,
                         });
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
                         const { isoCurves, isoDescriptor } = findIsoCurveSignature({
@@ -182,7 +181,21 @@ class ThreeScene extends Component {
 
                         this.props.store.setChartData({
                             name: "Iso-Curve Descriptor",
+                            cartesian: ChartLine,
+                            chart: LineChart,
                             data: isoDescriptor,
+                        });
+                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint) {
+                        const { farthestPoints } = farthestPointSampling({
+                            graph,
+                            qType,
+                            source,
+                            count: 100,
+                            logger,
+                        });
+
+                        farthestPoints.forEach(vertex => {
+                            this.renderVertex(vertex);
                         });
                     }
 

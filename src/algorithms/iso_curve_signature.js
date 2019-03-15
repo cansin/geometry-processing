@@ -77,8 +77,6 @@ export function findIsoCurveSignature({ geometry, graph, qType, source, logger }
         });
     });
 
-    console.log(isoDescriptor);
-
     elapsedTime = new Date() - startTime;
     logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 

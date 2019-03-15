@@ -3,14 +3,13 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import { unstable_Box as Box } from "@material-ui/core/Box";
-import LineChart from "recharts/es6/chart/LineChart";
-import Line from "recharts/es6/cartesian/Line";
 import ResponsiveContainer from "recharts/es6/component/ResponsiveContainer";
 import CartesianGrid from "recharts/es6/cartesian/CartesianGrid";
 import XAxis from "recharts/es6/cartesian/XAxis";
 import YAxis from "recharts/es6/cartesian/YAxis";
 import Tooltip from "recharts/es6/component/Tooltip";
 import Legend from "recharts/es6/component/Legend";
+import Cell from "recharts/es6/component/Cell";
 
 @inject("store")
 @observer
@@ -20,20 +19,29 @@ class Chart extends Component {
     };
 
     render() {
-        const { name, data } = this.props.store.chartData;
+        const { name, data, chart: Chart, cartesian: Cartesian } = this.props.store.chartData;
 
         return (
             <Paper>
                 <Box p={1}>
                     <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={300}>
-                        <LineChart data={data}>
+                        <Chart data={data}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis />
                             <YAxis />
                             <Tooltip />
                             <Legend verticalAlign="top" />
-                            <Line name={name} type="monotone" dataKey="value" stroke="#8884d8" />
-                        </LineChart>
+                            <Cartesian
+                                name={name}
+                                type="monotone"
+                                dataKey="value"
+                                fill="#cc0000"
+                                stroke="#cc0000">
+                                {data.map((entry, key) => (
+                                    <Cell key={key} fill={entry.name % 2 ? "#cc0000" : "#0000cc"} />
+                                ))}
+                            </Cartesian>
+                        </Chart>
                     </ResponsiveContainer>
                 </Box>
             </Paper>
