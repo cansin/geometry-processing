@@ -65,10 +65,26 @@ export function findIsoCurveSignature({ geometry, graph, qType, source, logger }
         });
     });
 
+    const isoDescriptor = [];
+    let i = 0;
+    isoCurves.forEach((isoCurve, isoDistance) => {
+        isoDescriptor.push({
+            name: `Iso Curve #${i++}`,
+            isoCurveLength: isoCurve.reduce(
+                (totalDistance, { vertices }) =>
+                    totalDistance + vertices[0].distanceTo(vertices[1]),
+                0,
+            ),
+        });
+    });
+
+    console.log(isoDescriptor);
+
     elapsedTime = new Date() - startTime;
     logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         isoCurves,
+        isoDescriptor,
     };
 }

@@ -164,7 +164,7 @@ class ThreeScene extends Component {
                             this.renderVertex(vertex);
                         });
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
-                        const { isoCurves } = findIsoCurveSignature({
+                        const { isoCurves, isoDescriptor } = findIsoCurveSignature({
                             geometry: child.geometry,
                             graph,
                             qType,
@@ -179,6 +179,8 @@ class ThreeScene extends Component {
                                 this.renderPathAsMeshLine(edge.vertices);
                             });
                         });
+
+                        this.props.store.setChartData(isoDescriptor);
                     }
 
                     elapsedTime = new Date() - startTime;
