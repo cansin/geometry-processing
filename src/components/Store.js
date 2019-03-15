@@ -8,6 +8,7 @@ class Store {
     @observable qType = "FibonacciHeap";
     @observable timing = undefined;
     @observable vertexSelection = "FarthestPoint";
+    @observable logs = "";
 
     @computed get vertexCount() {
         return ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Bilateral ? 100 : 2;
@@ -42,6 +43,16 @@ class Store {
     @action
     setTiming(value) {
         this.timing = value;
+    }
+
+    @action
+    log(value) {
+        console.log(value);
+    }
+
+    @action
+    clear() {
+        console.clear();
     }
 }
 

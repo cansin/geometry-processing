@@ -5,7 +5,6 @@ import {
     Geometry,
     Line,
     LineBasicMaterial,
-    LoadingManager,
     Mesh,
     MeshPhongMaterial,
     PerspectiveCamera,
@@ -39,8 +38,6 @@ class ThreeScene extends Component {
     };
 
     componentDidMount() {
-        this.logger = console;
-
         // ADD SCENE
         this.scene = new Scene();
 
@@ -71,18 +68,8 @@ class ThreeScene extends Component {
         });
 
         // ADD LOADERS
-        this.loadingManager = new LoadingManager(
-            () => {},
-            (item, loaded, total) => {
-                this.logger && this.logger.log(item, loaded, total);
-            },
-            item => {
-                console.error(item);
-            },
-        );
-
-        this.offLoader = new OFFLoader(this.loadingManager);
-        this.objLoader = new OBJLoader(this.loadingManager);
+        this.offLoader = new OFFLoader();
+        this.objLoader = new OBJLoader();
 
         window.addEventListener("resize", this.handleResize.bind(this));
 
@@ -108,13 +95,13 @@ class ThreeScene extends Component {
             setTiming,
         } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
-        const logger = this.logger;
+        const logger = this.props.store;
         let startTime,
             elapsedTime,
             totalTime = 0;
 
         startTime = new Date();
-        console.clear();
+        logger && logger.clear();
         logger && logger.log(`Loading Object...`);
         loader.load(model, object => {
             while (this.scene.children.length > 0) {
