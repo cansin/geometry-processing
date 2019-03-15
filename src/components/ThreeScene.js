@@ -21,14 +21,13 @@ import { OFFLoader } from "../loaders/OFFLoader";
 import { MeshLine, MeshLineMaterial } from "three.meshline";
 import PropTypes from "prop-types";
 import { inject, observer } from "mobx-react";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic_distance";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
+import { unstable_Box as Box } from "@material-ui/core/Box";
 
 @inject("store")
 @observer
@@ -86,14 +85,7 @@ class ThreeScene extends Component {
     }
 
     loadObject() {
-        const {
-            assignment,
-            model,
-            qType,
-            vertexSelection,
-            vertexCount,
-            setTiming,
-        } = this.props.store;
+        const { assignment, model, qType, vertexSelection, vertexCount } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         const logger = this.props.store;
         let startTime,
@@ -193,8 +185,6 @@ class ThreeScene extends Component {
                     elapsedTime = new Date() - startTime;
                     totalTime += elapsedTime;
                     logger && logger.log(`✅ Total time ${totalTime}ms.`);
-
-                    setTiming(totalTime);
                 }
             });
 
@@ -263,21 +253,17 @@ class ThreeScene extends Component {
     render() {
         const { assignment, model, qType, vertexSelection } = this.props.store;
         return (
-            <Paper style={{ height: "100%" }}>
-                <Grid container style={{ height: "100%" }}>
-                    <div
-                        aria-label={`${assignment} ${model} ${qType} ${vertexSelection}`}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            minHeight: 600,
-                        }}
-                        ref={mount => {
-                            this.mount = mount;
-                        }}
-                    />
-                </Grid>
-            </Paper>
+            <div
+                aria-label={`${assignment} ${model} ${qType} ${vertexSelection}`}
+                style={{
+                    height: "100%",
+                    width: "100%",
+                    minHeight: 600,
+                }}
+                ref={mount => {
+                    this.mount = mount;
+                }}
+            />
         );
     }
 }

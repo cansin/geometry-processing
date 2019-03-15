@@ -40,7 +40,7 @@ class ModeChooser extends Component {
     }
 
     render() {
-        const { assignment, model, qType, vertexSelection, timing } = this.props.store;
+        const { assignment, model, qType, vertexSelection } = this.props.store;
         return (
             <Paper>
                 <Box display="flex" alignItems="center">
@@ -107,9 +107,6 @@ class ModeChooser extends Component {
                                 ))}
                             </Select>
                         </FormControl>
-                    </Box>
-                    <Box p={1}>
-                        {timing !== undefined ? `The operation took ${timing}ms.` : "Loading..."}
                     </Box>
                 </Box>
             </Paper>
