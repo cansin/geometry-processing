@@ -1,4 +1,5 @@
 import { action, computed, observable } from "mobx";
+
 import { ASSIGNMENTS, MODELS } from "../constants";
 
 class Store {

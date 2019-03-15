@@ -8,8 +8,9 @@ module.exports = {
     parserOptions: {
         sourceType: "module",
     },
-    plugins: ["babel"],
+    plugins: ["babel", "import"],
     rules: {
+        "import/order": ["error", { "newlines-between": "always" }],
         "no-console": "off",
     },
     settings: {

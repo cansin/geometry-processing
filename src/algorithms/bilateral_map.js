@@ -1,5 +1,6 @@
-import { dijkstra, traverse } from "./geodesic_distance";
 import { Color } from "three";
+
+import { dijkstra, traverse } from "./geodesic_distance";
 
 export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
     const { distances: distancesP, previous: previousP } = dijkstra({

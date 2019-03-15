@@ -1,7 +1,9 @@
 import { Geometry } from "three";
+
+import { VERTEX_SELECTIONS } from "../constants";
+
 import UndirectedWeightedGraph from "./UndirectedWeightedGraph";
 import { farthestPointSampling } from "./farthest_point_sampling";
-import { VERTEX_SELECTIONS } from "../constants";
 
 function choosePointsRandomly({ geometry, logger }) {
     const { vertices } = geometry;

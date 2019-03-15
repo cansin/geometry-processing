@@ -7,9 +7,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
 import { inject, observer } from "mobx-react";
 import autobind from "autobind-decorator";
-import { ASSIGNMENTS } from "../constants";
 import Paper from "@material-ui/core/Paper";
 import { unstable_Box as Box } from "@material-ui/core/Box";
+
+import { ASSIGNMENTS } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
 
 @inject("store")
