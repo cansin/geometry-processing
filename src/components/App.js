@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { unstable_Box as Box } from "@material-ui/core/Box";
-import { Provider } from "mobx-react";
+import { observer, Provider } from "mobx-react";
 import Grid from "@material-ui/core/Grid";
 
 import ThreeScene from "./ThreeScene";
@@ -9,7 +9,8 @@ import store from "./Store";
 import Logs from "./Logs";
 import Chart from "./Chart";
 
-export default class App extends Component {
+@observer
+class App extends Component {
     render() {
         return (
             <Provider store={store}>
@@ -24,9 +25,11 @@ export default class App extends Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <Box display="flex" flexDirection="column">
-                                    <Box p={1} flexGrow={1}>
-                                        <Chart />
-                                    </Box>
+                                    {store.chartData && (
+                                        <Box p={1} flexGrow={1}>
+                                            <Chart />
+                                        </Box>
+                                    )}
                                     <Box p={1} flexGrow={1}>
                                         <Logs />
                                     </Box>
@@ -39,3 +42,5 @@ export default class App extends Component {
         );
     }
 }
+
+export default App;

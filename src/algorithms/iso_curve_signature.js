@@ -66,11 +66,10 @@ export function findIsoCurveSignature({ geometry, graph, qType, source, logger }
     });
 
     const isoDescriptor = [];
-    let i = 0;
     isoCurves.forEach((isoCurve, isoDistance) => {
         isoDescriptor.push({
-            name: `Iso Curve #${i++}`,
-            isoCurveLength: isoCurve.reduce(
+            name: isoDistance,
+            value: isoCurve.reduce(
                 (totalDistance, { vertices }) =>
                     totalDistance + vertices[0].distanceTo(vertices[1]),
                 0,

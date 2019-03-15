@@ -8,7 +8,7 @@ class Store {
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable logs = "";
-    @observable chartData = [];
+    @observable chartData = undefined;
 
     @computed get vertexCount() {
         return ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Bilateral ? 100 : 2;
@@ -20,25 +20,25 @@ class Store {
         this.model = Object.values(MODELS[this.assignment])[0];
         this.qType = "FibonacciHeap";
         this.vertexSelection = "FarthestPoint";
-        this.chartData = [];
+        this.chartData = undefined;
     }
 
     @action
     setModel(value) {
         this.model = value;
-        this.chartData = [];
+        this.chartData = undefined;
     }
 
     @action
     setQType(value) {
         this.qType = value;
-        this.chartData = [];
+        this.chartData = undefined;
     }
 
     @action
     setVertexSelection(value) {
         this.vertexSelection = value;
-        this.chartData = [];
+        this.chartData = undefined;
     }
 
     @action

@@ -20,7 +20,7 @@ class Chart extends Component {
     };
 
     render() {
-        const { chartData: data } = this.props.store;
+        const { name, data } = this.props.store.chartData;
 
         return (
             <Paper>
@@ -28,11 +28,11 @@ class Chart extends Component {
                     <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={300}>
                         <LineChart data={data}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
+                            <XAxis />
                             <YAxis />
                             <Tooltip />
-                            <Legend />
-                            <Line type="monotone" dataKey="isoCurveLength" stroke="#8884d8" />
+                            <Legend verticalAlign="top" />
+                            <Line name={name} type="monotone" dataKey="value" stroke="#8884d8" />
                         </LineChart>
                     </ResponsiveContainer>
                 </Box>

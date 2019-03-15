@@ -180,7 +180,10 @@ class ThreeScene extends Component {
                             });
                         });
 
-                        this.props.store.setChartData(isoDescriptor);
+                        this.props.store.setChartData({
+                            name: "Iso-Curve Descriptor",
+                            data: isoDescriptor,
+                        });
                     }
 
                     elapsedTime = new Date() - startTime;
