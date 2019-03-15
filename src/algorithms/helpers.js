@@ -3,17 +3,18 @@ import UndirectedWeightedGraph from "./UndirectedWeightedGraph";
 import { farthestPointSampling } from "./farthest_point_sampling";
 import { VERTEX_SELECTIONS } from "../constants";
 
-function choosePointsRandomly({ vertices }) {
+function choosePointsRandomly({ geometry, logger }) {
+    const { vertices } = geometry;
     let startTime, elapsedTime;
 
     startTime = new Date();
-    console.log(`Choosing points...`);
+    logger && logger.log(`Choosing points...`);
 
     const source = vertices[Math.floor(Math.random() * vertices.length)];
     const target = vertices[Math.floor(Math.random() * vertices.length)];
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         source,
@@ -21,12 +22,14 @@ function choosePointsRandomly({ vertices }) {
     };
 }
 
-function chooseFarthestPoints({ vertices }, graph, qType, vertexCount) {
+function chooseFarthestPoints({ geometry, graph, qType, vertexCount, logger }) {
+    const { vertices } = geometry;
     const [source, target] = farthestPointSampling({
         graph,
         qType,
         source: vertices[0],
         count: vertexCount,
+        logger,
     }).farthestPoints;
 
     return {
@@ -35,11 +38,12 @@ function chooseFarthestPoints({ vertices }, graph, qType, vertexCount) {
     };
 }
 
-function generateGraph({ faces, vertices }) {
+function generateGraph({ geometry, logger }) {
+    const { faces, vertices } = geometry;
     let startTime, elapsedTime;
 
     startTime = new Date();
-    console.log(`Adding vertices to the graph...`);
+    logger && logger.log(`Adding vertices to the graph...`);
 
     const graph = new UndirectedWeightedGraph();
 
@@ -48,10 +52,10 @@ function generateGraph({ faces, vertices }) {
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    console.log(`Adding edges to the graph...`);
+    logger && logger.log(`Adding edges to the graph...`);
 
     // Adopted from `three/src/geometries/WireframeGeometry.js:31`
     const keys = ["a", "b", "c"];
@@ -70,18 +74,19 @@ function generateGraph({ faces, vertices }) {
     }
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         graph,
     };
 }
 
-export function createNormalizedNaiveGeometry({ geometry }) {
+export function createNormalizedNaiveGeometry({ mesh, logger }) {
+    let { geometry } = mesh;
     let startTime, elapsedTime;
 
     startTime = new Date();
-    console.log("Creating naive geometry...");
+    logger && logger.log("Creating naive geometry...");
 
     if (geometry && !geometry.isGeometry) {
         geometry = new Geometry().fromBufferGeometry(geometry);
@@ -92,14 +97,14 @@ export function createNormalizedNaiveGeometry({ geometry }) {
     geometry.scale(75, 75, 75);
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     return geometry;
 }
 
-export function prepareDataStructures({ mesh, qType, vertexSelection, vertexCount }) {
+export function prepareDataStructures({ mesh, qType, vertexSelection, vertexCount, logger }) {
     const { geometry } = mesh;
-    const { graph } = generateGraph(geometry);
+    const { graph } = generateGraph({ geometry, logger });
 
     let choosePoints;
 
@@ -109,7 +114,7 @@ export function prepareDataStructures({ mesh, qType, vertexSelection, vertexCoun
         choosePoints = chooseFarthestPoints;
     }
 
-    const { source, target } = choosePoints(geometry, graph, qType, vertexCount);
+    const { source, target } = choosePoints({ geometry, graph, qType, vertexCount, logger });
 
     return {
         geometry,

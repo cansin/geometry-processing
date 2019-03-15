@@ -3,11 +3,11 @@ import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
 import { Q_TYPES } from "../constants";
 
-export function dijkstra({ graph, qType, source, targets = [], logs = true }) {
+export function dijkstra({ graph, qType, source, targets = [], logger }) {
     let startTime, elapsedTime;
 
     startTime = new Date();
-    logs && console.log("Initializing Dijkstra sets...");
+    logger && logger.log("Initializing Dijkstra sets...");
 
     // 1  function Dijkstra(Graph, source):
     // 2
@@ -15,15 +15,15 @@ export function dijkstra({ graph, qType, source, targets = [], logs = true }) {
     let Q;
     switch (Q_TYPES[qType]) {
         case Q_TYPES.Set:
-            logs && console.log("\tUsing a Set.");
+            logger && logger.log("\tUsing a Set.");
             Q = new MinSet();
             break;
         case Q_TYPES.MinHeap:
-            logs && console.log("\tUsing a Min Heap.");
+            logger && logger.log("\tUsing a Min Heap.");
             Q = new BinaryHeap();
             break;
         case Q_TYPES.FibonacciHeap:
-            logs && console.log("\tUsing a Fibonacci Heap.");
+            logger && logger.log("\tUsing a Fibonacci Heap.");
             Q = new FibonacciHeap();
             break;
     }
@@ -46,10 +46,10 @@ export function dijkstra({ graph, qType, source, targets = [], logs = true }) {
     });
 
     elapsedTime = new Date() - startTime;
-    logs && console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    logs && console.log(`Finding shortest paths...`);
+    logger && logger.log(`Finding shortest paths...`);
 
     // 11
     // 12      while Q is not empty:
@@ -62,7 +62,7 @@ export function dijkstra({ graph, qType, source, targets = [], logs = true }) {
         u = node.value;
 
         if (targets.length && targets.includes(u)) {
-            logs && console.log(`\tTarget given, exiting early...`);
+            logger && logger.log(`\tTarget given, exiting early...`);
             break;
         }
 
@@ -83,7 +83,7 @@ export function dijkstra({ graph, qType, source, targets = [], logs = true }) {
     }
 
     elapsedTime = new Date() - startTime;
-    logs && console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     // 22
     // 23      return dist[], prev[]
@@ -94,7 +94,7 @@ export function dijkstra({ graph, qType, source, targets = [], logs = true }) {
     };
 }
 
-export function traverse({ distances, previous, source, target }) {
+export function traverse({ distances, previous, source, target, logger }) {
     let startTime, elapsedTime;
 
     // 1  S ← empty sequence
@@ -104,7 +104,7 @@ export function traverse({ distances, previous, source, target }) {
     // 5          insert u at the beginning of S        // Push the vertex onto the stack
     // 6          u ← prev[u]                           // Traverse from target to source
     startTime = new Date();
-    console.log(`Traversing shortest path...`);
+    logger && logger.log(`Traversing shortest path...`);
 
     const S = [];
     let u = target;
@@ -117,7 +117,7 @@ export function traverse({ distances, previous, source, target }) {
     }
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         distance: distances.get(target),
@@ -125,8 +125,8 @@ export function traverse({ distances, previous, source, target }) {
     };
 }
 
-export function findGeodesicDistance(graph, qType, source, target) {
-    const { distances, previous } = dijkstra({ graph, qType, source, targets: [target] });
+export function findGeodesicDistance({ graph, qType, source, target, logger }) {
+    const { distances, previous } = dijkstra({ graph, qType, source, targets: [target], logger });
 
-    return traverse({ distances, previous, source, target });
+    return traverse({ distances, previous, source, target, logger });
 }

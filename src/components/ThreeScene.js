@@ -39,6 +39,8 @@ class ThreeScene extends Component {
     };
 
     componentDidMount() {
+        this.logger = console;
+
         // ADD SCENE
         this.scene = new Scene();
 
@@ -72,7 +74,7 @@ class ThreeScene extends Component {
         this.loadingManager = new LoadingManager(
             () => {},
             (item, loaded, total) => {
-                console.log(item, loaded, total);
+                this.logger && this.logger.log(item, loaded, total);
             },
             item => {
                 console.error(item);
@@ -106,13 +108,14 @@ class ThreeScene extends Component {
             setTiming,
         } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
+        const logger = this.logger;
         let startTime,
             elapsedTime,
             totalTime = 0;
 
         startTime = new Date();
         console.clear();
-        console.log(`Loading Object...`);
+        logger && logger.log(`Loading Object...`);
         loader.load(model, object => {
             while (this.scene.children.length > 0) {
                 this.scene.remove(this.scene.children[0]);
@@ -122,28 +125,35 @@ class ThreeScene extends Component {
 
             elapsedTime = new Date() - startTime;
             totalTime += elapsedTime;
-            console.log(`\tdone in ${elapsedTime}ms.`);
+            logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
             object.traverse(child => {
                 if (child instanceof Mesh) {
-                    child.geometry = createNormalizedNaiveGeometry(child);
+                    child.geometry = createNormalizedNaiveGeometry({ mesh: child, logger });
 
                     child.material.transparent = true;
                     child.material.opacity = 0.9;
                     child.material.color.setHex(0xcccccc);
 
                     startTime = new Date();
-                    console.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
+                    logger && logger.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
                     const { graph, source, target } = prepareDataStructures({
                         mesh: child,
                         qType,
                         vertexSelection,
                         vertexCount,
+                        logger,
                     });
 
                     if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
-                        const { path } = findGeodesicDistance(graph, qType, source, target);
+                        const { path } = findGeodesicDistance({
+                            graph,
+                            qType,
+                            source,
+                            target,
+                            logger,
+                        });
 
                         this.renderPathAsMeshLine(path);
                         this.renderVertex(source);
@@ -157,6 +167,7 @@ class ThreeScene extends Component {
                             qType,
                             p: source,
                             q: target,
+                            logger,
                         });
 
                         this.renderPathAsMeshLine(path);
@@ -168,6 +179,7 @@ class ThreeScene extends Component {
                             qType,
                             source,
                             count: 100,
+                            logger,
                         });
 
                         farthestPoints.forEach(vertex => {
@@ -179,6 +191,7 @@ class ThreeScene extends Component {
                             graph,
                             qType,
                             source,
+                            logger,
                         });
 
                         this.renderVertex(source);
@@ -192,7 +205,7 @@ class ThreeScene extends Component {
 
                     elapsedTime = new Date() - startTime;
                     totalTime += elapsedTime;
-                    console.log(`✅ Total time ${totalTime}ms.`);
+                    logger && logger.log(`✅ Total time ${totalTime}ms.`);
 
                     setTiming(totalTime);
                 }

@@ -1,13 +1,13 @@
 import { dijkstra } from "./geodesic_distance";
 
-export function findIsoCurveSignature({ geometry, graph, qType, source }) {
-    const { distances } = dijkstra({ graph, qType, source });
+export function findIsoCurveSignature({ geometry, graph, qType, source, logger }) {
+    const { distances } = dijkstra({ graph, qType, source, logger });
     const maxDistance = Math.max(...distances.values());
 
     let startTime, elapsedTime;
 
     startTime = new Date();
-    console.log(`Finding Geodesic Iso-Curves...`);
+    logger && logger.log(`Finding Geodesic Iso-Curves...`);
 
     const isoCurves = new Map();
     for (let i = maxDistance / 20.0; i < maxDistance; i += maxDistance / 20.0) {
@@ -66,7 +66,7 @@ export function findIsoCurveSignature({ geometry, graph, qType, source }) {
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         isoCurves,

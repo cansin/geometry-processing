@@ -1,14 +1,20 @@
 import { dijkstra, traverse } from "./geodesic_distance";
 import { Color } from "three";
 
-export function findBilateralMap({ geometry, graph, qType, p, q }) {
-    const { distances: distancesP, previous: previousP } = dijkstra({ graph, qType, source: p });
-    const { distances: distancesQ } = dijkstra({ graph, qType, source: q });
+export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
+    const { distances: distancesP, previous: previousP } = dijkstra({
+        graph,
+        qType,
+        source: p,
+        logger,
+    });
+    const { distances: distancesQ } = dijkstra({ graph, qType, source: q, logger });
     const { distance: distancePQ, path: pathPQ } = traverse({
         distances: distancesP,
         previous: previousP,
         source: p,
         target: q,
+        logger,
     });
 
     const G = new Map();
@@ -18,7 +24,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q }) {
     let startTime, elapsedTime;
 
     startTime = new Date();
-    console.log(`Finding Fuzzy Geodesic Scalar Field...`);
+    logger && logger.log(`Finding Fuzzy Geodesic Scalar Field...`);
 
     graph.vertices.forEach(x => {
         const distance =
@@ -31,10 +37,10 @@ export function findBilateralMap({ geometry, graph, qType, p, q }) {
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    console.log(`Calculating initial region...`);
+    logger && logger.log(`Calculating initial region...`);
 
     G.forEach((distance, x) => {
         if (distance > 0.3) {
@@ -43,10 +49,10 @@ export function findBilateralMap({ geometry, graph, qType, p, q }) {
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    console.log(`Calculating filtering region...`);
+    logger && logger.log(`Calculating filtering region...`);
 
     G.forEach((distance, x) => {
         if (distancesP.get(x) > distancePQ || distancesQ.get(x) > distancePQ) {
@@ -55,10 +61,10 @@ export function findBilateralMap({ geometry, graph, qType, p, q }) {
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     startTime = new Date();
-    console.log(`Divide the ROI into bins...`);
+    logger && logger.log(`Divide the ROI into bins...`);
 
     geometry.faces.forEach(face => {
         const v1 = geometry.vertices[face.a],
@@ -80,7 +86,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q }) {
     });
 
     elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
     return {
         path: pathPQ,
