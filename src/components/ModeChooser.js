@@ -5,13 +5,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
-import { observer } from "mobx-react";
+import { inject, observer } from "mobx-react";
 import autobind from "autobind-decorator";
 import { ASSIGNMENTS } from "../constants";
 import Paper from "@material-ui/core/Paper";
 import { unstable_Box as Box } from "@material-ui/core/Box";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
 
+@inject("store")
 @observer
 class ModeChooser extends Component {
     static propTypes = {

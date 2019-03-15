@@ -21,7 +21,7 @@ import { TrackballControls } from "three/examples/jsm/controls/TrackballControls
 import { OFFLoader } from "../loaders/OFFLoader";
 import { MeshLine, MeshLineMaterial } from "three.meshline";
 import PropTypes from "prop-types";
-import { observer } from "mobx-react";
+import { inject, observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
@@ -31,6 +31,7 @@ import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
 
+@inject("store")
 @observer
 class ThreeScene extends Component {
     static propTypes = {
