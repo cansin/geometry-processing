@@ -2,21 +2,16 @@ import React, { Component } from "react";
 import {
     AmbientLight,
     FaceColors,
-    Geometry,
-    Line,
-    LineBasicMaterial,
     Mesh,
-    MeshPhongMaterial,
     PerspectiveCamera,
     PointLight,
     Scene,
-    SphereBufferGeometry,
     Vector2,
     WebGLRenderer,
 } from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import { MeshLine, MeshLineMaterial } from "three.meshline";
+import { MeshLineMaterial } from "three.meshline";
 import PropTypes from "prop-types";
 import { inject, observer } from "mobx-react";
 import LineChart from "recharts/es6/chart/LineChart";
@@ -31,6 +26,8 @@ import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
+import { createPathAsMeshLine, createVertex } from "../objects";
+import autobind from "autobind-decorator";
 
 @inject("store")
 @observer
@@ -87,6 +84,86 @@ class ThreeScene extends Component {
         this.loadObject();
     }
 
+    @autobind
+    createGeodesicScene({ graph, qType, source, target, logger }) {
+        const { path } = findGeodesicDistance({
+            graph,
+            qType,
+            source,
+            target,
+            logger,
+        });
+
+        this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
+        this.scene.add(createVertex(source));
+        this.scene.add(createVertex(target));
+    }
+
+    @autobind
+    createBilateralScene({ mesh, graph, qType, source, target, logger }) {
+        mesh.material.vertexColors = FaceColors;
+
+        const { bilateralMap, path } = findBilateralMap({
+            geometry: mesh.geometry,
+            graph,
+            qType,
+            p: source,
+            q: target,
+            logger,
+        });
+
+        this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
+        this.scene.add(createVertex(source));
+        this.scene.add(createVertex(target));
+
+        this.props.store.setChartData({
+            name: "Bilateral Descriptor",
+            cartesian: Bar,
+            chart: BarChart,
+            data: bilateralMap,
+        });
+    }
+
+    @autobind
+    createIsoCurveScene({ mesh, graph, qType, source, logger }) {
+        const { isoCurves, isoDescriptor } = findIsoCurveSignature({
+            geometry: mesh.geometry,
+            graph,
+            qType,
+            source,
+            logger,
+        });
+
+        this.scene.add(createVertex(source));
+        isoCurves.forEach(edges => {
+            edges.forEach(({ vertices }) => {
+                this.scene.add(createPathAsMeshLine(vertices, this.meshLineMaterial));
+            });
+        });
+
+        this.props.store.setChartData({
+            name: "Iso-Curve Descriptor",
+            cartesian: ChartLine,
+            chart: LineChart,
+            data: isoDescriptor,
+        });
+    }
+
+    @autobind
+    createFarthestPointScene({ graph, qType, source, logger }) {
+        const { farthestPoints } = farthestPointSampling({
+            graph,
+            qType,
+            source,
+            count: 100,
+            logger,
+        });
+
+        farthestPoints.forEach(vertex => {
+            this.scene.add(createVertex(vertex));
+        });
+    }
+
     loadObject() {
         const { assignment, model, qType, vertexSelection, vertexCount } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
@@ -109,95 +186,40 @@ class ThreeScene extends Component {
             totalTime += elapsedTime;
             logger && logger.log(`\tdone in ${elapsedTime}ms.`);
 
-            object.traverse(child => {
-                if (child instanceof Mesh) {
-                    child.geometry = createNormalizedNaiveGeometry({ mesh: child, logger });
+            object.traverse(mesh => {
+                if (mesh instanceof Mesh) {
+                    mesh.geometry = createNormalizedNaiveGeometry({ mesh: mesh, logger });
 
-                    child.material.transparent = true;
-                    child.material.opacity = 0.9;
-                    child.material.color.setHex(0xcccccc);
+                    mesh.material.transparent = true;
+                    mesh.material.opacity = 0.9;
+                    mesh.material.color.setHex(0xcccccc);
 
                     startTime = new Date();
                     logger && logger.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
                     const { graph, source, target } = prepareDataStructures({
-                        mesh: child,
+                        mesh,
                         qType,
                         vertexSelection,
                         vertexCount,
                         logger,
                     });
 
-                    if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
-                        const { path } = findGeodesicDistance({
-                            graph,
-                            qType,
-                            source,
-                            target,
-                            logger,
-                        });
+                    const createScene = {
+                        [ASSIGNMENTS.Geodesic]: this.createGeodesicScene,
+                        [ASSIGNMENTS.Bilateral]: this.createBilateralScene,
+                        [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
+                        [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
+                    };
 
-                        this.renderPathAsMeshLine(path);
-                        this.renderVertex(source);
-                        this.renderVertex(target);
-                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
-                        child.material.vertexColors = FaceColors;
-
-                        const { bilateralMap, path } = findBilateralMap({
-                            geometry: child.geometry,
-                            graph,
-                            qType,
-                            p: source,
-                            q: target,
-                            logger,
-                        });
-
-                        this.renderPathAsMeshLine(path);
-                        this.renderVertex(path[0]);
-                        this.renderVertex(path[path.length - 1]);
-
-                        this.props.store.setChartData({
-                            name: "Bilateral Descriptor",
-                            cartesian: Bar,
-                            chart: BarChart,
-                            data: bilateralMap,
-                        });
-                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
-                        const { isoCurves, isoDescriptor } = findIsoCurveSignature({
-                            geometry: child.geometry,
-                            graph,
-                            qType,
-                            source,
-                            logger,
-                        });
-
-                        this.renderVertex(source);
-
-                        isoCurves.forEach(edges => {
-                            edges.forEach(edge => {
-                                this.renderPathAsMeshLine(edge.vertices);
-                            });
-                        });
-
-                        this.props.store.setChartData({
-                            name: "Iso-Curve Descriptor",
-                            cartesian: ChartLine,
-                            chart: LineChart,
-                            data: isoDescriptor,
-                        });
-                    } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint) {
-                        const { farthestPoints } = farthestPointSampling({
-                            graph,
-                            qType,
-                            source,
-                            count: 100,
-                            logger,
-                        });
-
-                        farthestPoints.forEach(vertex => {
-                            this.renderVertex(vertex);
-                        });
-                    }
+                    createScene[ASSIGNMENTS[assignment]]({
+                        mesh,
+                        graph,
+                        qType,
+                        source,
+                        target,
+                        logger,
+                    });
 
                     elapsedTime = new Date() - startTime;
                     totalTime += elapsedTime;
@@ -228,43 +250,6 @@ class ThreeScene extends Component {
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
         this.frameId = window.requestAnimationFrame(this.animate.bind(this));
-    }
-
-    renderPathAsMeshLine(path) {
-        const geometry = new Geometry();
-        path.forEach(vertex => {
-            geometry.vertices.push(vertex);
-        });
-
-        const line = new MeshLine();
-        line.setGeometry(geometry);
-
-        this.scene.add(new Mesh(line.geometry, this.meshLineMaterial));
-    }
-
-    renderPathAsLine(path) {
-        const geometry = new Geometry();
-        path.forEach(vertex => {
-            geometry.vertices.push(vertex);
-        });
-
-        const material = new LineBasicMaterial({
-            color: 0x0000ff,
-        });
-
-        const line = new Line(geometry, material);
-        this.scene.add(line);
-    }
-
-    renderVertex(vertex) {
-        const material = new MeshPhongMaterial({ color: 0x00ff00 });
-
-        const geometry = new SphereBufferGeometry(0.75);
-        geometry.translate(vertex.x, vertex.y, vertex.z);
-
-        const sphere = new Mesh(geometry, material);
-
-        this.scene.add(sphere);
     }
 
     render() {
