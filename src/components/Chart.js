@@ -29,12 +29,7 @@ class Chart extends Component {
                         <YAxis />
                         <Tooltip />
                         <Legend verticalAlign="top" />
-                        <Cartesian
-                            name={name}
-                            type="monotone"
-                            dataKey="value"
-                            fill="#cc0000"
-                            stroke="#cc0000">
+                        <Cartesian name={name} type="monotone" dataKey="value">
                             {data.map((entry, key) => (
                                 <Cell key={key} fill={entry.name % 2 ? "#cc0000" : "#0000cc"} />
                             ))}
