@@ -38,13 +38,11 @@ class Store {
 
     @action
     log(value) {
-        console.log(value);
         this.logs += `${value}\n`;
     }
 
     @action
     clear() {
-        console.clear();
         this.logs = "";
     }
 }
