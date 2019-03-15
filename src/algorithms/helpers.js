@@ -22,37 +22,17 @@ function choosePointsRandomly({ vertices }) {
 }
 
 function chooseFarthestPoints({ vertices }, graph, qType, vertexCount) {
-    const [source, target] = farthestPointSampling(
+    const [source, target] = farthestPointSampling({
         graph,
         qType,
-        vertices[0],
-        vertexCount,
-    ).farthestPoints;
+        source: vertices[0],
+        count: vertexCount,
+    }).farthestPoints;
 
     return {
         source,
         target,
     };
-}
-
-export function createNormalizedNaiveGeometry({ geometry }) {
-    let startTime, elapsedTime;
-
-    startTime = new Date();
-    console.log("Creating naive geometry...");
-
-    if (geometry && !geometry.isGeometry) {
-        geometry = new Geometry().fromBufferGeometry(geometry);
-        geometry.mergeVertices();
-    }
-
-    geometry.normalize();
-    geometry.scale(75, 75, 75);
-
-    elapsedTime = new Date() - startTime;
-    console.log(`\tdone in ${elapsedTime}ms.`);
-
-    return geometry;
 }
 
 function generateGraph({ faces, vertices }) {
@@ -97,7 +77,28 @@ function generateGraph({ faces, vertices }) {
     };
 }
 
-export function prepareDataStructures({ geometry }, qType, vertexSelection, vertexCount) {
+export function createNormalizedNaiveGeometry({ geometry }) {
+    let startTime, elapsedTime;
+
+    startTime = new Date();
+    console.log("Creating naive geometry...");
+
+    if (geometry && !geometry.isGeometry) {
+        geometry = new Geometry().fromBufferGeometry(geometry);
+        geometry.mergeVertices();
+    }
+
+    geometry.normalize();
+    geometry.scale(75, 75, 75);
+
+    elapsedTime = new Date() - startTime;
+    console.log(`\tdone in ${elapsedTime}ms.`);
+
+    return geometry;
+}
+
+export function prepareDataStructures({ mesh, qType, vertexSelection, vertexCount }) {
+    const { geometry } = mesh;
     const { graph } = generateGraph(geometry);
 
     let choosePoints;

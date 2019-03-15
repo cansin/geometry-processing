@@ -1,10 +1,15 @@
 import { dijkstra, traverse } from "./geodesic_distance";
 import { Color } from "three";
 
-export function findBilateralMap(geometry, graph, qType, p, q) {
-    const { distances: distancesP, previous: previousP } = dijkstra(graph, qType, p);
-    const { distances: distancesQ } = dijkstra(graph, qType, q);
-    const { distance: distancePQ, path: pathPQ } = traverse(distancesP, previousP, p, q);
+export function findBilateralMap({ geometry, graph, qType, p, q }) {
+    const { distances: distancesP, previous: previousP } = dijkstra({ graph, qType, source: p });
+    const { distances: distancesQ } = dijkstra({ graph, qType, source: q });
+    const { distance: distancePQ, path: pathPQ } = traverse({
+        distances: distancesP,
+        previous: previousP,
+        source: p,
+        target: q,
+    });
 
     const G = new Map();
     let minDistance = Infinity,

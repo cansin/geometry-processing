@@ -134,12 +134,12 @@ class ThreeScene extends Component {
                     startTime = new Date();
                     console.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
-                    const { graph, source, target } = prepareDataStructures(
-                        child,
+                    const { graph, source, target } = prepareDataStructures({
+                        mesh: child,
                         qType,
                         vertexSelection,
                         vertexCount,
-                    );
+                    });
 
                     if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic) {
                         const { path } = findGeodesicDistance(graph, qType, source, target);
@@ -150,30 +150,35 @@ class ThreeScene extends Component {
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.Bilateral) {
                         child.material.vertexColors = FaceColors;
 
-                        const { path } = findBilateralMap(
-                            child.geometry,
+                        const { path } = findBilateralMap({
+                            geometry: child.geometry,
                             graph,
                             qType,
-                            source,
-                            target,
-                        );
+                            p: source,
+                            q: target,
+                        });
 
                         this.renderPathAsMeshLine(path);
                         this.renderVertex(path[0]);
                         this.renderVertex(path[path.length - 1]);
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint) {
-                        const { farthestPoints } = farthestPointSampling(graph, qType, source, 100);
+                        const { farthestPoints } = farthestPointSampling({
+                            graph,
+                            qType,
+                            source,
+                            count: 100,
+                        });
 
                         farthestPoints.forEach(vertex => {
                             this.renderVertex(vertex);
                         });
                     } else if (ASSIGNMENTS[assignment] === ASSIGNMENTS.IsoCurve) {
-                        const { isoCurves } = findIsoCurveSignature(
-                            child.geometry,
+                        const { isoCurves } = findIsoCurveSignature({
+                            geometry: child.geometry,
                             graph,
                             qType,
                             source,
-                        );
+                        });
 
                         this.renderVertex(source);
 

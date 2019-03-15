@@ -3,11 +3,7 @@ import BinaryHeap from "@tyriar/binary-heap";
 import MinSet from "./MinSet";
 import { Q_TYPES } from "../constants";
 
-export function dijkstra(graph, qType, source, targets = [], logs = true) {
-    if (!(targets instanceof Array)) {
-        targets = [targets];
-    }
-
+export function dijkstra({ graph, qType, source, targets = [], logs = true }) {
     let startTime, elapsedTime;
 
     startTime = new Date();
@@ -98,7 +94,7 @@ export function dijkstra(graph, qType, source, targets = [], logs = true) {
     };
 }
 
-export function traverse(distances, previous, source, target) {
+export function traverse({ distances, previous, source, target }) {
     let startTime, elapsedTime;
 
     // 1  S ← empty sequence
@@ -130,7 +126,7 @@ export function traverse(distances, previous, source, target) {
 }
 
 export function findGeodesicDistance(graph, qType, source, target) {
-    const { distances, previous } = dijkstra(graph, qType, source, target);
+    const { distances, previous } = dijkstra({ graph, qType, source, targets: [target] });
 
-    return traverse(distances, previous, source, target);
+    return traverse({ distances, previous, source, target });
 }
