@@ -22,10 +22,7 @@ import autobind from "autobind-decorator";
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
-import {
-    findGeodesicDistance,
-    populateGeodesicDistanceMatrix,
-} from "../algorithms/geodesic_distance";
+import { findGeodesicDistance } from "../algorithms/geodesic_distance";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
