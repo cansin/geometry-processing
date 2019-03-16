@@ -184,7 +184,7 @@ class ThreeScene extends Component {
 
             elapsedTime = new Date() - startTime;
             totalTime += elapsedTime;
-            logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+            logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
             object.traverse(mesh => {
                 if (mesh instanceof Mesh) {
@@ -223,7 +223,7 @@ class ThreeScene extends Component {
 
                     elapsedTime = new Date() - startTime;
                     totalTime += elapsedTime;
-                    logger && logger.log(`✅ Total time ${totalTime}ms.`);
+                    logger && logger.log(`✅ Total time ${totalTime.toLocaleString()}ms.`);
                 }
             });
 

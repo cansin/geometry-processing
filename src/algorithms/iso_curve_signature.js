@@ -78,7 +78,7 @@ export function findIsoCurveSignature({ geometry, graph, qType, source, logger }
     });
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     return {
         isoCurves,

@@ -36,7 +36,7 @@ export function farthestPointSampling({ graph, qType, source, count, logger }) {
     }
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     return {
         farthestPoints,

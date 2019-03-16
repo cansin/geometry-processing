@@ -38,7 +38,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
     });
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     startTime = new Date();
     logger && logger.log(`Calculating initial region...`);
@@ -50,7 +50,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
     });
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     startTime = new Date();
     logger && logger.log(`Calculating filtering region...`);
@@ -62,7 +62,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
     });
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     startTime = new Date();
     logger && logger.log(`Divide the ROI into bins...`);
@@ -100,7 +100,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
     });
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     return {
         path: pathPQ,

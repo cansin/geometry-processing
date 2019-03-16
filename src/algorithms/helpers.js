@@ -16,7 +16,7 @@ function choosePointsRandomly({ geometry, logger }) {
     const target = vertices[Math.floor(Math.random() * vertices.length)];
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     return {
         source,
@@ -54,7 +54,7 @@ function generateGraph({ geometry, logger }) {
     });
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     startTime = new Date();
     logger && logger.log(`Adding edges to the graph...`);
@@ -76,7 +76,7 @@ function generateGraph({ geometry, logger }) {
     }
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     return {
         graph,
@@ -99,7 +99,7 @@ export function createNormalizedNaiveGeometry({ mesh, logger }) {
     geometry.scale(75, 75, 75);
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     return geometry;
 }

@@ -48,7 +48,7 @@ export function dijkstra({ graph, qType, source, targets = [], logger }) {
     });
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     startTime = new Date();
     logger && logger.log(`Finding shortest paths...`);
@@ -85,7 +85,7 @@ export function dijkstra({ graph, qType, source, targets = [], logger }) {
     }
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     // 22
     // 23      return dist[], prev[]
@@ -119,7 +119,7 @@ export function traverse({ distances, previous, source, target, logger }) {
     }
 
     elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime}ms.`);
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
     return {
         distance: distances.get(target),
