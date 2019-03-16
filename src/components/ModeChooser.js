@@ -61,7 +61,7 @@ class ModeChooser extends Component {
 
     @autobind
     handleCreateMatrix() {
-        const { graph, mesh, qType } = this.props.store;
+        const { assignment, model, graph, mesh, qType } = this.props.store;
 
         const { matrix } = populateGeodesicDistanceMatrix({
             geometry: mesh.geometry,
@@ -77,10 +77,13 @@ class ModeChooser extends Component {
         const url = window.URL.createObjectURL(blob);
 
         const a = document.createElement("a");
+        const filename = Object.keys(MODELS[assignment]).filter(
+            key => MODELS[assignment][key] === model,
+        )[0];
         document.body.appendChild(a);
         a.style = "display: none";
         a.href = url;
-        a.download = "geodesic_matrix.txt";
+        a.download = `${filename}_geodesic_matrix.txt`;
 
         a.click();
 
