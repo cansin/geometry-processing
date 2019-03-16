@@ -72,5 +72,6 @@ export const Q_TYPES = Object.freeze({
 
 export const VERTEX_SELECTIONS = Object.freeze({
     Random: "Random",
+    FirstAndLast: "First and Last",
     FarthestPoint: "Farthest Points",
 });

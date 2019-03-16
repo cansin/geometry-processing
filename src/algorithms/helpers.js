@@ -5,6 +5,25 @@ import { VERTEX_SELECTIONS } from "../constants";
 import UndirectedWeightedGraph from "./UndirectedWeightedGraph";
 import { farthestPointSampling } from "./farthest_point_sampling";
 
+function chooseFirstAndLastPoint({ geometry, logger }) {
+    const { vertices } = geometry;
+    let startTime, elapsedTime;
+
+    startTime = new Date();
+    logger && logger.log(`Choosing points...`);
+
+    const source = vertices[0];
+    const target = vertices[vertices.length - 1];
+
+    elapsedTime = new Date() - startTime;
+    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
+
+    return {
+        source,
+        target,
+    };
+}
+
 function choosePointsRandomly({ geometry, logger }) {
     const { vertices } = geometry;
     let startTime, elapsedTime;
@@ -114,6 +133,8 @@ export function prepareDataStructures({ mesh, qType, vertexSelection, vertexCoun
         choosePoints = choosePointsRandomly;
     } else if (VERTEX_SELECTIONS[vertexSelection] === VERTEX_SELECTIONS.FarthestPoint) {
         choosePoints = chooseFarthestPoints;
+    } else if (VERTEX_SELECTIONS[vertexSelection] === VERTEX_SELECTIONS.FirstAndLast) {
+        choosePoints = chooseFirstAndLastPoint;
     }
 
     const { source, target } = choosePoints({ geometry, graph, qType, vertexCount, logger });
