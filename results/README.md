@@ -1,4 +1,6 @@
-### Geodesic Distances on Meshes
+# Notes
+
+## Geodesic Distances on Meshes
 
 There was not anything surprising with Geodesic distance 
 implementation. The Fibonacci heap was quite noticeably 
@@ -7,9 +9,9 @@ more performant than a naive Set implementation as expected.
 Also, using an early exit strategy when the `target` node is
 known resulted in an even shorter execution time.
 
-### Sampling and Descriptors on Meshes
+## Sampling and Descriptors on Meshes
 
-#### Farthest Point Sampling
+### Farthest Point Sampling
 
 Using inversed distances in a Fibonacci Heap helped with the
 performance of finding the next point to sample 
@@ -19,7 +21,7 @@ Also, dropping the initial randomly chosen point as soon
 as the second point is sampled resulted in a more accurate
 sample set. 
 
-#### Geodesic Iso-Curve Signature
+### Geodesic Iso-Curve Signature
 
 The Iso-Curve Signature paper was not very clear on how the 
 distribution of Iso-Curve radii. They were mentioning an x to 
@@ -31,7 +33,7 @@ Also, I needed to de-dupe the Iso-Curves created with the
 intersection formula given by the paper. For each radius,
 I was ending up creating 2 very closely resembling curves.
 
-#### Bilateral Maps
+### Bilateral Maps
 
 In order to not create a graph using `faces`, and instead be 
 able to re-use the existing `vertices` graph, I ended up
