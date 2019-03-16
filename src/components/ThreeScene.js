@@ -18,6 +18,7 @@ import LineChart from "recharts/es6/chart/LineChart";
 import BarChart from "recharts/es6/chart/BarChart";
 import Bar from "recharts/es6/cartesian/Bar";
 import ChartLine from "recharts/es6/cartesian/Line";
+import autobind from "autobind-decorator";
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
@@ -27,7 +28,6 @@ import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
 import { createPathAsMeshLine, createVertex } from "../objects";
-import autobind from "autobind-decorator";
 
 @inject("store")
 @observer

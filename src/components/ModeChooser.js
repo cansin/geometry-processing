@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -13,10 +14,18 @@ import Grid from "@material-ui/core/Grid";
 import { ASSIGNMENTS } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
 
+const styles = theme => ({
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 110,
+    },
+});
+
 @inject("store")
 @observer
 class ModeChooser extends Component {
     static propTypes = {
+        classes: PropTypes.object.isRequired,
         store: PropTypes.object.isRequired,
     };
 
@@ -41,12 +50,13 @@ class ModeChooser extends Component {
     }
 
     render() {
-        const { assignment, model, qType, vertexSelection } = this.props.store;
+        const { classes, store } = this.props;
+        const { assignment, model, qType, vertexSelection } = store;
         return (
             <Paper>
                 <Grid container>
                     <Grid item>
-                        <FormControl>
+                        <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="assignment">Assignment</InputLabel>
                             <Select
                                 value={assignment}
@@ -62,7 +72,7 @@ class ModeChooser extends Component {
                         </FormControl>
                     </Grid>
                     <Grid item>
-                        <FormControl>
+                        <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="model">Model</InputLabel>
                             <Select
                                 value={model}
@@ -78,7 +88,7 @@ class ModeChooser extends Component {
                         </FormControl>
                     </Grid>
                     <Grid item>
-                        <FormControl style={{ minWidth: 110 }}>
+                        <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
                             <Select
                                 value={qType}
@@ -94,7 +104,7 @@ class ModeChooser extends Component {
                         </FormControl>
                     </Grid>
                     <Grid item>
-                        <FormControl>
+                        <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="vertex-selection">Vertices</InputLabel>
                             <Select
                                 value={vertexSelection}
@@ -115,4 +125,4 @@ class ModeChooser extends Component {
     }
 }
 
-export default ModeChooser;
+export default withStyles(styles)(ModeChooser);

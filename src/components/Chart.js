@@ -9,19 +9,28 @@ import YAxis from "recharts/es6/cartesian/YAxis";
 import Tooltip from "recharts/es6/component/Tooltip";
 import Legend from "recharts/es6/component/Legend";
 import Cell from "recharts/es6/component/Cell";
+import { withStyles } from "@material-ui/core";
+
+const styles = theme => ({
+    paper: {
+        padding: theme.spacing.unit,
+    },
+});
 
 @inject("store")
 @observer
 class Chart extends Component {
     static propTypes = {
+        classes: PropTypes.object.isRequired,
         store: PropTypes.object.isRequired,
     };
 
     render() {
-        const { name, data, chart: Chart, cartesian: Cartesian } = this.props.store.chartData;
+        const { classes, store } = this.props;
+        const { name, data, chart: Chart, cartesian: Cartesian } = store.chartData;
 
         return (
-            <Paper>
+            <Paper className={classes.paper}>
                 <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={300}>
                     <Chart data={data}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -41,4 +50,4 @@ class Chart extends Component {
     }
 }
 
-export default Chart;
+export default withStyles(styles)(Chart);

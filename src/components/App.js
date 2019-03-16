@@ -13,7 +13,7 @@ class App extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Grid container spacing={24}>
+                <Grid container spacing={16}>
                     <Grid item xs={12}>
                         <ModeChooser />
                     </Grid>
@@ -21,7 +21,12 @@ class App extends Component {
                         <ThreeScene />
                     </Grid>
                     <Grid item xs={4}>
-                        <Grid container direction="column" justify="center" alignItems="stretch">
+                        <Grid
+                            container
+                            spacing={16}
+                            direction="column"
+                            justify="center"
+                            alignItems="stretch">
                             {store.chartData && (
                                 <Grid item>
                                     <Chart />
