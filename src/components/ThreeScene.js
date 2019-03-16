@@ -22,7 +22,10 @@ import autobind from "autobind-decorator";
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
-import { findGeodesicDistance } from "../algorithms/geodesic_distance";
+import {
+    findGeodesicDistance,
+    populateGeodesicDistanceMatrix,
+} from "../algorithms/geodesic_distance";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
@@ -197,6 +200,7 @@ class ThreeScene extends Component {
                     startTime = new Date();
                     logger && logger.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
+                    this.props.store.setMesh(mesh);
                     const { graph, source, target } = prepareDataStructures({
                         mesh,
                         qType,
@@ -204,6 +208,7 @@ class ThreeScene extends Component {
                         vertexCount,
                         logger,
                     });
+                    this.props.store.setGraph(graph);
 
                     const createScene = {
                         [ASSIGNMENTS.Geodesic]: this.createGeodesicScene,

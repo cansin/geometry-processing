@@ -10,14 +10,24 @@ import { inject, observer } from "mobx-react";
 import autobind from "autobind-decorator";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import { Button } from "@material-ui/core";
+import SaveIcon from "@material-ui/icons/SaveAlt";
 
 import { ASSIGNMENTS } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
+import { populateGeodesicDistanceMatrix } from "../algorithms/geodesic_distance";
 
 const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit,
+        minWidth: 110,
+    },
     formControl: {
         margin: theme.spacing.unit,
         minWidth: 110,
+    },
+    icon: {
+        marginRight: theme.spacing.unit,
     },
 });
 
@@ -49,12 +59,28 @@ class ModeChooser extends Component {
         this.props.store.setVertexSelection(event.target.value);
     }
 
+    @autobind
+    handleCreateMatrix() {
+        const { graph, mesh, qType } = this.props.store;
+
+        const { matrix } = populateGeodesicDistanceMatrix({
+            geometry: mesh.geometry,
+            graph,
+            qType,
+            logger: this.props.store,
+        });
+
+        matrix.forEach(row => {
+            console.log(JSON.stringify(Array.from(row.values())));
+        });
+    }
+
     render() {
         const { classes, store } = this.props;
         const { assignment, model, qType, vertexSelection } = store;
         return (
             <Paper>
-                <Grid container>
+                <Grid container alignItems="center">
                     <Grid item>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="assignment">Assignment</InputLabel>
@@ -119,6 +145,18 @@ class ModeChooser extends Component {
                             </Select>
                         </FormControl>
                     </Grid>
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic && (
+                        <Grid item>
+                            <Button
+                                className={classes.button}
+                                color="secondary"
+                                onClick={this.handleCreateMatrix}
+                                variant="contained">
+                                <SaveIcon className={classes.icon} />
+                                Create Matrix
+                            </Button>
+                        </Grid>
+                    )}
                 </Grid>
             </Paper>
         );

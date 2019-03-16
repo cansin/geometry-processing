@@ -132,3 +132,38 @@ export function findGeodesicDistance({ graph, qType, source, target, logger }) {
 
     return traverse({ distances, previous, source, target, logger });
 }
+
+export function populateGeodesicDistanceMatrix({ geometry, graph, qType, logger }) {
+    const matrix = new Map();
+
+    geometry.vertices.forEach(source => {
+        matrix.set(`${source.x}:${source.y}:${source.z}`, new Map());
+        const { distances } = dijkstra({ graph, qType, source, logger });
+
+        distances.forEach((distance, target) => {
+            matrix
+                .get(`${source.x}:${source.y}:${source.z}`)
+                .set(`${target.x}:${target.y}:${target.z}`, distance);
+        });
+
+        Array.from(matrix.get(`${source.x}:${source.y}:${source.z}`).keys())
+            .sort()
+            .reduce((accumulator, currentValue) => {
+                accumulator[currentValue] = matrix
+                    .get(`${source.x}:${source.y}:${source.z}`)
+                    .get(currentValue);
+                return accumulator;
+            }, {});
+    });
+
+    Array.from(matrix.keys())
+        .sort()
+        .reduce((accumulator, currentValue) => {
+            accumulator[currentValue] = matrix.get(currentValue);
+            return accumulator;
+        }, {});
+
+    return {
+        matrix,
+    };
+}
