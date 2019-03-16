@@ -67,12 +67,25 @@ class ModeChooser extends Component {
             geometry: mesh.geometry,
             graph,
             qType,
-            logger: this.props.store,
         });
 
+        let data = "";
         matrix.forEach(row => {
-            console.log(JSON.stringify(Array.from(row.values())));
+            data += Array.from(row.values()).join(" ") + "\n";
         });
+        const blob = new Blob([data], { type: "octet/stream" });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        a.href = url;
+        a.download = "geodesic_matrix.txt";
+
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
     }
 
     render() {
