@@ -1,9 +1,9 @@
 import { FibonacciHeap } from "@tyriar/fibonacci-heap";
-import BinaryHeap from "@tyriar/binary-heap";
 
 import { Q_TYPES } from "../constants";
 
 import MinSet from "./MinSet";
+import MinHeap from "./MinHeap";
 
 export function dijkstra({ graph, qType, source, targets = [], logger }) {
     let startTime, elapsedTime;
@@ -22,7 +22,7 @@ export function dijkstra({ graph, qType, source, targets = [], logger }) {
             break;
         case Q_TYPES.MinHeap:
             logger && logger.log("\tUsing a Min Heap.");
-            Q = new BinaryHeap();
+            Q = new MinHeap();
             break;
         case Q_TYPES.FibonacciHeap:
             logger && logger.log("\tUsing a Fibonacci Heap.");

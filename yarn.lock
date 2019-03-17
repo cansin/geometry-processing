@@ -781,11 +781,6 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@tyriar/binary-heap@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@tyriar/binary-heap/-/binary-heap-1.0.5.tgz#0a7d2852599d79fd74853af585e17f2981683b01"
-  integrity sha1-Cn0oUlmdef10hTr1heF/KYFoOwE=
-
 "@tyriar/fibonacci-heap@^2.0.9":
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/@tyriar/fibonacci-heap/-/fibonacci-heap-2.0.9.tgz#df3dcbdb1b9182168601f6318366157ee16666e9"
@@ -2762,6 +2757,11 @@ fastparse@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.2.tgz#91728c5a5942eced8531283c79441ee4122c35a9"
   integrity sha512-483XLLxTVIwWK3QTrMGRqUfUpoOs/0hbQrl2oz4J0pAcm3A3bu84wxTFqGqkJzewCLdME38xJLJAxBABfQT8sQ==
+
+fastpriorityqueue@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/fastpriorityqueue/-/fastpriorityqueue-0.6.1.tgz#a4ef79956d2e8c0a148fc00371c920db802c5e8f"
+  integrity sha512-UBCrvnXWpSJHQ2eg5CuYpQekegw1IZQT1osEqu1aBgcwPck+E7J/EObCP2k0FB+VE+g+7dG1NaYvmERfYh2ATA==
 
 faye-websocket@^0.10.0:
   version "0.10.0"
