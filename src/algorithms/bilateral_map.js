@@ -81,7 +81,7 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
             distance3 = G.get(v1),
             hue = (distance1 + distance2 + distance3) / 3.0;
 
-        color.setHSL(hue, 0.5, 0.5);
+        color.setHSL(((1 - hue) * 240.0) / 360.0, 1, 0.5);
 
         // Calculate the area using Heron's formula
         const e1 = v1.distanceTo(v2),
@@ -195,7 +195,7 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
             distance3 = G.get(v3),
             hue = (distance1 + distance2 + distance3) / 3.0;
 
-        color.setHSL(hue, 0.5, 0.5);
+        color.setHSL(((1 - hue) * 240.0) / 360.0, 1, 0.5);
 
         // Calculate the area using Heron's formula
         const e1 = v1.distanceTo(v2),
