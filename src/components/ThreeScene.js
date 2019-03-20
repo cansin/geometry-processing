@@ -23,7 +23,7 @@ import autobind from "autobind-decorator";
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic_distance";
-import { findBilateralMap } from "../algorithms/bilateral_map";
+import { findBilateralMap, findMultiSeedBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
@@ -113,8 +113,36 @@ class ThreeScene extends Component {
         });
 
         this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
-        this.scene.add(createVertex(source));
-        this.scene.add(createVertex(target));
+        this.scene.add(createVertex(source, 0x00ff00));
+        this.scene.add(createVertex(target, 0xff0000));
+
+        this.props.store.setChartData({
+            name: "Bilateral Descriptor",
+            cartesian: Bar,
+            chart: BarChart,
+            data: bilateralMap,
+        });
+    }
+
+    @autobind
+    createMultiSeedBilateralScene({ mesh, graph, qType, logger, vertexCount }) {
+        mesh.material.vertexColors = FaceColors;
+
+        const { bilateralMap, path, points } = findMultiSeedBilateralMap({
+            geometry: mesh.geometry,
+            graph,
+            qType,
+            logger,
+            vertexCount,
+        });
+
+        this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
+
+        let isFirst = true;
+        points.forEach(vertex => {
+            this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
+            isFirst = false;
+        });
 
         this.props.store.setChartData({
             name: "Bilateral Descriptor",
@@ -210,6 +238,7 @@ class ThreeScene extends Component {
                     const createScene = {
                         [ASSIGNMENTS.Geodesic]: this.createGeodesicScene,
                         [ASSIGNMENTS.Bilateral]: this.createBilateralScene,
+                        [ASSIGNMENTS.MultiSeedBilateral]: this.createMultiSeedBilateralScene,
                         [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
                         [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
                     };
@@ -221,6 +250,7 @@ class ThreeScene extends Component {
                         source,
                         target,
                         logger,
+                        vertexCount,
                     });
 
                     elapsedTime = new Date() - startTime;
@@ -255,10 +285,10 @@ class ThreeScene extends Component {
     }
 
     render() {
-        const { assignment, model, qType, vertexSelection } = this.props.store;
+        const { assignment, model, qType, vertexSelection, vertexCount } = this.props.store;
         return (
             <div
-                aria-label={`${assignment} ${model} ${qType} ${vertexSelection}`}
+                aria-label={`${assignment} ${model} ${qType} ${vertexSelection} ${vertexCount}`}
                 style={{
                     height: "100%",
                     width: "100%",

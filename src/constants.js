@@ -25,6 +25,7 @@ import cat from "../meshes1/3) use for bilateral descriptor/cat.off";
 export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic Distance",
     Bilateral: "Bilateral Descriptor",
+    MultiSeedBilateral: "Multi-Seed Bilateral Descriptor",
     IsoCurve: "Iso-Curve Descriptor",
     FarthestPoint: "Farthest Point Sampling",
 });
@@ -33,6 +34,21 @@ export const MODELS = Object.freeze({
     Geodesic: { horse0, man0, centaur, dragon, man, weirdSphere },
     IsoCurve: { man0, dragon, man4, man3, gorilla, woman, man2 },
     Bilateral: {
+        princetonHuman32Incomplete,
+        princetonHuman30,
+        neptune,
+        human,
+        humanWithShortcut,
+        horse2,
+        horse1,
+        horsePartialHole2,
+        horsePartialHole,
+        centaur2,
+        centaur,
+        cat1,
+        cat,
+    },
+    MultiSeedBilateral: {
         princetonHuman32Incomplete,
         princetonHuman30,
         neptune,

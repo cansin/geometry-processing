@@ -34,8 +34,8 @@ export function createPathAsLine(path) {
     return line;
 }
 
-export function createVertex(vertex) {
-    const material = new MeshPhongMaterial({ color: 0x00ff00 });
+export function createVertex(vertex, color = 0x00ff00) {
+    const material = new MeshPhongMaterial({ color });
 
     const geometry = new SphereBufferGeometry(0.75);
     geometry.translate(vertex.x, vertex.y, vertex.z);
