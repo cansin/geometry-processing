@@ -1,13 +1,13 @@
 import { dijkstra, traverse } from "./geodesic_distance";
 
 export function findNearestNeighbors({ graph, qType, logger, points }) {
-    const visited = [Array.from(points)[0]];
+    const visited = [points[0]];
 
     const allGeodesics = new Map();
     const path = [];
     let distance = 0;
 
-    while (visited.length !== points.size) {
+    while (visited.length !== points.length) {
         const source = visited[visited.length - 1];
         const { distances, previous } = dijkstra({
             graph,

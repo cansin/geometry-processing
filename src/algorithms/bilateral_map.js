@@ -76,24 +76,26 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
 
         const color = new Color(0xcccccc);
 
-        const distance1 = G.get(v1),
-            distance2 = G.get(v1),
-            distance3 = G.get(v1),
-            hue = (distance1 + distance2 + distance3) / 3.0;
+        if (G.get(v1) !== Infinity && G.get(v2) !== Infinity && G.get(v3) !== Infinity) {
+            const distance1 = (distancesP.get(v1) * 20.0) / distancePQ,
+                distance2 = (distancesP.get(v2) * 20.0) / distancePQ,
+                distance3 = (distancesP.get(v3) * 20.0) / distancePQ,
+                hue = Math.floor((distance1 + distance2 + distance3) / 3.0);
 
-        color.setHSL(((1 - hue) * 240.0) / 360.0, 1, 0.5);
+            color.setHSL((1 - (hue % 2)) * (2.0 / 3.0), 1.0, 0.5);
 
-        // Calculate the area using Heron's formula
-        const e1 = v1.distanceTo(v2),
-            e2 = v2.distanceTo(v3),
-            e3 = v1.distanceTo(v3);
-        const s = (e1 + e2 + e3) / 2.0;
-        bilateralMap[hue] = {
-            name: hue,
-            value:
-                ((bilateralMap[hue] && bilateralMap[hue].value) || 0) +
-                Math.sqrt(s * (s - e1) * (s - e2) * (s - e3)),
-        };
+            // Calcuate the area using Heron's formula
+            const e1 = v1.distanceTo(v2),
+                e2 = v2.distanceTo(v3),
+                e3 = v1.distanceTo(v3);
+            const s = (e1 + e2 + e3) / 2.0;
+            bilateralMap[hue] = {
+                name: hue,
+                value:
+                    ((bilateralMap[hue] && bilateralMap[hue].value) || 0) +
+                    Math.sqrt(s * (s - e1) * (s - e2) * (s - e3)),
+            };
+        }
 
         face.color = color;
     });
@@ -120,12 +122,31 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
         logger,
     });
 
-    const { allGeodesics, distance: pathDistance, path } = findNearestNeighbors({
+    const {
+        allGeodesics: allGeodesics1,
+        distance: pathDistance1,
+        path: path1,
+    } = findNearestNeighbors({
         graph,
         qType,
         logger,
         points,
     });
+
+    const {
+        allGeodesics: allGeodesics2,
+        distance: pathDistance2,
+        path: path2,
+    } = findNearestNeighbors({
+        graph,
+        qType,
+        logger,
+        points: [path1[path1.length - 1], path1[0]],
+    });
+
+    const allGeodesics = new Map([...allGeodesics1, ...allGeodesics2]);
+    const pathDistance = pathDistance1 + pathDistance2;
+    const path = [...path1, ...path2];
 
     const source = path[0];
     const distancesToSource = allGeodesics.get(source).distances;
@@ -144,7 +165,9 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
         allGeodesics.forEach(({ distances }) => {
             distance += distances.get(x);
         });
-        distance = Math.abs((distance - pathDistance) / pathDistance);
+        distance =
+            (distance / (allGeodesics.size - 1) - pathDistance / allGeodesics.size) /
+            (pathDistance / allGeodesics.size);
 
         minDistance = Math.min(distance, minDistance);
         maxDistance = Math.max(distance, maxDistance);
@@ -171,7 +194,10 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
     logger && logger.log(`Calculating filtering region...`);
 
     G.forEach((distance, x) => {
-        if (distancesToSource.get(x) > pathDistance || distancesToSource.get(x) > pathDistance) {
+        if (
+            distancesToSource.get(x) > pathDistance / allGeodesics.size ||
+            distancesToSource.get(x) > pathDistance / allGeodesics.size
+        ) {
             G.set(x, Infinity);
         }
     });
@@ -190,24 +216,27 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
 
         const color = new Color(0xcccccc);
 
-        const distance1 = G.get(v1),
-            distance2 = G.get(v2),
-            distance3 = G.get(v3),
-            hue = (distance1 + distance2 + distance3) / 3.0;
+        if (G.get(v1) !== Infinity && G.get(v2) !== Infinity && G.get(v3) !== Infinity) {
+            const distance1 =
+                    (distancesToSource.get(v1) * 20.0) / (pathDistance / allGeodesics.size),
+                distance2 = (distancesToSource.get(v2) * 20.0) / (pathDistance / allGeodesics.size),
+                distance3 = (distancesToSource.get(v3) * 20.0) / (pathDistance / allGeodesics.size),
+                hue = Math.floor((distance1 + distance2 + distance3) / 3.0);
 
-        color.setHSL(((1 - hue) * 240.0) / 360.0, 1, 0.5);
+            color.setHSL((1 - (hue % 2)) * (2.0 / 3.0), 1.0, 0.5);
 
-        // Calculate the area using Heron's formula
-        const e1 = v1.distanceTo(v2),
-            e2 = v2.distanceTo(v3),
-            e3 = v1.distanceTo(v3);
-        const s = (e1 + e2 + e3) / 2.0;
-        bilateralMap[hue] = {
-            name: hue,
-            value:
-                ((bilateralMap[hue] && bilateralMap[hue].value) || 0) +
-                Math.sqrt(s * (s - e1) * (s - e2) * (s - e3)),
-        };
+            // Calculate the area using Heron's formula
+            const e1 = v1.distanceTo(v2),
+                e2 = v2.distanceTo(v3),
+                e3 = v1.distanceTo(v3);
+            const s = (e1 + e2 + e3) / 2.0;
+            bilateralMap[hue] = {
+                name: hue,
+                value:
+                    ((bilateralMap[hue] && bilateralMap[hue].value) || 0) +
+                    Math.sqrt(s * (s - e1) * (s - e2) * (s - e3)),
+            };
+        }
 
         face.color = color;
     });
