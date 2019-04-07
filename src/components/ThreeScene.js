@@ -23,7 +23,11 @@ import autobind from "autobind-decorator";
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic_distance";
-import { findBilateralMap, findMultiSeedBilateralMap } from "../algorithms/bilateral_map";
+import {
+    findBilateralMap,
+    findMultiSeedBilateralMap,
+    findTriangularBilateralMap,
+} from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
@@ -153,6 +157,35 @@ class ThreeScene extends Component {
     }
 
     @autobind
+    createTriangularBilateralScene({ mesh, graph, qType, logger }) {
+        mesh.material.vertexColors = FaceColors;
+
+        const { paths, points } = findTriangularBilateralMap({
+            geometry: mesh.geometry,
+            graph,
+            qType,
+            logger,
+        });
+
+        paths.forEach(path => {
+            this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
+        });
+
+        let isFirst = true;
+        points.forEach(vertex => {
+            this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
+            isFirst = false;
+        });
+
+        // this.props.store.setChartData({
+        //     name: "Bilateral Descriptor",
+        //     cartesian: Bar,
+        //     chart: BarChart,
+        //     data: bilateralMap,
+        // });
+    }
+
+    @autobind
     createIsoCurveScene({ mesh, graph, qType, source, logger }) {
         const { isoCurves, isoDescriptor } = findIsoCurveSignature({
             geometry: mesh.geometry,
@@ -239,6 +272,7 @@ class ThreeScene extends Component {
                         [ASSIGNMENTS.Geodesic]: this.createGeodesicScene,
                         [ASSIGNMENTS.Bilateral]: this.createBilateralScene,
                         [ASSIGNMENTS.MultiSeedBilateral]: this.createMultiSeedBilateralScene,
+                        [ASSIGNMENTS.TriangularBilateral]: this.createTriangularBilateralScene,
                         [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
                         [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
                     };

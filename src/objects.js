@@ -20,14 +20,14 @@ export function createPathAsMeshLine(path, material) {
     return new Mesh(line.geometry, material);
 }
 
-export function createPathAsLine(path) {
+export function createPathAsLine(path, color = 0x0000ff) {
     const geometry = new Geometry();
     path.forEach(vertex => {
         geometry.vertices.push(vertex);
     });
 
     const material = new LineBasicMaterial({
-        color: 0x0000ff,
+        color,
     });
 
     const line = new Line(geometry, material);

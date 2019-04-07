@@ -167,17 +167,19 @@ class ModeChooser extends Component {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item>
-                        <FormControl className={classes.formControl}>
-                            <TextField
-                                id="vertex-count"
-                                label="Vertex Count"
-                                value={vertexCount}
-                                onChange={this.handleVertexCountChange}
-                                type="number"
-                            />
-                        </FormControl>
-                    </Grid>
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.MultiSeedBilateral && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <TextField
+                                    id="vertex-count"
+                                    label="Vertex Count"
+                                    value={vertexCount}
+                                    onChange={this.handleVertexCountChange}
+                                    type="number"
+                                />
+                            </FormControl>
+                        </Grid>
+                    )}
                     {ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic && (
                         <Grid item>
                             <Button

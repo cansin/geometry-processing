@@ -1,6 +1,6 @@
-import { action, computed, observable } from "mobx";
+import { action, observable } from "mobx";
 
-import { ASSIGNMENTS, MODELS } from "../constants";
+import { MODELS } from "../constants";
 
 class Store {
     @observable assignment = "Geodesic";
