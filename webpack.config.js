@@ -17,7 +17,7 @@ module.exports = {
                 "https://fonts.googleapis.com/css?family=Roboto:300,400,500",
                 "https://fonts.googleapis.com/icon?family=Material+Icons",
             ],
-            title: "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignment I",
+            title: "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignments",
             xhtml: true,
             appMountId: "app",
         }),
