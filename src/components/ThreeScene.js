@@ -228,13 +228,12 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createMeshParameterizationScene({ mesh, graph, qType, source, target, logger }) {
+    createMeshParameterizationScene({ mesh, graph, weightApproach, boundaryShape, logger }) {
         const { allEdges, boundaryVertices, boundaryEdges } = generateMeshParameterization({
             geometry: mesh.geometry,
             graph,
-            qType,
-            source,
-            target,
+            weightApproach,
+            boundaryShape,
             logger,
         });
 
@@ -256,7 +255,15 @@ class ThreeScene extends Component {
     }
 
     loadObject() {
-        const { assignment, model, qType, vertexSelection, vertexCount } = this.props.store;
+        const {
+            assignment,
+            model,
+            qType,
+            vertexSelection,
+            vertexCount,
+            weightApproach,
+            boundaryShape,
+        } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         const logger = this.props.store;
         let startTime,
@@ -316,6 +323,8 @@ class ThreeScene extends Component {
                         target,
                         logger,
                         vertexCount,
+                        weightApproach,
+                        boundaryShape,
                     });
 
                     elapsedTime = new Date() - startTime;
@@ -350,10 +359,18 @@ class ThreeScene extends Component {
     }
 
     render() {
-        const { assignment, model, qType, vertexSelection, vertexCount } = this.props.store;
+        const {
+            assignment,
+            model,
+            qType,
+            vertexSelection,
+            vertexCount,
+            weightApproach,
+            boundaryShape,
+        } = this.props.store;
         return (
             <div
-                aria-label={`${assignment} ${model} ${qType} ${vertexSelection} ${vertexCount}`}
+                aria-label={`${assignment} ${model} ${qType} ${vertexSelection} ${vertexCount} ${weightApproach} ${boundaryShape}`}
                 style={{
                     height: "100%",
                     width: "100%",

@@ -1,7 +1,16 @@
 import math from "mathjs";
 import { Vector3 } from "three";
 
-export function generateMeshParameterization({ geometry, graph, logger }) {
+export function generateMeshParameterization({
+    geometry,
+    graph,
+    weightApproach,
+    boundaryShape,
+    logger,
+}) {
+
+    console.log(weightApproach, boundaryShape);
+
     let startTime, elapsedTime;
 
     startTime = new Date();
@@ -47,9 +56,12 @@ export function generateMeshParameterization({ geometry, graph, logger }) {
     logger && logger.log(`Calculating W, bx, and by matrices...`);
 
     const length = geometry.vertices.length;
+
     const W = math.identity(length);
+
     const bx = math.zeros(length);
     const by = math.zeros(length);
+
     geometry.vertices.forEach((vertex, index) => {
         if (!boundaryVertices.has(vertex)) {
             const row = Array(length).fill(0);

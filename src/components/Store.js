@@ -8,6 +8,8 @@ class Store {
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
+    @observable weightApproach = "Uniform";
+    @observable boundaryShape = "Irregular";
     @observable logs = "";
     @observable chartData = undefined;
     @observable mesh = undefined;
@@ -20,6 +22,8 @@ class Store {
         this.qType = "FibonacciHeap";
         this.vertexSelection = "FarthestPoint";
         this.vertexCount = 2;
+        this.weightApproach = "Uniform";
+        this.boundaryShape = "Irregular";
         this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;
@@ -43,6 +47,16 @@ class Store {
     setVertexSelection(value) {
         this.vertexSelection = value;
         this.chartData = undefined;
+    }
+
+    @action
+    setWeightApproach(value) {
+        this.weightApproach = value;
+    }
+
+    @action
+    setBoundaryShape(value) {
+        this.boundaryShape = value;
     }
 
     @action

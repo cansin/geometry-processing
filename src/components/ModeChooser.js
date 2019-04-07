@@ -14,7 +14,7 @@ import { Button } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/SaveAlt";
 import TextField from "@material-ui/core/es/TextField";
 
-import { ASSIGNMENTS } from "../constants";
+import { ASSIGNMENTS, BOUNDARY_SHAPES, WEIGHT_APPROACHES } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
 import { populateGeodesicDistanceMatrix } from "../algorithms/geodesic_distance";
 
@@ -25,7 +25,7 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 110,
+        minWidth: 125,
     },
     icon: {
         marginRight: theme.spacing.unit,
@@ -58,6 +58,16 @@ class ModeChooser extends Component {
     @autobind
     handleVertexSelectionChange(event) {
         this.props.store.setVertexSelection(event.target.value);
+    }
+
+    @autobind
+    handleWeightApproachChange(event) {
+        this.props.store.setWeightApproach(event.target.value);
+    }
+
+    @autobind
+    handleBoundaryShapeChange(event) {
+        this.props.store.setBoundaryShape(event.target.value);
     }
 
     @autobind
@@ -99,7 +109,15 @@ class ModeChooser extends Component {
 
     render() {
         const { classes, store } = this.props;
-        const { assignment, model, qType, vertexCount, vertexSelection } = store;
+        const {
+            assignment,
+            model,
+            qType,
+            vertexCount,
+            vertexSelection,
+            weightApproach,
+            boundaryShape,
+        } = store;
         return (
             <Paper>
                 <Grid container alignItems="center">
@@ -135,38 +153,78 @@ class ModeChooser extends Component {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
-                            <Select
-                                value={qType}
-                                onChange={this.handleQTypeChange}
-                                input={<Input name="q-type" id="q-type" />}
-                                autoWidth>
-                                {Object.entries(Q_TYPES).map(([value, tag], key) => (
-                                    <MenuItem key={key} value={value}>
-                                        {tag}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="vertex-selection">Vertex Selection</InputLabel>
-                            <Select
-                                value={vertexSelection}
-                                onChange={this.handleVertexSelectionChange}
-                                input={<Input name="vertex-selection" id="vertex-selection" />}
-                                autoWidth>
-                                {Object.entries(VERTEX_SELECTIONS).map(([value, tag], key) => (
-                                    <MenuItem key={key} value={value}>
-                                        {tag}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                    {ASSIGNMENTS[assignment] !== ASSIGNMENTS.MeshParameterization && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
+                                <Select
+                                    value={qType}
+                                    onChange={this.handleQTypeChange}
+                                    input={<Input name="q-type" id="q-type" />}
+                                    autoWidth>
+                                    {Object.entries(Q_TYPES).map(([value, tag], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
+                    {ASSIGNMENTS[assignment] !== ASSIGNMENTS.MeshParameterization && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="vertex-selection">Vertex Selection</InputLabel>
+                                <Select
+                                    value={vertexSelection}
+                                    onChange={this.handleVertexSelectionChange}
+                                    input={<Input name="vertex-selection" id="vertex-selection" />}
+                                    autoWidth>
+                                    {Object.entries(VERTEX_SELECTIONS).map(([value, tag], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.MeshParameterization && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="boundary-shape">Boundary Shape</InputLabel>
+                                <Select
+                                    value={boundaryShape}
+                                    onChange={this.handleBoundaryShapeChange}
+                                    input={<Input name="boundary-shape" id="boundary-shape" />}
+                                    autoWidth>
+                                    {Object.entries(BOUNDARY_SHAPES).map(([value, tag], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.MeshParameterization && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="weight-approach">Weight Approach</InputLabel>
+                                <Select
+                                    value={weightApproach}
+                                    onChange={this.handleWeightApproachChange}
+                                    input={<Input name="weight-approach" id="weight-approach" />}
+                                    autoWidth>
+                                    {Object.entries(WEIGHT_APPROACHES).map(([value, tag], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
                     {ASSIGNMENTS[assignment] === ASSIGNMENTS.MultiSeedBilateral && (
                         <Grid item>
                             <FormControl className={classes.formControl}>

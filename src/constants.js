@@ -118,3 +118,14 @@ export const VERTEX_SELECTIONS = Object.freeze({
     FirstAndLast: "First and Last",
     FarthestPoint: "Farthest Points",
 });
+
+export const WEIGHT_APPROACHES = Object.freeze({
+    Uniform: "Uniform",
+    Harmonic: "Harmonic",
+    MeanValue: "Mean-Value",
+});
+
+export const BOUNDARY_SHAPES = Object.freeze({
+    Irregular: "Irregular",
+    Disk: "Disk",
+});
