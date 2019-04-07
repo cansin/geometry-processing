@@ -1,26 +1,30 @@
-import horse0 from "../meshes1/1) use for geodesic/fprint matrix/horse0.off";
-import man0 from "../meshes1/1) use for geodesic/fprint matrix/man0.off";
-import centaur from "../meshes1/1) use for geodesic/timing/centaur.off";
-import dragon from "../meshes1/1) use for geodesic/timing/dragon.obj";
-import man from "../meshes1/1) use for geodesic/timing/man.off";
-import weirdSphere from "../meshes1/1) use for geodesic/timing/weirdSphere.off";
-import man4 from "../meshes1/2) use for iso-curve descriptor/man4.off";
-import man3 from "../meshes1/2) use for iso-curve descriptor/man3.off";
-import gorilla from "../meshes1/2) use for iso-curve descriptor/gorilla.off";
-import woman from "../meshes1/2) use for iso-curve descriptor/woman.off";
-import man2 from "../meshes1/2) use for iso-curve descriptor/man2.off";
-import princetonHuman32Incomplete from "../meshes1/3) use for bilateral descriptor/princeton-Human-32-incomplete.off";
-import princetonHuman30 from "../meshes1/3) use for bilateral descriptor/princeton-Human-30.off";
-import neptune from "../meshes1/3) use for bilateral descriptor/neptune.off";
-import human from "../meshes1/3) use for bilateral descriptor/human.off";
-import humanWithShortcut from "../meshes1/3) use for bilateral descriptor/human_with_shortcut.off";
-import horse2 from "../meshes1/3) use for bilateral descriptor/horse2.off";
-import horse1 from "../meshes1/3) use for bilateral descriptor/horse1.off";
-import horsePartialHole2 from "../meshes1/3) use for bilateral descriptor/horse_partial_hole2.off";
-import horsePartialHole from "../meshes1/3) use for bilateral descriptor/horse_partial_hole.off";
-import centaur2 from "../meshes1/3) use for bilateral descriptor/centaur2.off";
-import cat1 from "../meshes1/3) use for bilateral descriptor/cat1.off";
-import cat from "../meshes1/3) use for bilateral descriptor/cat.off";
+import horse0 from "../meshes/geodesic distance/fprint matrix/horse0.off";
+import man0 from "../meshes/geodesic distance/fprint matrix/man0.off";
+import centaur from "../meshes/geodesic distance/timing/centaur.off";
+import dragon from "../meshes/geodesic distance/timing/dragon.obj";
+import man from "../meshes/geodesic distance/timing/man.off";
+import weirdSphere from "../meshes/geodesic distance/timing/weirdSphere.off";
+import man4 from "../meshes/iso-curve descriptor/man4.off";
+import man3 from "../meshes/iso-curve descriptor/man3.off";
+import gorilla from "../meshes/iso-curve descriptor/gorilla.off";
+import woman from "../meshes/iso-curve descriptor/woman.off";
+import man2 from "../meshes/iso-curve descriptor/man2.off";
+import princetonHuman32Incomplete from "../meshes/bilateral descriptor/princeton-Human-32-incomplete.off";
+import princetonHuman30 from "../meshes/bilateral descriptor/princeton-Human-30.off";
+import neptune from "../meshes/bilateral descriptor/neptune.off";
+import human from "../meshes/bilateral descriptor/human.off";
+import humanWithShortcut from "../meshes/bilateral descriptor/human_with_shortcut.off";
+import horse2 from "../meshes/bilateral descriptor/horse2.off";
+import horse1 from "../meshes/bilateral descriptor/horse1.off";
+import horsePartialHole2 from "../meshes/bilateral descriptor/horse_partial_hole2.off";
+import horsePartialHole from "../meshes/bilateral descriptor/horse_partial_hole.off";
+import centaur2 from "../meshes/bilateral descriptor/centaur2.off";
+import cat1 from "../meshes/bilateral descriptor/cat1.off";
+import cat from "../meshes/bilateral descriptor/cat.off";
+import face from "../meshes/mesh parameterization/face.off";
+import faceLow from "../meshes/mesh parameterization/face-low.off";
+import facem from "../meshes/mesh parameterization/facem.off";
+import facemLow from "../meshes/mesh parameterization/facem-low.off";
 
 export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic Distance",
@@ -29,6 +33,7 @@ export const ASSIGNMENTS = Object.freeze({
     TriangularBilateral: "Triangular Bilateral Descriptor",
     IsoCurve: "Iso-Curve Descriptor",
     FarthestPoint: "Farthest Point Sampling",
+    MeshParameterization: "Mesh Parameterization",
 });
 
 export const MODELS = Object.freeze({
@@ -93,6 +98,12 @@ export const MODELS = Object.freeze({
         centaur,
         cat1,
         cat,
+    },
+    MeshParameterization: {
+        face,
+        faceLow,
+        facem,
+        facemLow,
     },
 });
 

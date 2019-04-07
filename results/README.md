@@ -44,3 +44,5 @@ of a face's vertices and assigned it as the face's own distance.
 Later, while calculating the Bilateral Maps' bin values, I relied
 on Heron's formula in order to find the area of a triangle using
 the 3 edge lengths.
+
+### Mesh Parameterization

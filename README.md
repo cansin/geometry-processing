@@ -1,7 +1,7 @@
-# CENG 789 - Digital Geometry Processing - Assignment I
+# CENG 789 - Digital Geometry Processing - Assignments
 
-This project is an implementation of the [1st Assignment](assignment1.pdf)
-for Digital Geometry Processing course.
+This project is an implementation of the [1st](assignment1.pdf) and
+[2nd](assignment2.pdf) assignment for Digital Geometry Processing course.
 
 ## Installation
 
