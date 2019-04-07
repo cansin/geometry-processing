@@ -12,6 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { Button } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/SaveAlt";
+import TextField from "@material-ui/core/es/TextField";
 
 import { ASSIGNMENTS } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
@@ -60,6 +61,11 @@ class ModeChooser extends Component {
     }
 
     @autobind
+    handleVertexCountChange(event) {
+        this.props.store.setVertexCount(event.target.value);
+    }
+
+    @autobind
     handleCreateMatrix() {
         const { assignment, model, graph, mesh, qType } = this.props.store;
 
@@ -93,7 +99,7 @@ class ModeChooser extends Component {
 
     render() {
         const { classes, store } = this.props;
-        const { assignment, model, qType, vertexSelection } = store;
+        const { assignment, model, qType, vertexCount, vertexSelection } = store;
         return (
             <Paper>
                 <Grid container alignItems="center">
@@ -147,7 +153,7 @@ class ModeChooser extends Component {
                     </Grid>
                     <Grid item>
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="vertex-selection">Vertices</InputLabel>
+                            <InputLabel htmlFor="vertex-selection">Vertex Selection</InputLabel>
                             <Select
                                 value={vertexSelection}
                                 onChange={this.handleVertexSelectionChange}
@@ -161,6 +167,19 @@ class ModeChooser extends Component {
                             </Select>
                         </FormControl>
                     </Grid>
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.MultiSeedBilateral && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <TextField
+                                    id="vertex-count"
+                                    label="Vertex Count"
+                                    value={vertexCount}
+                                    onChange={this.handleVertexCountChange}
+                                    type="number"
+                                />
+                            </FormControl>
+                        </Grid>
+                    )}
                     {ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic && (
                         <Grid item>
                             <Button

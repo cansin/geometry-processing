@@ -6,7 +6,7 @@ export function farthestPointSampling({ graph, qType, source, count, logger }) {
     const { distances } = dijkstra({ graph, qType, source, logger: undefined });
     const allDistances = new Set([distances]);
 
-    const farthestPoints = new Set();
+    const farthestPoints = [];
 
     let startTime, elapsedTime;
 
@@ -32,7 +32,7 @@ export function farthestPointSampling({ graph, qType, source, count, logger }) {
         const point = cluster.extractMinimum().value;
         allDistances.add(dijkstra({ graph, qType, source: point, logger: undefined }).distances);
 
-        farthestPoints.add(point);
+        farthestPoints.push(point);
     }
 
     elapsedTime = new Date() - startTime;

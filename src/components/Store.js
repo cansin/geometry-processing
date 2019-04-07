@@ -1,20 +1,17 @@
-import { action, computed, observable } from "mobx";
+import { action, observable } from "mobx";
 
-import { ASSIGNMENTS, MODELS } from "../constants";
+import { MODELS } from "../constants";
 
 class Store {
     @observable assignment = "Geodesic";
     @observable model = MODELS.Geodesic.horse0;
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
+    @observable vertexCount = 2;
     @observable logs = "";
     @observable chartData = undefined;
     @observable mesh = undefined;
     @observable graph = undefined;
-
-    @computed get vertexCount() {
-        return ASSIGNMENTS[this.assignment] === ASSIGNMENTS.Bilateral ? 100 : 2;
-    }
 
     @action
     setAssignment(value) {
@@ -22,6 +19,7 @@ class Store {
         this.model = Object.values(MODELS[this.assignment])[0];
         this.qType = "FibonacciHeap";
         this.vertexSelection = "FarthestPoint";
+        this.vertexCount = 2;
         this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;
@@ -44,6 +42,12 @@ class Store {
     @action
     setVertexSelection(value) {
         this.vertexSelection = value;
+        this.chartData = undefined;
+    }
+
+    @action
+    setVertexCount(value) {
+        this.vertexCount = value;
         this.chartData = undefined;
     }
 
