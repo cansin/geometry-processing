@@ -31,7 +31,7 @@ import {
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
-import { createPathAsMeshLine, createVertex } from "../objects";
+import {createPathAsLine, createPathAsMeshLine, createVertex} from "../objects";
 import { generateMeshParameterization } from "../algorithms/mesh_parameterization";
 
 @inject("store")
@@ -227,8 +227,9 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createMeshParameterizationScene({ graph, qType, source, target, logger }) {
-        const { path } = generateMeshParameterization({
+    createMeshParameterizationScene({ mesh, graph, qType, source, target, logger }) {
+        const { boundaryEdges } = generateMeshParameterization({
+            geometry: mesh.geometry,
             graph,
             qType,
             source,
@@ -236,9 +237,9 @@ class ThreeScene extends Component {
             logger,
         });
 
-        this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
-        this.scene.add(createVertex(source));
-        this.scene.add(createVertex(target));
+        boundaryEdges.forEach(({ vertices }) => {
+            this.scene.add(createPathAsMeshLine(vertices, this.meshLineMaterial));
+        });
     }
 
     loadObject() {
