@@ -7,6 +7,7 @@ import {
     PointLight,
     Scene,
     Vector2,
+    Vector3,
     WebGLRenderer,
 } from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
@@ -31,7 +32,7 @@ import {
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
-import {createPathAsLine, createPathAsMeshLine, createVertex} from "../objects";
+import { createPathAsLine, createPathAsMeshLine, createVertex } from "../objects";
 import { generateMeshParameterization } from "../algorithms/mesh_parameterization";
 
 @inject("store")
@@ -228,7 +229,7 @@ class ThreeScene extends Component {
 
     @autobind
     createMeshParameterizationScene({ mesh, graph, qType, source, target, logger }) {
-        const { boundaryEdges } = generateMeshParameterization({
+        const { allEdges, boundaryVertices, boundaryEdges } = generateMeshParameterization({
             geometry: mesh.geometry,
             graph,
             qType,
@@ -237,8 +238,20 @@ class ThreeScene extends Component {
             logger,
         });
 
+        boundaryVertices.forEach(vertex => {
+            this.scene.add(createVertex(vertex, 0x00ff00));
+        });
+
         boundaryEdges.forEach(({ vertices }) => {
-            this.scene.add(createPathAsMeshLine(vertices, this.meshLineMaterial));
+            this.scene.add(createPathAsLine(vertices, 0x00ff00));
+        });
+
+        boundaryVertices.forEach(vertex => {
+            this.scene.add(createVertex(new Vector3(vertex.x, vertex.y, 0), 0xff0000));
+        });
+
+        allEdges.forEach(({ vertices }) => {
+            this.scene.add(createPathAsLine(vertices, 0xff0000));
         });
     }
 

@@ -100,10 +100,10 @@ export const MODELS = Object.freeze({
         cat,
     },
     MeshParameterization: {
-        face,
-        faceLow,
-        facem,
         facemLow,
+        facem,
+        faceLow,
+        face,
     },
 });
 
