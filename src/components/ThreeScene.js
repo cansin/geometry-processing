@@ -32,6 +32,7 @@ import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
 import { createPathAsMeshLine, createVertex } from "../objects";
+import { generateMeshParameterization } from "../algorithms/mesh_parameterization";
 
 @inject("store")
 @observer
@@ -225,6 +226,21 @@ class ThreeScene extends Component {
         });
     }
 
+    @autobind
+    createMeshParameterizationScene({ graph, qType, source, target, logger }) {
+        const { path } = generateMeshParameterization({
+            graph,
+            qType,
+            source,
+            target,
+            logger,
+        });
+
+        this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
+        this.scene.add(createVertex(source));
+        this.scene.add(createVertex(target));
+    }
+
     loadObject() {
         const { assignment, model, qType, vertexSelection, vertexCount } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
@@ -275,6 +291,7 @@ class ThreeScene extends Component {
                         [ASSIGNMENTS.TriangularBilateral]: this.createTriangularBilateralScene,
                         [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
                         [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
+                        [ASSIGNMENTS.MeshParameterization]: this.createMeshParameterizationScene,
                     };
 
                     createScene[ASSIGNMENTS[assignment]]({
