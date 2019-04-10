@@ -126,6 +126,6 @@ export const WEIGHT_APPROACHES = Object.freeze({
 });
 
 export const BOUNDARY_SHAPES = Object.freeze({
-    Irregular: "Irregular",
-    Disk: "Disk",
+    Free: "Free",
+    Circle: "Circle",
 });

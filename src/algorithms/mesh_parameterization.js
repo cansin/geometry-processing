@@ -1,6 +1,8 @@
 import math from "mathjs";
 import { Vector3 } from "three";
 
+import { WEIGHT_APPROACHES } from "../constants";
+
 export function generateMeshParameterization({
     geometry,
     graph,
@@ -8,9 +10,6 @@ export function generateMeshParameterization({
     boundaryShape,
     logger,
 }) {
-
-    console.log(weightApproach, boundaryShape);
-
     let startTime, elapsedTime;
 
     startTime = new Date();
@@ -18,20 +17,13 @@ export function generateMeshParameterization({
 
     const edgeCounts = new Map();
     geometry.faces.forEach(face => {
-        let vertexIndex1 = Math.min(face.a, face.b),
-            vertexIndex2 = Math.max(face.a, face.b),
-            identifier = `${vertexIndex1},${vertexIndex2}`;
-        edgeCounts.set(identifier, (edgeCounts.get(identifier) || 0) + 1);
-
-        vertexIndex1 = Math.min(face.a, face.c);
-        vertexIndex2 = Math.max(face.a, face.c);
-        identifier = `${vertexIndex1},${vertexIndex2}`;
-        edgeCounts.set(identifier, (edgeCounts.get(identifier) || 0) + 1);
-
-        vertexIndex1 = Math.min(face.b, face.c);
-        vertexIndex2 = Math.max(face.b, face.c);
-        identifier = `${vertexIndex1},${vertexIndex2}`;
-        edgeCounts.set(identifier, (edgeCounts.get(identifier) || 0) + 1);
+        const edges = [[face.a, face.b], [face.a, face.c], [face.b, face.c]];
+        edges.forEach(([vertexIndex1, vertexIndex2]) => {
+            let minIndex = Math.min(vertexIndex1, vertexIndex2),
+                maxIndex = Math.max(vertexIndex1, vertexIndex2),
+                identifier = `${minIndex},${maxIndex}`;
+            edgeCounts.set(identifier, (edgeCounts.get(identifier) || 0) + 1);
+        });
     });
 
     const boundaryEdges = new Set();
@@ -56,24 +48,65 @@ export function generateMeshParameterization({
     logger && logger.log(`Calculating W, bx, and by matrices...`);
 
     const length = geometry.vertices.length;
-
-    const W = math.identity(length);
-
+    const W = math.zeros(length, length);
     const bx = math.zeros(length);
     const by = math.zeros(length);
 
+    geometry.faces.forEach(face => {
+        const edges = [
+            [face.a, face.b, face.c],
+            [face.a, face.c, face.b],
+            [face.b, face.c, face.a],
+        ];
+        edges.forEach(([vertexIndex1, vertexIndex2, otherVertexIndex]) => {
+            const vertex1 = geometry.vertices[vertexIndex1],
+                vertex2 = geometry.vertices[vertexIndex2],
+                otherVertex = geometry.vertices[otherVertexIndex];
+            let value;
+
+            if (WEIGHT_APPROACHES[weightApproach] === WEIGHT_APPROACHES.Uniform) {
+                value = 0.5;
+            } else if (WEIGHT_APPROACHES[weightApproach] === WEIGHT_APPROACHES.Harmonic) {
+                // As described at https://www.jwwalker.com/pages/angle-between-vectors.html
+                const dot12 = vertex1.dot(vertex2);
+                const dot11 = vertex1.dot(vertex1);
+                const dot22 = vertex2.dot(vertex2);
+                const angle = math.acos(dot12 / math.sqrt(dot11 * dot22));
+
+                value = math.cot(angle) / 2;
+            } else if (WEIGHT_APPROACHES[weightApproach] === WEIGHT_APPROACHES.MeanValue) {
+                const dotOther2 = otherVertex.dot(vertex2);
+                const dotOtherOther = otherVertex.dot(otherVertex);
+                const dot22 = vertex2.dot(vertex2);
+                const angle = math.acos(dotOther2 / math.sqrt(dotOtherOther * dot22));
+
+                value = math.tan(angle / 2) / (2 * vertex1.distanceTo(vertex2));
+            }
+
+            if (!boundaryVertices.has(vertex1)) {
+                const acc = W.subset(math.index(vertexIndex1, vertexIndex2));
+                W.subset(math.index(vertexIndex1, vertexIndex2), acc + value);
+            }
+
+            if (!boundaryVertices.has(vertex2)) {
+                const acc = W.subset(math.index(vertexIndex2, vertexIndex1));
+                W.subset(math.index(vertexIndex2, vertexIndex1), acc + value);
+            }
+        });
+    });
+
     geometry.vertices.forEach((vertex, index) => {
         if (!boundaryVertices.has(vertex)) {
-            const row = Array(length).fill(0);
-            graph.neighbors(vertex).forEach(neighbor => {
-                row[geometry.vertices.indexOf(neighbor)] = 1;
+            const row = W.subset(math.index(index, math.range(0, length)));
+            let value = 0;
+            row.forEach(cur => {
+                value = value - cur;
             });
 
-            const value = row.reduce((acc, cur) => acc - cur, 0);
-            row[index] = value;
-
-            W.subset(math.index(index, math.range(0, W._size[0])), row);
+            W.subset(math.index(index, index), value);
         } else {
+            W.subset(math.index(index, index), 1);
+
             bx.subset(math.index(index), vertex.x);
             by.subset(math.index(index), vertex.y);
         }
