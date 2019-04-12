@@ -162,49 +162,23 @@ export function generateMeshParameterization({
 
     const allEdges = new Set();
     geometry.faces.forEach(face => {
-        allEdges.add({
-            vertices: [
-                new Vector3(
-                    math.subset(xx, math.index(face.a)),
-                    math.subset(xy, math.index(face.a)),
-                    0,
-                ),
-                new Vector3(
-                    math.subset(xx, math.index(face.b)),
-                    math.subset(xy, math.index(face.b)),
-                    0,
-                ),
-            ],
-        });
+        const edges = [[face.a, face.b], [face.a, face.c], [face.b, face.c]];
 
-        allEdges.add({
-            vertices: [
-                new Vector3(
-                    math.subset(xx, math.index(face.a)),
-                    math.subset(xy, math.index(face.a)),
-                    0,
-                ),
-                new Vector3(
-                    math.subset(xx, math.index(face.c)),
-                    math.subset(xy, math.index(face.c)),
-                    0,
-                ),
-            ],
-        });
-
-        allEdges.add({
-            vertices: [
-                new Vector3(
-                    math.subset(xx, math.index(face.b)),
-                    math.subset(xy, math.index(face.b)),
-                    0,
-                ),
-                new Vector3(
-                    math.subset(xx, math.index(face.c)),
-                    math.subset(xy, math.index(face.c)),
-                    0,
-                ),
-            ],
+        edges.forEach(([vertexIndex1, vertexIndex2]) => {
+            allEdges.add({
+                vertices: [
+                    new Vector3(
+                        math.subset(xx, math.index(vertexIndex1)),
+                        math.subset(xy, math.index(vertexIndex1)),
+                        40,
+                    ),
+                    new Vector3(
+                        math.subset(xx, math.index(vertexIndex2)),
+                        math.subset(xy, math.index(vertexIndex2)),
+                        40,
+                    ),
+                ],
+            });
         });
     });
 
