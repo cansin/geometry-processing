@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import {
     AmbientLight,
+    CircleGeometry,
     FaceColors,
     Mesh,
+    MeshBasicMaterial,
     PerspectiveCamera,
     PointLight,
     Scene,
@@ -243,10 +245,6 @@ class ThreeScene extends Component {
 
         boundaryEdges.forEach(({ vertices }) => {
             this.scene.add(createPathAsLine(vertices, 0x00ff00));
-        });
-
-        boundaryVertices.forEach(vertex => {
-            this.scene.add(createVertex(new Vector3(vertex.x, vertex.y, 0), 0xff0000));
         });
 
         allEdges.forEach(({ vertices }) => {

@@ -3,8 +3,8 @@ import { action, observable } from "mobx";
 import { MODELS } from "../constants";
 
 class Store {
-    @observable assignment = "Geodesic";
-    @observable model = MODELS.Geodesic.horse0;
+    @observable assignment = "MeshParameterization";
+    @observable model = MODELS.MeshParameterization.facemLow;
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;

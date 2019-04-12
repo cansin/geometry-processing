@@ -1,7 +1,24 @@
 import math from "mathjs";
-import { Vector3 } from "three";
+import { CircleGeometry, Vector3 } from "three";
 
-import { WEIGHT_APPROACHES } from "../constants";
+import { BOUNDARY_SHAPES, WEIGHT_APPROACHES } from "../constants";
+import { createVertex } from "../objects";
+
+function findClosestVertex(source, targets) {
+    let closest = undefined;
+    let minDistance = Infinity;
+
+    targets.forEach(target => {
+        const currentDistance = target.distanceTo(source);
+
+        if (currentDistance < minDistance) {
+            closest = target;
+            minDistance = currentDistance;
+        }
+    });
+
+    return { closest, minDistance };
+}
 
 export function generateMeshParameterization({
     geometry,
@@ -107,8 +124,16 @@ export function generateMeshParameterization({
         } else {
             W.subset(math.index(index, index), 1);
 
-            bx.subset(math.index(index), vertex.x);
-            by.subset(math.index(index), vertex.y);
+            if (BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Free) {
+                bx.subset(math.index(index), vertex.x);
+                by.subset(math.index(index), vertex.y);
+            } else if (BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Circle) {
+                const circleGeometry = new CircleGeometry(75, boundaryVertices.size);
+                const { closest } = findClosestVertex(vertex, circleGeometry.vertices);
+
+                bx.subset(math.index(index), closest.x);
+                by.subset(math.index(index), closest.y);
+            }
         }
     });
 
