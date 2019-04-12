@@ -9,7 +9,7 @@ class Store {
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
     @observable weightApproach = "Uniform";
-    @observable boundaryShape = "Free";
+    @observable boundaryShape = "Circle";
     @observable logs = "";
     @observable chartData = undefined;
     @observable mesh = undefined;
@@ -23,7 +23,7 @@ class Store {
         this.vertexSelection = "FarthestPoint";
         this.vertexCount = 2;
         this.weightApproach = "Uniform";
-        this.boundaryShape = "Free";
+        this.boundaryShape = "Circle";
         this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;

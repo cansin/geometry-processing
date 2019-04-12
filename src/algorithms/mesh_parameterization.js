@@ -2,7 +2,14 @@ import math from "mathjs";
 import { CircleGeometry, Vector3 } from "three";
 
 import { BOUNDARY_SHAPES, WEIGHT_APPROACHES } from "../constants";
-import { createVertex } from "../objects";
+
+function calculateAngle(vertex1, vertex2) {
+    // As described at https://www.jwwalker.com/pages/angle-between-vectors.html
+    const dot12 = vertex1.dot(vertex2);
+    const dot11 = vertex1.dot(vertex1);
+    const dot22 = vertex2.dot(vertex2);
+    return math.acos(dot12 / math.sqrt(dot11 * dot22));
+}
 
 function findClosestVertex(source, targets) {
     let closest = undefined;
@@ -84,19 +91,16 @@ export function generateMeshParameterization({
             if (WEIGHT_APPROACHES[weightApproach] === WEIGHT_APPROACHES.Uniform) {
                 value = 0.5;
             } else if (WEIGHT_APPROACHES[weightApproach] === WEIGHT_APPROACHES.Harmonic) {
-                // As described at https://www.jwwalker.com/pages/angle-between-vectors.html
-                const dot12 = vertex1.dot(vertex2);
-                const dot11 = vertex1.dot(vertex1);
-                const dot22 = vertex2.dot(vertex2);
-                const angle = math.acos(dot12 / math.sqrt(dot11 * dot22));
-
+                const angle = calculateAngle(
+                    new Vector3().subVectors(vertex1, otherVertex),
+                    new Vector3().subVectors(vertex2, otherVertex),
+                );
                 value = math.cot(angle) / 2;
             } else if (WEIGHT_APPROACHES[weightApproach] === WEIGHT_APPROACHES.MeanValue) {
-                const dotOther2 = otherVertex.dot(vertex2);
-                const dotOtherOther = otherVertex.dot(otherVertex);
-                const dot22 = vertex2.dot(vertex2);
-                const angle = math.acos(dotOther2 / math.sqrt(dotOtherOther * dot22));
-
+                const angle = calculateAngle(
+                    new Vector3().subVectors(otherVertex, vertex1),
+                    new Vector3().subVectors(vertex2, vertex1),
+                );
                 value = math.tan(angle / 2) / (2 * vertex1.distanceTo(vertex2));
             }
 
