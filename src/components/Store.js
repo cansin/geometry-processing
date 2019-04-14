@@ -10,6 +10,7 @@ class Store {
     @observable vertexCount = 2;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
+    @observable isMouthFixated = "True";
     @observable logs = "";
     @observable chartData = undefined;
     @observable mesh = undefined;
@@ -24,6 +25,7 @@ class Store {
         this.vertexCount = 2;
         this.weightApproach = "Uniform";
         this.boundaryShape = "Circle";
+        this.isMouthFixated = "True";
         this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;
@@ -68,6 +70,11 @@ class Store {
     @action
     setChartData(value) {
         this.chartData = value;
+    }
+
+    @action
+    setIsMouthFixated(value) {
+        this.isMouthFixated = value;
     }
 
     @action setMesh(value) {

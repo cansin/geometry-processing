@@ -230,7 +230,14 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createMeshParameterizationScene({ mesh, graph, weightApproach, boundaryShape, logger }) {
+    createMeshParameterizationScene({
+        mesh,
+        graph,
+        weightApproach,
+        boundaryShape,
+        isMouthFixated,
+        logger,
+    }) {
         const {
             allEdges,
             initialBoundaryVertices,
@@ -241,6 +248,7 @@ class ThreeScene extends Component {
             graph,
             weightApproach,
             boundaryShape,
+            isMouthFixated,
             logger,
         });
 
@@ -289,6 +297,7 @@ class ThreeScene extends Component {
             vertexCount,
             weightApproach,
             boundaryShape,
+            isMouthFixated,
         } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         const logger = this.props.store;
@@ -351,6 +360,7 @@ class ThreeScene extends Component {
                         vertexCount,
                         weightApproach,
                         boundaryShape,
+                        isMouthFixated,
                     });
 
                     elapsedTime = new Date() - startTime;
@@ -397,10 +407,11 @@ class ThreeScene extends Component {
             vertexCount,
             weightApproach,
             boundaryShape,
+            isMouthFixated,
         } = this.props.store;
         return (
             <div
-                aria-label={`${assignment} ${model} ${qType} ${vertexSelection} ${vertexCount} ${weightApproach} ${boundaryShape}`}
+                aria-label={`${assignment} ${model} ${qType} ${vertexSelection} ${vertexCount} ${weightApproach} ${boundaryShape} ${isMouthFixated}`}
                 style={{
                     height: "100%",
                     width: "100%",

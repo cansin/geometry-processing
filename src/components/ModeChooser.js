@@ -14,7 +14,7 @@ import { Button } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/SaveAlt";
 import TextField from "@material-ui/core/es/TextField";
 
-import { ASSIGNMENTS, BOUNDARY_SHAPES, WEIGHT_APPROACHES } from "../constants";
+import { ASSIGNMENTS, BOUNDARY_SHAPES, MOUTH_FIXATIONS, WEIGHT_APPROACHES } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
 import { populateGeodesicDistanceMatrix } from "../algorithms/geodesic_distance";
 
@@ -76,6 +76,11 @@ class ModeChooser extends Component {
     }
 
     @autobind
+    handleIsMouthFixatedChange(event) {
+        this.props.store.setIsMouthFixated(event.target.value);
+    }
+
+    @autobind
     handleCreateMatrix() {
         const { assignment, model, graph, mesh, qType } = this.props.store;
 
@@ -117,6 +122,7 @@ class ModeChooser extends Component {
             vertexSelection,
             weightApproach,
             boundaryShape,
+            isMouthFixated,
         } = store;
         return (
             <Paper>
@@ -217,6 +223,24 @@ class ModeChooser extends Component {
                                     input={<Input name="weight-approach" id="weight-approach" />}
                                     autoWidth>
                                     {Object.entries(WEIGHT_APPROACHES).map(([value, tag], key) => (
+                                        <MenuItem key={key} value={value}>
+                                            {tag}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.MeshParameterization && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="mouth-fixated">Is Mouth Fixated</InputLabel>
+                                <Select
+                                    value={isMouthFixated}
+                                    onChange={this.handleIsMouthFixatedChange}
+                                    input={<Input name="mouth-fixated" id="mouth-fixated" />}
+                                    autoWidth>
+                                    {Object.entries(MOUTH_FIXATIONS).map(([value, tag], key) => (
                                         <MenuItem key={key} value={value}>
                                             {tag}
                                         </MenuItem>

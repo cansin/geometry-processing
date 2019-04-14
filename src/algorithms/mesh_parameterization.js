@@ -2,7 +2,7 @@ import math from "mathjs";
 import { CircleGeometry, Vector3 } from "three";
 import { inverse, Matrix } from "ml-matrix";
 
-import { BOUNDARY_SHAPES, WEIGHT_APPROACHES } from "../constants";
+import { BOUNDARY_SHAPES, MOUTH_FIXATIONS, WEIGHT_APPROACHES } from "../constants";
 
 function calculateAngle(vertex1, vertex2) {
     // As described at https://www.jwwalker.com/pages/angle-between-vectors.html
@@ -27,11 +27,29 @@ function findClosestVertex(source, targets) {
     return { closest, minDistance };
 }
 
-function shouldPin(vertex, initialBoundaryVertices) {
-    return initialBoundaryVertices.has(vertex);
+function shouldPin(vertex, initialBoundaryVertices, isMouthFixated) {
+    return (
+        initialBoundaryVertices.has(vertex) &&
+        // This has should ideally be replaced by a generic solution
+        (MOUTH_FIXATIONS[isMouthFixated] === MOUTH_FIXATIONS.True ||
+            !(
+                vertex.x >= -19 &&
+                vertex.x <= 27 &&
+                vertex.y >= -37 &&
+                vertex.y <= -33 &&
+                vertex.z >= 4 &&
+                vertex.z <= 24
+            ))
+    );
 }
 
-export function generateMeshParameterization({ geometry, weightApproach, boundaryShape, logger }) {
+export function generateMeshParameterization({
+    geometry,
+    weightApproach,
+    boundaryShape,
+    isMouthFixated,
+    logger,
+}) {
     let startTime, elapsedTime;
 
     startTime = new Date();
@@ -104,12 +122,12 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
                 value = math.tan(angle / 2) / (2 * vertex1.distanceTo(vertex2));
             }
 
-            if (!shouldPin(vertex1, initialBoundaryVertices)) {
+            if (!shouldPin(vertex1, initialBoundaryVertices, isMouthFixated)) {
                 const acc = W.get(vertexIndex1, vertexIndex2);
                 W.set(vertexIndex1, vertexIndex2, acc + value);
             }
 
-            if (!shouldPin(vertex2, initialBoundaryVertices)) {
+            if (!shouldPin(vertex2, initialBoundaryVertices, isMouthFixated)) {
                 const acc = W.get(vertexIndex2, vertexIndex1);
                 W.set(vertexIndex2, vertexIndex1, acc + value);
             }
@@ -119,7 +137,7 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
     const circleVertices = new CircleGeometry(75, initialBoundaryVertices.size).vertices;
     circleVertices.shift();
     geometry.vertices.forEach((vertex, index) => {
-        if (!shouldPin(vertex, initialBoundaryVertices)) {
+        if (!shouldPin(vertex, initialBoundaryVertices, isMouthFixated)) {
             const row = W.getRow(index);
             let value = 0;
             row.forEach(cur => {

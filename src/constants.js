@@ -129,3 +129,8 @@ export const BOUNDARY_SHAPES = Object.freeze({
     Free: "Free",
     Circle: "Circle",
 });
+
+export const MOUTH_FIXATIONS = Object.freeze({
+    True: "True",
+    False: "False",
+});
