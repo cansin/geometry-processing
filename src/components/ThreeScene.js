@@ -244,20 +244,39 @@ class ThreeScene extends Component {
             logger,
         });
 
+        const moveToRight = new Vector3(80, 0, 0),
+            moveToLeft = new Vector3(-80, 0, 0);
+
         initialBoundaryVertices.forEach(vertex => {
-            this.scene.add(createVertex(vertex, 0x00ff00));
+            this.scene.add(createVertex(new Vector3().addVectors(vertex, moveToLeft), 0x00ff00));
         });
 
         boundaryEdges.forEach(({ vertices }) => {
-            this.scene.add(createPathAsLine(vertices, 0x00ff00));
+            this.scene.add(
+                createPathAsLine(
+                    [
+                        new Vector3().addVectors(vertices[0], moveToLeft),
+                        new Vector3().addVectors(vertices[1], moveToLeft),
+                    ],
+                    0x00ff00,
+                ),
+            );
         });
 
         finalBoundaryVertices.forEach(vertex => {
-            this.scene.add(createVertex(vertex, 0xff0000));
+            this.scene.add(createVertex(new Vector3().addVectors(vertex, moveToRight), 0x00ff00));
         });
 
         allEdges.forEach(({ vertices }) => {
-            this.scene.add(createPathAsLine(vertices, 0xff0000));
+            this.scene.add(
+                createPathAsLine(
+                    [
+                        new Vector3().addVectors(vertices[0], moveToRight),
+                        new Vector3().addVectors(vertices[1], moveToRight),
+                    ],
+                    0xff0000,
+                ),
+            );
         });
     }
 
@@ -340,7 +359,11 @@ class ThreeScene extends Component {
                 }
             });
 
-            this.scene.add(object);
+            this.scene.add(
+                ASSIGNMENTS[assignment] === ASSIGNMENTS.MeshParameterization
+                    ? object.translateOnAxis(new Vector3(1, 0, 0), -80)
+                    : object,
+            );
         });
     }
 

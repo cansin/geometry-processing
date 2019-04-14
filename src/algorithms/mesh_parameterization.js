@@ -132,14 +132,14 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
 
             if (
                 BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Free ||
-                (vertex.x >= -16.864584923230474 &&
-                    vertex.x <= 24.159557946357165 &&
-                    vertex.y >= -36.58137459769151 &&
-                    vertex.y <= -33.75080768166199 &&
-                    vertex.z >= 6.126368618328243 &&
-                    vertex.z <= 21.94929000717644)
+                (vertex.x >= -19 &&
+                    vertex.x <= 27 &&
+                    vertex.y >= -37 &&
+                    vertex.y <= -33 &&
+                    vertex.z >= 4 &&
+                    vertex.z <= 24)
             ) {
-                finalBoundaryVertices.add(new Vector3(vertex.x, vertex.y, 40));
+                finalBoundaryVertices.add(new Vector3(vertex.x, vertex.y, 0));
                 bx.set(index, 0, vertex.x);
                 by.set(index, 0, vertex.y);
             } else if (BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Circle) {
@@ -148,7 +148,7 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
                     circleVertices,
                 );
 
-                finalBoundaryVertices.add(new Vector3(closest.x, closest.y, 40));
+                finalBoundaryVertices.add(new Vector3(closest.x, closest.y, 0));
                 bx.set(index, 0, closest.x);
                 by.set(index, 0, closest.y);
             }
@@ -185,8 +185,8 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
         edges.forEach(([vertexIndex1, vertexIndex2]) => {
             allEdges.add({
                 vertices: [
-                    new Vector3(xx.get(vertexIndex1, 0), xy.get(vertexIndex1, 0), 40),
-                    new Vector3(xx.get(vertexIndex2, 0), xy.get(vertexIndex2, 0), 40),
+                    new Vector3(xx.get(vertexIndex1, 0), xy.get(vertexIndex1, 0), 0),
+                    new Vector3(xx.get(vertexIndex2, 0), xy.get(vertexIndex2, 0), 0),
                 ],
             });
         });
