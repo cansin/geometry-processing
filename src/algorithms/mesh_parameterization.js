@@ -17,7 +17,6 @@ function findClosestVertex(source, targets) {
 
     targets.forEach(target => {
         const currentDistance = target.distanceTo(source);
-
         if (currentDistance < minDistance) {
             closest = target;
             minDistance = currentDistance;
@@ -27,13 +26,11 @@ function findClosestVertex(source, targets) {
     return { closest, minDistance };
 }
 
-export function generateMeshParameterization({
-    geometry,
-    graph,
-    weightApproach,
-    boundaryShape,
-    logger,
-}) {
+function shouldPin(vertex, initialBoundaryVertices) {
+    return initialBoundaryVertices.has(vertex);
+}
+
+export function generateMeshParameterization({ geometry, weightApproach, boundaryShape, logger }) {
     let startTime, elapsedTime;
 
     startTime = new Date();
@@ -51,7 +48,8 @@ export function generateMeshParameterization({
     });
 
     const boundaryEdges = new Set();
-    const boundaryVertices = new Set();
+    const initialBoundaryVertices = new Set();
+    const finalBoundaryVertices = new Set();
     edgeCounts.forEach((count, edge) => {
         if (count === 1) {
             boundaryEdges.add({
@@ -60,8 +58,8 @@ export function generateMeshParameterization({
                     geometry.vertices[Number(edge.split(",")[1])],
                 ],
             });
-            boundaryVertices.add(geometry.vertices[Number(edge.split(",")[0])]);
-            boundaryVertices.add(geometry.vertices[Number(edge.split(",")[1])]);
+            initialBoundaryVertices.add(geometry.vertices[Number(edge.split(",")[0])]);
+            initialBoundaryVertices.add(geometry.vertices[Number(edge.split(",")[1])]);
         }
     });
 
@@ -82,6 +80,7 @@ export function generateMeshParameterization({
             [face.a, face.c, face.b],
             [face.b, face.c, face.a],
         ];
+
         edges.forEach(([vertexIndex1, vertexIndex2, otherVertexIndex]) => {
             const vertex1 = geometry.vertices[vertexIndex1],
                 vertex2 = geometry.vertices[vertexIndex2],
@@ -104,20 +103,22 @@ export function generateMeshParameterization({
                 value = math.tan(angle / 2) / (2 * vertex1.distanceTo(vertex2));
             }
 
-            if (!boundaryVertices.has(vertex1)) {
+            if (!shouldPin(vertex1, initialBoundaryVertices)) {
                 const acc = W.subset(math.index(vertexIndex1, vertexIndex2));
                 W.subset(math.index(vertexIndex1, vertexIndex2), acc + value);
             }
 
-            if (!boundaryVertices.has(vertex2)) {
+            if (!shouldPin(vertex2, initialBoundaryVertices)) {
                 const acc = W.subset(math.index(vertexIndex2, vertexIndex1));
                 W.subset(math.index(vertexIndex2, vertexIndex1), acc + value);
             }
         });
     });
 
+    const circleVertices = new CircleGeometry(75, initialBoundaryVertices.size).vertices;
+    circleVertices.shift();
     geometry.vertices.forEach((vertex, index) => {
-        if (!boundaryVertices.has(vertex)) {
+        if (!shouldPin(vertex, initialBoundaryVertices)) {
             const row = W.subset(math.index(index, math.range(0, length)));
             let value = 0;
             row.forEach(cur => {
@@ -128,13 +129,25 @@ export function generateMeshParameterization({
         } else {
             W.subset(math.index(index, index), 1);
 
-            if (BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Free) {
+            if (
+                BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Free ||
+                (vertex.x >= -16.864584923230474 &&
+                    vertex.x <= 24.159557946357165 &&
+                    vertex.y >= -36.58137459769151 &&
+                    vertex.y <= -33.75080768166199 &&
+                    vertex.z >= 6.126368618328243 &&
+                    vertex.z <= 21.94929000717644)
+            ) {
+                finalBoundaryVertices.add(new Vector3(vertex.x, vertex.y, 40));
                 bx.subset(math.index(index), vertex.x);
                 by.subset(math.index(index), vertex.y);
             } else if (BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Circle) {
-                const circleGeometry = new CircleGeometry(75, boundaryVertices.size);
-                const { closest } = findClosestVertex(vertex, circleGeometry.vertices);
+                const { closest } = findClosestVertex(
+                    new Vector3(vertex.x, vertex.y, 0),
+                    circleVertices,
+                );
 
+                finalBoundaryVertices.add(new Vector3(closest.x, closest.y, 40));
                 bx.subset(math.index(index), closest.x);
                 by.subset(math.index(index), closest.y);
             }
@@ -192,6 +205,7 @@ export function generateMeshParameterization({
     return {
         allEdges,
         boundaryEdges,
-        boundaryVertices,
+        initialBoundaryVertices,
+        finalBoundaryVertices,
     };
 }

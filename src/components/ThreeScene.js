@@ -231,7 +231,12 @@ class ThreeScene extends Component {
 
     @autobind
     createMeshParameterizationScene({ mesh, graph, weightApproach, boundaryShape, logger }) {
-        const { allEdges, boundaryVertices, boundaryEdges } = generateMeshParameterization({
+        const {
+            allEdges,
+            initialBoundaryVertices,
+            finalBoundaryVertices,
+            boundaryEdges,
+        } = generateMeshParameterization({
             geometry: mesh.geometry,
             graph,
             weightApproach,
@@ -239,12 +244,16 @@ class ThreeScene extends Component {
             logger,
         });
 
-        boundaryVertices.forEach(vertex => {
+        initialBoundaryVertices.forEach(vertex => {
             this.scene.add(createVertex(vertex, 0x00ff00));
         });
 
         boundaryEdges.forEach(({ vertices }) => {
             this.scene.add(createPathAsLine(vertices, 0x00ff00));
+        });
+
+        finalBoundaryVertices.forEach(vertex => {
+            this.scene.add(createVertex(vertex, 0xff0000));
         });
 
         allEdges.forEach(({ vertices }) => {
