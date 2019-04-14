@@ -45,4 +45,20 @@ Later, while calculating the Bilateral Maps' bin values, I relied
 on Heron's formula in order to find the area of a triangle using
 the 3 edge lengths.
 
-### Mesh Parameterization
+## Mesh Parameterization
+
+I first implemented a _free-formed parameterization_ where boundary vertices' 
+Z values are simply set to 0. Then I implemented the parameterization where 
+boundary vertices are mapped to a circle. 
+
+Both `face` and `faceLow` meshes had an extra boundary within the mouth. It
+was not a problem for the _free-formed parameterization_ where I simply fixated
+the mouth boundary as I did with the outer face boundary. But with _circle 
+parameterization_ I needed to identify which boundary to fixate to the circle. 
+I provided two different implementation where either mouth boundary is unpinned 
+or pinned with 0 Z-values. 
+
+A proper implementation of that would probably be to 
+identify the longest continuous boundary edge and to map it to the circle, 
+while keeping other boundaries unpinned. But I simply _hacked_ my way around 
+by providing a range of positions where I know mouth would end up in.   
