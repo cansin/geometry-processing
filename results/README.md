@@ -62,3 +62,13 @@ A proper implementation of that would probably be to
 identify the longest continuous boundary edge and to map it to the circle, 
 while keeping other boundaries unpinned. But I simply _hacked_ my way around 
 by providing a range of positions where I know mouth would end up in.   
+
+As a final note, I was surprised about how long it is taking for matrix inverse
+to be calculated. I initially relied on a popular library called 
+[math.js](https://mathjs.org/). But I quickly realized it is just too slow to 
+rely on. Later I found an alternative called [ml-matrix](https://mljs.github.io/matrix/)
+of which inverse function is 10x times faster than the _mathjs_'s implementation.
+It still takes roughly around 2 to 5 minutes for high resolution meshes' matrices
+to be inversed. As a follow up, I am hoping to migrate the implementation to
+[Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) 
+so that the UI won't get frozen when the computationally-heavy code is running. 
