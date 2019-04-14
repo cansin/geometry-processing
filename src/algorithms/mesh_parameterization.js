@@ -1,5 +1,6 @@
 import math from "mathjs";
 import { CircleGeometry, Vector3 } from "three";
+import { inverse, Matrix } from "ml-matrix";
 
 import { BOUNDARY_SHAPES, WEIGHT_APPROACHES } from "../constants";
 
@@ -70,9 +71,9 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
     logger && logger.log(`Calculating W, bx, and by matrices...`);
 
     const length = geometry.vertices.length;
-    const W = math.zeros(length, length);
-    const bx = math.zeros(length);
-    const by = math.zeros(length);
+    const W = Matrix.zeros(length, length);
+    const bx = Matrix.zeros(length, 1);
+    const by = Matrix.zeros(length, 1);
 
     geometry.faces.forEach(face => {
         const edges = [
@@ -104,13 +105,13 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
             }
 
             if (!shouldPin(vertex1, initialBoundaryVertices)) {
-                const acc = W.subset(math.index(vertexIndex1, vertexIndex2));
-                W.subset(math.index(vertexIndex1, vertexIndex2), acc + value);
+                const acc = W.get(vertexIndex1, vertexIndex2);
+                W.set(vertexIndex1, vertexIndex2, acc + value);
             }
 
             if (!shouldPin(vertex2, initialBoundaryVertices)) {
-                const acc = W.subset(math.index(vertexIndex2, vertexIndex1));
-                W.subset(math.index(vertexIndex2, vertexIndex1), acc + value);
+                const acc = W.get(vertexIndex2, vertexIndex1);
+                W.set(vertexIndex2, vertexIndex1, acc + value);
             }
         });
     });
@@ -119,15 +120,15 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
     circleVertices.shift();
     geometry.vertices.forEach((vertex, index) => {
         if (!shouldPin(vertex, initialBoundaryVertices)) {
-            const row = W.subset(math.index(index, math.range(0, length)));
+            const row = W.getRow(index);
             let value = 0;
             row.forEach(cur => {
                 value = value - cur;
             });
 
-            W.subset(math.index(index, index), value);
+            W.set(index, index, value);
         } else {
-            W.subset(math.index(index, index), 1);
+            W.set(index, index, 1);
 
             if (
                 BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Free ||
@@ -139,8 +140,8 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
                     vertex.z <= 21.94929000717644)
             ) {
                 finalBoundaryVertices.add(new Vector3(vertex.x, vertex.y, 40));
-                bx.subset(math.index(index), vertex.x);
-                by.subset(math.index(index), vertex.y);
+                bx.set(index, 0, vertex.x);
+                by.set(index, 0, vertex.y);
             } else if (BOUNDARY_SHAPES[boundaryShape] === BOUNDARY_SHAPES.Circle) {
                 const { closest } = findClosestVertex(
                     new Vector3(vertex.x, vertex.y, 0),
@@ -148,8 +149,8 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
                 );
 
                 finalBoundaryVertices.add(new Vector3(closest.x, closest.y, 40));
-                bx.subset(math.index(index), closest.x);
-                by.subset(math.index(index), closest.y);
+                bx.set(index, 0, closest.x);
+                by.set(index, 0, closest.y);
             }
         }
     });
@@ -160,7 +161,7 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
     startTime = new Date();
     logger && logger.log(`Calculating inverse W matrix...`);
 
-    const Wi = math.inv(W);
+    const Wi = inverse(W);
 
     elapsedTime = new Date() - startTime;
     logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
@@ -168,8 +169,8 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
     startTime = new Date();
     logger && logger.log(`Calculating xx, and xy matrices...`);
 
-    const xx = math.multiply(Wi, bx);
-    const xy = math.multiply(Wi, by);
+    const xx = Wi.mmul(bx);
+    const xy = Wi.mmul(by);
 
     elapsedTime = new Date() - startTime;
     logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
@@ -184,16 +185,8 @@ export function generateMeshParameterization({ geometry, weightApproach, boundar
         edges.forEach(([vertexIndex1, vertexIndex2]) => {
             allEdges.add({
                 vertices: [
-                    new Vector3(
-                        math.subset(xx, math.index(vertexIndex1)),
-                        math.subset(xy, math.index(vertexIndex1)),
-                        40,
-                    ),
-                    new Vector3(
-                        math.subset(xx, math.index(vertexIndex2)),
-                        math.subset(xy, math.index(vertexIndex2)),
-                        40,
-                    ),
+                    new Vector3(xx.get(vertexIndex1, 0), xy.get(vertexIndex1, 0), 40),
+                    new Vector3(xx.get(vertexIndex2, 0), xy.get(vertexIndex2, 0), 40),
                 ],
             });
         });
