@@ -166,38 +166,44 @@ class ThreeScene extends Component {
         graph,
         qType,
         logger,
-        sourceVertexIndex,
-        target1VertexIndex,
-        target2VertexIndex,
+        sourceVertexIndexPromise,
+        target1VertexIndexPromise,
+        target2VertexIndexPromise,
     }) {
-        mesh.material.vertexColors = FaceColors;
+        Promise.all([
+            sourceVertexIndexPromise,
+            target1VertexIndexPromise,
+            target2VertexIndexPromise,
+        ]).then(([sourceVertexIndex, target1VertexIndex, target2VertexIndex]) => {
+            mesh.material.vertexColors = FaceColors;
 
-        const { bilateralMap, paths, points } = findTriangularBilateralMap({
-            geometry: mesh.geometry,
-            graph,
-            qType,
-            logger,
-            sourceVertexIndex,
-            target1VertexIndex,
-            target2VertexIndex,
-        });
+            const { bilateralMap, paths, points } = findTriangularBilateralMap({
+                geometry: mesh.geometry,
+                graph,
+                qType,
+                logger,
+                sourceVertexIndex,
+                target1VertexIndex,
+                target2VertexIndex,
+            });
 
-        paths.forEach(path => {
-            this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
-        });
+            paths.forEach(path => {
+                this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
+            });
 
-        let isFirst = true;
-        points.forEach(vertex => {
-            this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
-            isFirst = false;
-        });
+            let isFirst = true;
+            points.forEach(vertex => {
+                this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
+                isFirst = false;
+            });
 
-        this.props.store.setChartData({
-            name: "Triangular Bilateral Descriptor",
-            cartesian: Scatter,
-            cartesianDataKey: "z",
-            chart: ScatterChart,
-            data: bilateralMap,
+            this.props.store.setChartData({
+                name: "Triangular Bilateral Descriptor",
+                cartesian: Scatter,
+                cartesianDataKey: "z",
+                chart: ScatterChart,
+                data: bilateralMap,
+            });
         });
     }
 
@@ -311,9 +317,9 @@ class ThreeScene extends Component {
             weightApproach,
             boundaryShape,
             isMouthFixated,
-            sourceVertexIndex,
-            target1VertexIndex,
-            target2VertexIndex,
+            sourceVertexIndexPromise,
+            target1VertexIndexPromise,
+            target2VertexIndexPromise,
         } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         const logger = this.props.store;
@@ -377,9 +383,9 @@ class ThreeScene extends Component {
                         weightApproach,
                         boundaryShape,
                         isMouthFixated,
-                        sourceVertexIndex,
-                        target1VertexIndex,
-                        target2VertexIndex,
+                        sourceVertexIndexPromise,
+                        target1VertexIndexPromise,
+                        target2VertexIndexPromise,
                     });
 
                     elapsedTime = new Date() - startTime;
@@ -427,9 +433,6 @@ class ThreeScene extends Component {
             weightApproach,
             boundaryShape,
             isMouthFixated,
-            sourceVertexIndex,
-            target1VertexIndex,
-            target2VertexIndex,
         } = this.props.store;
         return (
             <div
@@ -442,9 +445,6 @@ class ThreeScene extends Component {
                     ${weightApproach} 
                     ${boundaryShape} 
                     ${isMouthFixated}
-                    ${sourceVertexIndex}
-                    ${target1VertexIndex}
-                    ${target2VertexIndex}
                 `}
                 style={{
                     height: "100%",

@@ -7,28 +7,6 @@ module.exports = {
     entry: {
         index: "./src/index.js",
     },
-    plugins: [
-        new CleanWebpackPlugin(["build/*"]),
-        new HtmlWebpackPlugin({
-            inject: false,
-            template: HtmlWebpackTemplate,
-            favicon: "favicon.ico",
-            links: [
-                "https://fonts.googleapis.com/css?family=Roboto:300,400,500",
-                "https://fonts.googleapis.com/icon?family=Material+Icons",
-            ],
-            title: "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignments",
-            xhtml: true,
-            appMountId: "app",
-        }),
-    ],
-    output: {
-        filename: "[name].bundle.js",
-        path: path.resolve(__dirname, "build"),
-    },
-    resolveLoader: {
-        modules: ["node_modules", path.resolve(__dirname, "src/loaders")],
-    },
     module: {
         rules: [
             {
@@ -65,5 +43,32 @@ module.exports = {
                 ],
             },
         ],
+    },
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+        },
+    },
+    output: {
+        filename: "[name].bundle.js",
+        path: path.resolve(__dirname, "build"),
+    },
+    plugins: [
+        new CleanWebpackPlugin(["build/*"]),
+        new HtmlWebpackPlugin({
+            inject: false,
+            template: HtmlWebpackTemplate,
+            favicon: "favicon.ico",
+            links: [
+                "https://fonts.googleapis.com/css?family=Roboto:300,400,500",
+                "https://fonts.googleapis.com/icon?family=Material+Icons",
+            ],
+            title: "Cansin Yildiz - CENG 789 - Digital Geometry Processing - Assignments",
+            xhtml: true,
+            appMountId: "app",
+        }),
+    ],
+    resolveLoader: {
+        modules: ["node_modules", path.resolve(__dirname, "src/loaders")],
     },
 };

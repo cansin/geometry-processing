@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, observable } from "mobx";
 
 import { ASSIGNMENTS, MODELS, MODEL_REFS } from "../constants";
 
@@ -20,25 +20,28 @@ class Store {
     @observable mesh = undefined;
     @observable graph = undefined;
 
-    @computed
-    get sourceVertexIndex() {
+    get sourceVertexIndexPromise() {
         return this.modelRef
-            ? this.modelRef.get(this.sourceVertexIndexAtNullShape + 1) - 1
-            : this.sourceVertexIndexAtNullShape;
+            ? this.modelRef.then(
+                  module => module.default.get(this.sourceVertexIndexAtNullShape + 1) - 1,
+              )
+            : Promise.resolve(this.sourceVertexIndexAtNullShape);
     }
 
-    @computed
-    get target1VertexIndex() {
+    get target1VertexIndexPromise() {
         return this.modelRef
-            ? this.modelRef.get(this.target1VertexIndexAtNullShape + 1) - 1
-            : this.target1VertexIndexAtNullShape;
+            ? this.modelRef.then(
+                  module => module.default.get(this.target1VertexIndexAtNullShape + 1) - 1,
+              )
+            : Promise.resolve(this.target1VertexIndexAtNullShape);
     }
 
-    @computed
-    get target2VertexIndex() {
+    get target2VertexIndexPromise() {
         return this.modelRef
-            ? this.modelRef.get(this.target2VertexIndexAtNullShape + 1) - 1
-            : this.target2VertexIndexAtNullShape;
+            ? this.modelRef.then(
+                  module => module.default.get(this.target2VertexIndexAtNullShape + 1) - 1,
+              )
+            : Promise.resolve(this.target2VertexIndexAtNullShape);
     }
 
     @action

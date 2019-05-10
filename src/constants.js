@@ -90,31 +90,106 @@ export const ASSIGNMENTS = Object.freeze({
 export const MODEL_REFS = Object.freeze(
     new Map([
         [kid00, undefined],
-        [kid01, kid01Ref],
-        [kid02, kid02Ref],
-        [kid03, kid03Ref],
-        [kid04, kid04Ref],
-        [kid05, kid05Ref],
-        [kid06, kid06Ref],
-        [kid07, kid07Ref],
-        [kid08, kid08Ref],
-        [kid09, kid09Ref],
-        [kid10, kid10Ref],
-        [kid11, kid11Ref],
-        [kid12, kid12Ref],
-        [kid13, kid13Ref],
-        [kid14, kid14Ref],
-        [kid15, kid15Ref],
-        [kid16, kid16Ref],
-        [kid17, kid17Ref],
-        [kid18, kid18Ref],
-        [kid19, kid19Ref],
-        [kid20, kid20Ref],
-        [kid21, kid21Ref],
-        [kid22, kid22Ref],
-        [kid23, kid23Ref],
-        [kid24, kid24Ref],
-        [kid25, kid25Ref],
+        [
+            kid01,
+            import(/* webpackChunkName: "kid01_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid01_ref.txt"),
+        ],
+        [
+            kid02,
+            import(/* webpackChunkName: "kid02_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid02_ref.txt"),
+        ],
+        [
+            kid03,
+            import(/* webpackChunkName: "kid03_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid03_ref.txt"),
+        ],
+        [
+            kid04,
+            import(/* webpackChunkName: "kid04_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid04_ref.txt"),
+        ],
+        [
+            kid05,
+            import(/* webpackChunkName: "kid05_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid05_ref.txt"),
+        ],
+        [
+            kid06,
+            import(/* webpackChunkName: "kid06_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid06_ref.txt"),
+        ],
+        [
+            kid07,
+            import(/* webpackChunkName: "kid07_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid07_ref.txt"),
+        ],
+        [
+            kid08,
+            import(/* webpackChunkName: "kid08_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid08_ref.txt"),
+        ],
+        [
+            kid09,
+            import(/* webpackChunkName: "kid09_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid09_ref.txt"),
+        ],
+        [
+            kid10,
+            import(/* webpackChunkName: "kid10_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid10_ref.txt"),
+        ],
+        [
+            kid11,
+            import(/* webpackChunkName: "kid11_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid11_ref.txt"),
+        ],
+        [
+            kid12,
+            import(/* webpackChunkName: "kid12_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid12_ref.txt"),
+        ],
+        [
+            kid13,
+            import(/* webpackChunkName: "kid13_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid13_ref.txt"),
+        ],
+        [
+            kid14,
+            import(/* webpackChunkName: "kid14_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid14_ref.txt"),
+        ],
+        [
+            kid15,
+            import(/* webpackChunkName: "kid15_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid15_ref.txt"),
+        ],
+        [
+            kid16,
+            import(/* webpackChunkName: "kid16_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid16_ref.txt"),
+        ],
+        [
+            kid17,
+            import(/* webpackChunkName: "kid17_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid17_ref.txt"),
+        ],
+        [
+            kid18,
+            import(/* webpackChunkName: "kid18_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid18_ref.txt"),
+        ],
+        [
+            kid19,
+            import(/* webpackChunkName: "kid19_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid19_ref.txt"),
+        ],
+        [
+            kid20,
+            import(/* webpackChunkName: "kid20_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid20_ref.txt"),
+        ],
+        [
+            kid21,
+            import(/* webpackChunkName: "kid21_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid21_ref.txt"),
+        ],
+        [
+            kid22,
+            import(/* webpackChunkName: "kid22_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid22_ref.txt"),
+        ],
+        [
+            kid23,
+            import(/* webpackChunkName: "kid23_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid23_ref.txt"),
+        ],
+        [
+            kid24,
+            import(/* webpackChunkName: "kid24_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid24_ref.txt"),
+        ],
+        [
+            kid25,
+            import(/* webpackChunkName: "kid25_ref" */ "../meshes/triangular bilateral descriptor/low resolution/kid25_ref.txt"),
+        ],
     ]),
 );
 

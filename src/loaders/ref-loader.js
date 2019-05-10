@@ -9,5 +9,5 @@ module.exports = function(content) {
             .reverse();
     });
 
-    return `module.exports = new Map(${JSON.stringify(result)});`;
+    return `export default new Map(${JSON.stringify(result)});`;
 };
