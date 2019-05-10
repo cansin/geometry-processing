@@ -1,0 +1,5 @@
+Number of vertices:  61861 
+Number of faces: 123650 
+Percentage of vertices matched to reference: 0.906613 
+Percentage of vertices matched to the same vertices on reference: 0.00488191 
+Percentage of vertices with symmetry: 0.89499 

@@ -25,6 +25,32 @@ import face from "../meshes/mesh parameterization/face.off";
 import faceLow from "../meshes/mesh parameterization/face-low.off";
 import facem from "../meshes/mesh parameterization/facem.off";
 import facemLow from "../meshes/mesh parameterization/facem-low.off";
+import kid00 from "../meshes/triangular bilateral descriptor/high resolution/kid00.off";
+import kid01 from "../meshes/triangular bilateral descriptor/high resolution/kid01.off";
+import kid02 from "../meshes/triangular bilateral descriptor/high resolution/kid02.off";
+import kid03 from "../meshes/triangular bilateral descriptor/high resolution/kid03.off";
+import kid04 from "../meshes/triangular bilateral descriptor/high resolution/kid04.off";
+import kid05 from "../meshes/triangular bilateral descriptor/high resolution/kid05.off";
+import kid06 from "../meshes/triangular bilateral descriptor/high resolution/kid06.off";
+import kid07 from "../meshes/triangular bilateral descriptor/high resolution/kid07.off";
+import kid08 from "../meshes/triangular bilateral descriptor/high resolution/kid08.off";
+import kid09 from "../meshes/triangular bilateral descriptor/high resolution/kid09.off";
+import kid10 from "../meshes/triangular bilateral descriptor/high resolution/kid10.off";
+import kid11 from "../meshes/triangular bilateral descriptor/high resolution/kid11.off";
+import kid12 from "../meshes/triangular bilateral descriptor/high resolution/kid12.off";
+import kid13 from "../meshes/triangular bilateral descriptor/high resolution/kid13.off";
+import kid14 from "../meshes/triangular bilateral descriptor/high resolution/kid14.off";
+import kid15 from "../meshes/triangular bilateral descriptor/high resolution/kid15.off";
+import kid16 from "../meshes/triangular bilateral descriptor/high resolution/kid16.off";
+import kid17 from "../meshes/triangular bilateral descriptor/high resolution/kid17.off";
+import kid18 from "../meshes/triangular bilateral descriptor/high resolution/kid18.off";
+import kid19 from "../meshes/triangular bilateral descriptor/high resolution/kid19.off";
+import kid20 from "../meshes/triangular bilateral descriptor/high resolution/kid20.off";
+import kid21 from "../meshes/triangular bilateral descriptor/high resolution/kid21.off";
+import kid22 from "../meshes/triangular bilateral descriptor/high resolution/kid22.off";
+import kid23 from "../meshes/triangular bilateral descriptor/high resolution/kid23.off";
+import kid24 from "../meshes/triangular bilateral descriptor/high resolution/kid24.off";
+import kid25 from "../meshes/triangular bilateral descriptor/high resolution/kid25.off";
 
 export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic Distance",
@@ -70,19 +96,32 @@ export const MODELS = Object.freeze({
         cat,
     },
     TriangularBilateral: {
-        princetonHuman32Incomplete,
-        princetonHuman30,
-        neptune,
-        human,
-        humanWithShortcut,
-        horse2,
-        horse1,
-        horsePartialHole2,
-        horsePartialHole,
-        centaur2,
-        centaur,
-        cat1,
-        cat,
+        kid00,
+        kid01,
+        kid02,
+        kid03,
+        kid04,
+        kid05,
+        kid06,
+        kid07,
+        kid08,
+        kid09,
+        kid10,
+        kid11,
+        kid12,
+        kid13,
+        kid14,
+        kid15,
+        kid16,
+        kid17,
+        kid18,
+        kid19,
+        kid20,
+        kid21,
+        kid22,
+        kid23,
+        kid24,
+        kid25,
     },
     FarthestPoint: {
         princetonHuman32Incomplete,

@@ -1,0 +1,4 @@
+Number of vertices:  59727 
+Number of faces: 119344 
+
+Each point on kid00 has a symmetric counterpart. Therefore, in kid00_sym.txt the n-th number is the index of the symmetric match to the point with index n.

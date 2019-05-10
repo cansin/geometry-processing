@@ -4,7 +4,7 @@ import { MODELS } from "../constants";
 
 class Store {
     @observable assignment = "TriangularBilateral";
-    @observable model = MODELS.TriangularBilateral.princetonHuman32Incomplete;
+    @observable model = MODELS.TriangularBilateral.kid00;
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
