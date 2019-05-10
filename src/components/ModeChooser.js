@@ -25,7 +25,7 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 125,
+        minWidth: 170,
     },
     icon: {
         marginRight: theme.spacing.unit,
@@ -76,6 +76,21 @@ class ModeChooser extends Component {
     }
 
     @autobind
+    handleSourceVertexIndexChange(event) {
+        this.props.store.setSourceVertexIndex(event.target.value);
+    }
+
+    @autobind
+    handleTarget1VertexIndexChange(event) {
+        this.props.store.setTarget1VertexIndex(event.target.value);
+    }
+
+    @autobind
+    handleTarget2VertexIndexChange(event) {
+        this.props.store.setTarget2VertexIndex(event.target.value);
+    }
+
+    @autobind
     handleIsMouthFixatedChange(event) {
         this.props.store.setIsMouthFixated(event.target.value);
     }
@@ -123,6 +138,9 @@ class ModeChooser extends Component {
             weightApproach,
             boundaryShape,
             isMouthFixated,
+            sourceVertexIndex,
+            target1VertexIndex,
+            target2VertexIndex,
         } = store;
         return (
             <Paper>
@@ -257,6 +275,37 @@ class ModeChooser extends Component {
                                     label="Vertex Count"
                                     value={vertexCount}
                                     onChange={this.handleVertexCountChange}
+                                    type="number"
+                                />
+                            </FormControl>
+                        </Grid>
+                    )}
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.TriangularBilateral && (
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <TextField
+                                    id="sourceVertexIndex"
+                                    label="Source Vertex Index"
+                                    value={sourceVertexIndex}
+                                    onChange={this.handleSourceVertexIndexChange}
+                                    type="number"
+                                />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <TextField
+                                    id="target1VertexIndex"
+                                    label="1st Target Vertex Index"
+                                    value={target1VertexIndex}
+                                    onChange={this.handleTarget1VertexIndexChange}
+                                    type="number"
+                                />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <TextField
+                                    id="target2VertexIndex"
+                                    label="2nd Target Vertex Index"
+                                    value={target2VertexIndex}
+                                    onChange={this.handleTarget2VertexIndexChange}
                                     type="number"
                                 />
                             </FormControl>

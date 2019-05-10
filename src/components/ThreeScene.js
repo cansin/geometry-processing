@@ -161,7 +161,15 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createTriangularBilateralScene({ mesh, graph, qType, logger }) {
+    createTriangularBilateralScene({
+        mesh,
+        graph,
+        qType,
+        logger,
+        sourceVertexIndex,
+        target1VertexIndex,
+        target2VertexIndex,
+    }) {
         mesh.material.vertexColors = FaceColors;
 
         const { bilateralMap, paths, points } = findTriangularBilateralMap({
@@ -169,6 +177,9 @@ class ThreeScene extends Component {
             graph,
             qType,
             logger,
+            sourceVertexIndex,
+            target1VertexIndex,
+            target2VertexIndex,
         });
 
         paths.forEach(path => {
@@ -300,6 +311,9 @@ class ThreeScene extends Component {
             weightApproach,
             boundaryShape,
             isMouthFixated,
+            sourceVertexIndex,
+            target1VertexIndex,
+            target2VertexIndex,
         } = this.props.store;
         const loader = model.endsWith(".off") ? this.offLoader : this.objLoader;
         const logger = this.props.store;
@@ -363,6 +377,9 @@ class ThreeScene extends Component {
                         weightApproach,
                         boundaryShape,
                         isMouthFixated,
+                        sourceVertexIndex,
+                        target1VertexIndex,
+                        target2VertexIndex,
                     });
 
                     elapsedTime = new Date() - startTime;
@@ -410,10 +427,25 @@ class ThreeScene extends Component {
             weightApproach,
             boundaryShape,
             isMouthFixated,
+            sourceVertexIndex,
+            target1VertexIndex,
+            target2VertexIndex,
         } = this.props.store;
         return (
             <div
-                aria-label={`${assignment} ${model} ${qType} ${vertexSelection} ${vertexCount} ${weightApproach} ${boundaryShape} ${isMouthFixated}`}
+                aria-label={`
+                    ${assignment} 
+                    ${model} 
+                    ${qType} 
+                    ${vertexSelection} 
+                    ${vertexCount} 
+                    ${weightApproach} 
+                    ${boundaryShape} 
+                    ${isMouthFixated}
+                    ${sourceVertexIndex}
+                    ${target1VertexIndex}
+                    ${target2VertexIndex}
+                `}
                 style={{
                     height: "100%",
                     width: "100%",

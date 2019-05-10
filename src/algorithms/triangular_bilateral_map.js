@@ -1,28 +1,23 @@
 import { Color } from "three";
 
-import { farthestPointSampling } from "./farthest_point_sampling";
 import { findBilateralMap } from "./bilateral_map";
 
-export function findTriangularBilateralMap({ geometry, graph, qType, logger }) {
+export function findTriangularBilateralMap({
+    geometry,
+    graph,
+    qType,
+    logger,
+    sourceVertexIndex,
+    target1VertexIndex,
+    target2VertexIndex,
+}) {
     const { vertices } = geometry;
-    const { farthestPoints: points } = farthestPointSampling({
-        graph,
-        qType,
-        source: vertices[0],
-        count: 3,
-        logger,
-    });
-
-    const source = points[0],
-        target1 = points[1],
-        target2 = points[2];
-
     const { scalarField: scalarField1, faceMap: faceMap1, path: path1 } = findBilateralMap({
         geometry: geometry,
         graph,
         qType,
-        p: target1,
-        q: source,
+        p: vertices[target1VertexIndex],
+        q: vertices[sourceVertexIndex],
         logger,
     });
 
@@ -30,8 +25,8 @@ export function findTriangularBilateralMap({ geometry, graph, qType, logger }) {
         geometry: geometry,
         graph,
         qType,
-        p: target2,
-        q: source,
+        p: vertices[target2VertexIndex],
+        q: vertices[sourceVertexIndex],
         logger,
     });
 
@@ -87,6 +82,10 @@ export function findTriangularBilateralMap({ geometry, graph, qType, logger }) {
     return {
         bilateralMap,
         paths: [path1, path2],
-        points,
+        points: [
+            vertices[sourceVertexIndex],
+            vertices[target1VertexIndex],
+            vertices[target2VertexIndex],
+        ],
     };
 }

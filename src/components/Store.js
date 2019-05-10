@@ -8,6 +8,9 @@ class Store {
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
+    @observable sourceVertexIndex = 0;
+    @observable target1VertexIndex = 1000;
+    @observable target2VertexIndex = 2000;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
     @observable isMouthFixated = "True";
@@ -64,6 +67,24 @@ class Store {
     @action
     setVertexCount(value) {
         this.vertexCount = value;
+        this.chartData = undefined;
+    }
+
+    @action
+    setSourceVertexIndex(value) {
+        this.sourceVertexIndex = value;
+        this.chartData = undefined;
+    }
+
+    @action
+    setTarget1VertexIndex(value) {
+        this.target1VertexIndex = value;
+        this.chartData = undefined;
+    }
+
+    @action
+    setTarget2VertexIndex(value) {
+        this.target2VertexIndex = value;
         this.chartData = undefined;
     }
 
