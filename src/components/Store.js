@@ -3,8 +3,8 @@ import { action, observable } from "mobx";
 import { MODELS } from "../constants";
 
 class Store {
-    @observable assignment = "MeshParameterization";
-    @observable model = MODELS.MeshParameterization.facemLow;
+    @observable assignment = "TriangularBilateral";
+    @observable model = MODELS.TriangularBilateral.princetonHuman32Incomplete;
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;

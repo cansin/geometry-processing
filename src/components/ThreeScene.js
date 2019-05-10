@@ -26,16 +26,14 @@ import autobind from "autobind-decorator";
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
 import { findGeodesicDistance } from "../algorithms/geodesic_distance";
-import {
-    findBilateralMap,
-    findMultiSeedBilateralMap,
-    findTriangularBilateralMap,
-} from "../algorithms/bilateral_map";
+import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
 import { createPathAsLine, createPathAsMeshLine, createVertex } from "../objects";
 import { generateMeshParameterization } from "../algorithms/mesh_parameterization";
+import { findMultiSeedBilateralMap } from "../algorithms/multi_seed_bilateral_map";
+import { findTriangularBilateralMap } from "../algorithms/triangular_bilateral_map";
 
 @inject("store")
 @observer
