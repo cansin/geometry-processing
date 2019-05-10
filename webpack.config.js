@@ -26,6 +26,9 @@ module.exports = {
         filename: "[name].bundle.js",
         path: path.resolve(__dirname, "build"),
     },
+    resolveLoader: {
+        modules: ["node_modules", path.resolve(__dirname, "src/loaders")],
+    },
     module: {
         rules: [
             {
@@ -37,12 +40,15 @@ module.exports = {
             },
             {
                 test: /\.(jpg|off|obj)$/,
-                use: [
-                    {
-                        loader: "file-loader",
-                        options: {},
-                    },
-                ],
+                use: {
+                    loader: "file-loader",
+                },
+            },
+            {
+                test: /\.(txt)$/,
+                use: {
+                    loader: "ref-loader",
+                },
             },
             {
                 test: /\.less$/,

@@ -138,9 +138,9 @@ class ModeChooser extends Component {
             weightApproach,
             boundaryShape,
             isMouthFixated,
-            sourceVertexIndex,
-            target1VertexIndex,
-            target2VertexIndex,
+            sourceVertexIndexAtNullShape,
+            target1VertexIndexAtNullShape,
+            target2VertexIndexAtNullShape,
         } = store;
         return (
             <Paper>
@@ -284,27 +284,27 @@ class ModeChooser extends Component {
                         <Grid item>
                             <FormControl className={classes.formControl}>
                                 <TextField
-                                    id="sourceVertexIndex"
-                                    label="Source Vertex Index"
-                                    value={sourceVertexIndex}
+                                    id="sourceVertexIndexAtNullShape"
+                                    label="Source Vertex Index at Null Shape"
+                                    value={sourceVertexIndexAtNullShape}
                                     onChange={this.handleSourceVertexIndexChange}
                                     type="number"
                                 />
                             </FormControl>
                             <FormControl className={classes.formControl}>
                                 <TextField
-                                    id="target1VertexIndex"
-                                    label="1st Target Vertex Index"
-                                    value={target1VertexIndex}
+                                    id="target1VertexIndexAtNullShape"
+                                    label="1st Target Vertex Index at Null Shape"
+                                    value={target1VertexIndexAtNullShape}
                                     onChange={this.handleTarget1VertexIndexChange}
                                     type="number"
                                 />
                             </FormControl>
                             <FormControl className={classes.formControl}>
                                 <TextField
-                                    id="target2VertexIndex"
-                                    label="2nd Target Vertex Index"
-                                    value={target2VertexIndex}
+                                    id="target2VertexIndexAtNullShape"
+                                    label="2nd Target Vertex Index at Null Shape"
+                                    value={target2VertexIndexAtNullShape}
                                     onChange={this.handleTarget2VertexIndexChange}
                                     type="number"
                                 />

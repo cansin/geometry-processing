@@ -1,16 +1,17 @@
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 
-import { MODELS } from "../constants";
+import { ASSIGNMENTS, MODELS, MODEL_REFS } from "../constants";
 
 class Store {
     @observable assignment = "TriangularBilateral";
     @observable model = MODELS.TriangularBilateral.kid00;
+    @observable modelRef = MODEL_REFS.get(MODELS.TriangularBilateral.kid00);
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
-    @observable sourceVertexIndex = 0;
-    @observable target1VertexIndex = 1000;
-    @observable target2VertexIndex = 2000;
+    @observable sourceVertexIndexAtNullShape = 0;
+    @observable target1VertexIndexAtNullShape = 1000;
+    @observable target2VertexIndexAtNullShape = 2000;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
     @observable isMouthFixated = "True";
@@ -19,19 +20,37 @@ class Store {
     @observable mesh = undefined;
     @observable graph = undefined;
 
+    @computed
+    get sourceVertexIndex() {
+        return this.modelRef
+            ? this.modelRef.get(this.sourceVertexIndexAtNullShape + 1) - 1
+            : this.sourceVertexIndexAtNullShape;
+    }
+
+    @computed
+    get target1VertexIndex() {
+        return this.modelRef
+            ? this.modelRef.get(this.target1VertexIndexAtNullShape + 1) - 1
+            : this.target1VertexIndexAtNullShape;
+    }
+
+    @computed
+    get target2VertexIndex() {
+        return this.modelRef
+            ? this.modelRef.get(this.target2VertexIndexAtNullShape + 1) - 1
+            : this.target2VertexIndexAtNullShape;
+    }
+
     @action
     setAssignment(value) {
         this.assignment = value;
-        this.model = Object.values(MODELS[this.assignment])[0];
+        this.setModel(Object.values(MODELS[this.assignment])[0]);
         this.qType = "FibonacciHeap";
         this.vertexSelection = "FarthestPoint";
         this.vertexCount = 2;
         this.weightApproach = "Uniform";
         this.boundaryShape = "Circle";
         this.isMouthFixated = "True";
-        this.chartData = undefined;
-        this.mesh = undefined;
-        this.graph = undefined;
     }
 
     @action
@@ -40,6 +59,10 @@ class Store {
         this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;
+
+        if (ASSIGNMENTS[this.assignment] === ASSIGNMENTS.TriangularBilateral) {
+            this.modelRef = MODEL_REFS.get(this.model);
+        }
     }
 
     @action
@@ -72,19 +95,19 @@ class Store {
 
     @action
     setSourceVertexIndex(value) {
-        this.sourceVertexIndex = value;
+        this.sourceVertexIndexAtNullShape = value;
         this.chartData = undefined;
     }
 
     @action
     setTarget1VertexIndex(value) {
-        this.target1VertexIndex = value;
+        this.target1VertexIndexAtNullShape = value;
         this.chartData = undefined;
     }
 
     @action
     setTarget2VertexIndex(value) {
-        this.target2VertexIndex = value;
+        this.target2VertexIndexAtNullShape = value;
         this.chartData = undefined;
     }
 
