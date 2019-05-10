@@ -48,7 +48,10 @@ class Chart extends Component {
                         <ZAxis dataKey="z" range={[10, 100]} />
                         <Cartesian name={name} type="monotone" dataKey={cartesianDataKey}>
                             {data.map((entry, key) => (
-                                <Cell key={key} fill={entry.x % 2 ? "#cc0000" : "#0000cc"} />
+                                <Cell
+                                    key={key}
+                                    fill={entry.fill || (entry.x % 2 ? "#cc0000" : "#0000cc")}
+                                />
                             ))}
                         </Cartesian>
                     </Chart>
