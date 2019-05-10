@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import {
     AmbientLight,
-    CircleGeometry,
     FaceColors,
     Mesh,
-    MeshBasicMaterial,
     PerspectiveCamera,
     PointLight,
     Scene,
@@ -22,6 +20,8 @@ import BarChart from "recharts/es6/chart/BarChart";
 import Bar from "recharts/es6/cartesian/Bar";
 import ChartLine from "recharts/es6/cartesian/Line";
 import autobind from "autobind-decorator";
+import ScatterChart from "recharts/es6/chart/ScatterChart";
+import Scatter from "recharts/es6/cartesian/Scatter";
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
@@ -125,6 +125,7 @@ class ThreeScene extends Component {
         this.props.store.setChartData({
             name: "Bilateral Descriptor",
             cartesian: Bar,
+            cartesianDataKey: "y",
             chart: BarChart,
             data: bilateralMap,
         });
@@ -151,8 +152,9 @@ class ThreeScene extends Component {
         });
 
         this.props.store.setChartData({
-            name: "Bilateral Descriptor",
+            name: "Multi-Seed Bilateral Descriptor",
             cartesian: Bar,
+            cartesianDataKey: "y",
             chart: BarChart,
             data: bilateralMap,
         });
@@ -162,7 +164,7 @@ class ThreeScene extends Component {
     createTriangularBilateralScene({ mesh, graph, qType, logger }) {
         mesh.material.vertexColors = FaceColors;
 
-        const { paths, points } = findTriangularBilateralMap({
+        const { bilateralMap, paths, points } = findTriangularBilateralMap({
             geometry: mesh.geometry,
             graph,
             qType,
@@ -179,12 +181,13 @@ class ThreeScene extends Component {
             isFirst = false;
         });
 
-        // this.props.store.setChartData({
-        //     name: "Bilateral Descriptor",
-        //     cartesian: Bar,
-        //     chart: BarChart,
-        //     data: bilateralMap,
-        // });
+        this.props.store.setChartData({
+            name: "Triangular Bilateral Descriptor",
+            cartesian: Scatter,
+            cartesianDataKey: "z",
+            chart: ScatterChart,
+            data: bilateralMap,
+        });
     }
 
     @autobind
@@ -207,6 +210,7 @@ class ThreeScene extends Component {
         this.props.store.setChartData({
             name: "Iso-Curve Descriptor",
             cartesian: ChartLine,
+            cartesianDataKey: "y",
             chart: LineChart,
             data: isoDescriptor,
         });

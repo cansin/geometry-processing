@@ -10,6 +10,7 @@ import Tooltip from "recharts/es6/component/Tooltip";
 import Legend from "recharts/es6/component/Legend";
 import Cell from "recharts/es6/component/Cell";
 import { withStyles } from "@material-ui/core";
+import ZAxis from "recharts/es6/cartesian/ZAxis";
 
 const styles = theme => ({
     paper: {
@@ -27,20 +28,27 @@ class Chart extends Component {
 
     render() {
         const { classes, store } = this.props;
-        const { name, data, chart: Chart, cartesian: Cartesian } = store.chartData;
+        const {
+            name,
+            data,
+            chart: Chart,
+            cartesian: Cartesian,
+            cartesianDataKey,
+        } = store.chartData;
 
         return (
             <Paper className={classes.paper}>
                 <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={300}>
                     <Chart data={data}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis />
-                        <YAxis />
-                        <Tooltip />
+                        <Tooltip cursor={{ strokeDasharray: "3 3" }} />
                         <Legend verticalAlign="top" />
-                        <Cartesian name={name} type="monotone" dataKey="value">
+                        <XAxis dataKey="x" />
+                        <YAxis dataKey="y" />
+                        <ZAxis dataKey="z" range={[10, 100]} />
+                        <Cartesian name={name} type="monotone" dataKey={cartesianDataKey}>
                             {data.map((entry, key) => (
-                                <Cell key={key} fill={entry.name % 2 ? "#cc0000" : "#0000cc"} />
+                                <Cell key={key} fill={entry.x % 2 ? "#cc0000" : "#0000cc"} />
                             ))}
                         </Cartesian>
                     </Chart>

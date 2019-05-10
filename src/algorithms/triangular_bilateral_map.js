@@ -35,6 +35,7 @@ export function findTriangularBilateralMap({ geometry, graph, qType, logger }) {
         logger,
     });
 
+    const bilateralMap = [];
     geometry.faces.forEach(face => {
         const v1 = geometry.vertices[face.a],
             v2 = geometry.vertices[face.b],
@@ -62,12 +63,26 @@ export function findTriangularBilateralMap({ geometry, graph, qType, logger }) {
             } else if (hue1 % 2 !== hue2 % 2 && hue1 % 2 === 1) {
                 color.setHSL(0.6, 1.0, 0.5);
             }
+
+            // Calculate the area using Heron's formula
+            const e1 = v1.distanceTo(v2),
+                e2 = v2.distanceTo(v3),
+                e3 = v1.distanceTo(v3);
+            const s = (e1 + e2 + e3) / 2.0;
+            bilateralMap[hue1 * 1000 + hue2] = {
+                x: hue1,
+                y: hue2,
+                z:
+                    ((bilateralMap[hue1 * 1000 + hue2] && bilateralMap[hue1 * 1000 + hue2].z) ||
+                        0) + Math.sqrt(s * (s - e1) * (s - e2) * (s - e3)),
+            };
         }
 
         face.color = color;
     });
 
     return {
+        bilateralMap,
         paths: [path1, path2],
         points,
     };

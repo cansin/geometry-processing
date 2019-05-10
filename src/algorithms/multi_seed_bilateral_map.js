@@ -122,9 +122,9 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
                 e3 = v1.distanceTo(v3);
             const s = (e1 + e2 + e3) / 2.0;
             bilateralMap[hue] = {
-                name: hue,
-                value:
-                    ((bilateralMap[hue] && bilateralMap[hue].value) || 0) +
+                x: hue,
+                y:
+                    ((bilateralMap[hue] && bilateralMap[hue].y) || 0) +
                     Math.sqrt(s * (s - e1) * (s - e2) * (s - e3)),
             };
         }
