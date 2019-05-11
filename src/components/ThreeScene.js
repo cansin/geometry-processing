@@ -146,7 +146,7 @@ class ThreeScene extends Component {
         this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
 
         let isFirst = true;
-        points.forEach(vertex => {
+        points.filter(Boolean).forEach(vertex => {
             this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
             isFirst = false;
         });
@@ -187,12 +187,12 @@ class ThreeScene extends Component {
                 target2VertexIndex,
             });
 
-            paths.forEach(path => {
+            paths.filter(Boolean).forEach(path => {
                 this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
             });
 
             let isFirst = true;
-            points.forEach(vertex => {
+            points.filter(Boolean).forEach(vertex => {
                 this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
                 isFirst = false;
             });
@@ -433,6 +433,9 @@ class ThreeScene extends Component {
             weightApproach,
             boundaryShape,
             isMouthFixated,
+            sourceVertexIndexAtNullShape,
+            target1VertexIndexAtNullShape,
+            target2VertexIndexAtNullShape,
         } = this.props.store;
         return (
             <div
@@ -445,6 +448,9 @@ class ThreeScene extends Component {
                     ${weightApproach} 
                     ${boundaryShape} 
                     ${isMouthFixated}
+                    ${sourceVertexIndexAtNullShape}
+                    ${target1VertexIndexAtNullShape}
+                    ${target2VertexIndexAtNullShape}
                 `}
                 style={{
                     height: "100%",

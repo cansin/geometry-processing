@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 
 import { getModelRef, MODELS, NULL_SHAPE } from "../constants";
 
@@ -19,28 +19,25 @@ class Store {
     @observable mesh = undefined;
     @observable graph = undefined;
 
+    _getVertexIndexPromise(index) {
+        return this.model !== NULL_SHAPE
+            ? getModelRef(this.model).then(module => module.default.get(index + 1) - 1 || index)
+            : Promise.resolve(index);
+    }
+
+    @computed
     get sourceVertexIndexPromise() {
-        return this.model !== NULL_SHAPE
-            ? getModelRef(this.model).then(
-                  module => module.default.get(this.sourceVertexIndexAtNullShape + 1) - 1,
-              )
-            : Promise.resolve(this.sourceVertexIndexAtNullShape);
+        return this._getVertexIndexPromise(this.sourceVertexIndexAtNullShape);
     }
 
+    @computed
     get target1VertexIndexPromise() {
-        return this.model !== NULL_SHAPE
-            ? getModelRef(this.model).then(
-                  module => module.default.get(this.target2VertexIndexAtNullShape + 1) - 1,
-              )
-            : Promise.resolve(this.target1VertexIndexAtNullShape);
+        return this._getVertexIndexPromise(this.target1VertexIndexAtNullShape);
     }
 
+    @computed
     get target2VertexIndexPromise() {
-        return this.model !== NULL_SHAPE
-            ? getModelRef(this.model).then(
-                  module => module.default.get(this.target2VertexIndexAtNullShape + 1) - 1,
-              )
-            : Promise.resolve(this.target2VertexIndexAtNullShape);
+        return this._getVertexIndexPromise(this.target2VertexIndexAtNullShape);
     }
 
     @action
