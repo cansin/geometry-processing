@@ -20,12 +20,9 @@ module.exports = {
                 test: /\.(jpg|off|obj)$/,
                 use: {
                     loader: "file-loader",
-                },
-            },
-            {
-                test: /\.(txt)$/,
-                use: {
-                    loader: "ref-loader",
+                    options: {
+                        name: "[path][name].[ext]",
+                    },
                 },
             },
             {
@@ -50,7 +47,6 @@ module.exports = {
         },
     },
     output: {
-        filename: "[name].bundle.js",
         path: path.resolve(__dirname, "build"),
     },
     plugins: [

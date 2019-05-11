@@ -1,11 +1,10 @@
 import { action, observable } from "mobx";
 
-import { ASSIGNMENTS, MODELS, MODEL_REFS } from "../constants";
+import { getModelRef, MODELS, NULL_SHAPE } from "../constants";
 
 class Store {
     @observable assignment = "TriangularBilateral";
     @observable model = MODELS.TriangularBilateral.kid00;
-    @observable modelRef = MODEL_REFS.get(MODELS.TriangularBilateral.kid00);
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
@@ -21,24 +20,24 @@ class Store {
     @observable graph = undefined;
 
     get sourceVertexIndexPromise() {
-        return this.modelRef
-            ? this.modelRef.then(
+        return this.model !== NULL_SHAPE
+            ? getModelRef(this.model).then(
                   module => module.default.get(this.sourceVertexIndexAtNullShape + 1) - 1,
               )
             : Promise.resolve(this.sourceVertexIndexAtNullShape);
     }
 
     get target1VertexIndexPromise() {
-        return this.modelRef
-            ? this.modelRef.then(
-                  module => module.default.get(this.target1VertexIndexAtNullShape + 1) - 1,
+        return this.model !== NULL_SHAPE
+            ? getModelRef(this.model).then(
+                  module => module.default.get(this.target2VertexIndexAtNullShape + 1) - 1,
               )
             : Promise.resolve(this.target1VertexIndexAtNullShape);
     }
 
     get target2VertexIndexPromise() {
-        return this.modelRef
-            ? this.modelRef.then(
+        return this.model !== NULL_SHAPE
+            ? getModelRef(this.model).then(
                   module => module.default.get(this.target2VertexIndexAtNullShape + 1) - 1,
               )
             : Promise.resolve(this.target2VertexIndexAtNullShape);
@@ -62,10 +61,6 @@ class Store {
         this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;
-
-        if (ASSIGNMENTS[this.assignment] === ASSIGNMENTS.TriangularBilateral) {
-            this.modelRef = MODEL_REFS.get(this.model);
-        }
     }
 
     @action
