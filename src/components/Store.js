@@ -8,9 +8,9 @@ class Store {
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
-    @observable sourceVertexIndexAtNullShape = 0;
-    @observable target1VertexIndexAtNullShape = 1000;
-    @observable target2VertexIndexAtNullShape = 2000;
+    @observable sourceVertexIndexAtNullShape = 11181;
+    @observable target1VertexIndexAtNullShape = 1251;
+    @observable target2VertexIndexAtNullShape = 2749;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
     @observable isMouthFixated = "True";

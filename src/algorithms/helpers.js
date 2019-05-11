@@ -46,6 +46,7 @@ function choosePointsRandomly({ geometry, logger }) {
 function chooseFarthestPoints({ geometry, graph, qType, vertexCount, logger }) {
     const { vertices } = geometry;
     const [source, target] = farthestPointSampling({
+        geometry,
         graph,
         qType,
         source: vertices[0],

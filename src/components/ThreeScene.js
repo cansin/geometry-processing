@@ -234,8 +234,9 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createFarthestPointScene({ graph, qType, source, logger }) {
+    createFarthestPointScene({ mesh, graph, qType, source, logger }) {
         const { farthestPoints } = farthestPointSampling({
+            geometry: mesh.geometry,
             graph,
             qType,
             source,

@@ -2,11 +2,12 @@ import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 
 import { dijkstra } from "./geodesic_distance";
 
-export function farthestPointSampling({ graph, qType, source, count, logger }) {
+export function farthestPointSampling({ geometry, graph, qType, source, count, logger }) {
     const { distances } = dijkstra({ graph, qType, source, logger: undefined });
     const allDistances = new Set([distances]);
 
     const farthestPoints = [];
+    const farthestPointIndices = [];
 
     let startTime, elapsedTime;
 
@@ -38,7 +39,19 @@ export function farthestPointSampling({ graph, qType, source, count, logger }) {
     elapsedTime = new Date() - startTime;
     logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
+    farthestPoints.forEach(point => {
+        geometry.vertices.forEach((vertex, index) => {
+            if (vertex === point) {
+                farthestPointIndices.push(index);
+            }
+        });
+    });
+
+    logger &&
+        logger.log(`Farthest Point Indices: ${JSON.stringify(farthestPointIndices, null, 1)}`);
+
     return {
         farthestPoints,
+        farthestPointIndices,
     };
 }
