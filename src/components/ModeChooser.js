@@ -25,12 +25,32 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 170,
+        minWidth: 125,
+    },
+    formControlNullShape: {
+        margin: theme.spacing.unit,
+        minWidth: 270,
     },
     icon: {
         marginRight: theme.spacing.unit,
     },
 });
+
+function downloadFile(content, filename) {
+    const blob = new Blob([content], { type: "octet/stream" });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    a.href = url;
+    a.download = filename;
+
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
 
 @inject("store")
 @observer
@@ -96,8 +116,44 @@ class ModeChooser extends Component {
     }
 
     @autobind
+    handleDownloadBilateralDescriptor() {
+        const { chartData, model } = this.props.store;
+
+        const matrixDim = Math.max(
+            Math.floor(chartData.data.length / 1000),
+            chartData.data.length % 1000,
+        );
+
+        const matrix = new Array(matrixDim).fill(0);
+        matrix.map((row, index) => {
+            matrix[index] = new Array(matrixDim).fill(0);
+        });
+
+        chartData.data.forEach(datum => {
+            matrix[datum.x][datum.y] = datum.z;
+        });
+
+        const data = matrix.reduce(
+            (acc, row) => `${acc}\n${row.reduce((acc, col) => `${acc} ${col}`, "")}`,
+            "",
+        );
+
+        downloadFile(data, `${model.slice(0, -4)}_bilateral_descriptor.txt`);
+    }
+
+    @autobind
+    handleDownloadFarthestPointIndices() {
+        const { farthestPointIndices, model } = this.props.store;
+
+        downloadFile(
+            JSON.stringify(farthestPointIndices),
+            `${model.slice(0, -4)}_farthest_point_indices.txt`,
+        );
+    }
+
+    @autobind
     handleCreateMatrix() {
-        const { assignment, model, graph, mesh, qType } = this.props.store;
+        const { model, graph, mesh, qType } = this.props.store;
 
         const { matrix } = populateGeodesicDistanceMatrix({
             geometry: mesh.geometry,
@@ -109,22 +165,8 @@ class ModeChooser extends Component {
         matrix.forEach(row => {
             data += Array.from(row.values()).join(" ") + "\n";
         });
-        const blob = new Blob([data], { type: "octet/stream" });
-        const url = window.URL.createObjectURL(blob);
 
-        const a = document.createElement("a");
-        const filename = Object.keys(MODELS[assignment]).filter(
-            key => MODELS[assignment][key] === model,
-        )[0];
-        document.body.appendChild(a);
-        a.style = "display: none";
-        a.href = url;
-        a.download = `${filename}_geodesic_matrix.txt`;
-
-        a.click();
-
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        downloadFile(data, `${model.slice(0, -4)}_geodesic_matrix.txt`);
     }
 
     render() {
@@ -178,94 +220,110 @@ class ModeChooser extends Component {
                         </FormControl>
                     </Grid>
                     {ASSIGNMENTS[assignment] !== ASSIGNMENTS.MeshParameterization && (
-                        <Grid item>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
-                                <Select
-                                    value={qType}
-                                    onChange={this.handleQTypeChange}
-                                    input={<Input name="q-type" id="q-type" />}
-                                    autoWidth>
-                                    {Object.entries(Q_TYPES).map(([value, tag], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    )}
-                    {ASSIGNMENTS[assignment] !== ASSIGNMENTS.MeshParameterization && (
-                        <Grid item>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="vertex-selection">Vertex Selection</InputLabel>
-                                <Select
-                                    value={vertexSelection}
-                                    onChange={this.handleVertexSelectionChange}
-                                    input={<Input name="vertex-selection" id="vertex-selection" />}
-                                    autoWidth>
-                                    {Object.entries(VERTEX_SELECTIONS).map(([value, tag], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    )}
-                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.MeshParameterization && (
-                        <Grid item>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="boundary-shape">Boundary Shape</InputLabel>
-                                <Select
-                                    value={boundaryShape}
-                                    onChange={this.handleBoundaryShapeChange}
-                                    input={<Input name="boundary-shape" id="boundary-shape" />}
-                                    autoWidth>
-                                    {Object.entries(BOUNDARY_SHAPES).map(([value, tag], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                        <>
+                            <Grid item>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="q-type">Dijkstra Queue</InputLabel>
+                                    <Select
+                                        value={qType}
+                                        onChange={this.handleQTypeChange}
+                                        input={<Input name="q-type" id="q-type" />}
+                                        autoWidth>
+                                        {Object.entries(Q_TYPES).map(([value, tag], key) => (
+                                            <MenuItem key={key} value={value}>
+                                                {tag}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="vertex-selection">
+                                        Vertex Selection
+                                    </InputLabel>
+                                    <Select
+                                        value={vertexSelection}
+                                        onChange={this.handleVertexSelectionChange}
+                                        input={
+                                            <Input name="vertex-selection" id="vertex-selection" />
+                                        }
+                                        autoWidth>
+                                        {Object.entries(VERTEX_SELECTIONS).map(
+                                            ([value, tag], key) => (
+                                                <MenuItem key={key} value={value}>
+                                                    {tag}
+                                                </MenuItem>
+                                            ),
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </>
                     )}
                     {ASSIGNMENTS[assignment] === ASSIGNMENTS.MeshParameterization && (
-                        <Grid item>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="weight-approach">Weight Approach</InputLabel>
-                                <Select
-                                    value={weightApproach}
-                                    onChange={this.handleWeightApproachChange}
-                                    input={<Input name="weight-approach" id="weight-approach" />}
-                                    autoWidth>
-                                    {Object.entries(WEIGHT_APPROACHES).map(([value, tag], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    )}
-                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.MeshParameterization && (
-                        <Grid item>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="mouth-fixated">Is Mouth Fixated</InputLabel>
-                                <Select
-                                    value={isMouthFixated}
-                                    onChange={this.handleIsMouthFixatedChange}
-                                    input={<Input name="mouth-fixated" id="mouth-fixated" />}
-                                    autoWidth>
-                                    {Object.entries(MOUTH_FIXATIONS).map(([value, tag], key) => (
-                                        <MenuItem key={key} value={value}>
-                                            {tag}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                        <>
+                            <Grid item>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="boundary-shape">Boundary Shape</InputLabel>
+                                    <Select
+                                        value={boundaryShape}
+                                        onChange={this.handleBoundaryShapeChange}
+                                        input={<Input name="boundary-shape" id="boundary-shape" />}
+                                        autoWidth>
+                                        {Object.entries(BOUNDARY_SHAPES).map(
+                                            ([value, tag], key) => (
+                                                <MenuItem key={key} value={value}>
+                                                    {tag}
+                                                </MenuItem>
+                                            ),
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="weight-approach">
+                                        Weight Approach
+                                    </InputLabel>
+                                    <Select
+                                        value={weightApproach}
+                                        onChange={this.handleWeightApproachChange}
+                                        input={
+                                            <Input name="weight-approach" id="weight-approach" />
+                                        }
+                                        autoWidth>
+                                        {Object.entries(WEIGHT_APPROACHES).map(
+                                            ([value, tag], key) => (
+                                                <MenuItem key={key} value={value}>
+                                                    {tag}
+                                                </MenuItem>
+                                            ),
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="mouth-fixated">
+                                        Is Mouth Fixated
+                                    </InputLabel>
+                                    <Select
+                                        value={isMouthFixated}
+                                        onChange={this.handleIsMouthFixatedChange}
+                                        input={<Input name="mouth-fixated" id="mouth-fixated" />}
+                                        autoWidth>
+                                        {Object.entries(MOUTH_FIXATIONS).map(
+                                            ([value, tag], key) => (
+                                                <MenuItem key={key} value={value}>
+                                                    {tag}
+                                                </MenuItem>
+                                            ),
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </>
                     )}
                     {ASSIGNMENTS[assignment] === ASSIGNMENTS.MultiSeedBilateral && (
                         <Grid item>
@@ -281,35 +339,47 @@ class ModeChooser extends Component {
                         </Grid>
                     )}
                     {ASSIGNMENTS[assignment] === ASSIGNMENTS.TriangularBilateral && (
-                        <Grid item>
-                            <FormControl className={classes.formControl}>
-                                <TextField
-                                    id="sourceVertexIndexAtNullShape"
-                                    label="Source Vertex Index at Null Shape"
-                                    value={sourceVertexIndexAtNullShape}
-                                    onChange={this.handleSourceVertexIndexChange}
-                                    type="number"
-                                />
-                            </FormControl>
-                            <FormControl className={classes.formControl}>
-                                <TextField
-                                    id="target1VertexIndexAtNullShape"
-                                    label="1st Target Vertex Index at Null Shape"
-                                    value={target1VertexIndexAtNullShape}
-                                    onChange={this.handleTarget1VertexIndexChange}
-                                    type="number"
-                                />
-                            </FormControl>
-                            <FormControl className={classes.formControl}>
-                                <TextField
-                                    id="target2VertexIndexAtNullShape"
-                                    label="2nd Target Vertex Index at Null Shape"
-                                    value={target2VertexIndexAtNullShape}
-                                    onChange={this.handleTarget2VertexIndexChange}
-                                    type="number"
-                                />
-                            </FormControl>
-                        </Grid>
+                        <>
+                            <Grid item>
+                                <Button
+                                    className={classes.button}
+                                    color="secondary"
+                                    onClick={this.handleDownloadBilateralDescriptor}
+                                    variant="contained">
+                                    <SaveIcon className={classes.icon} />
+                                    Download Bilateral Descriptor
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <FormControl className={classes.formControlNullShape}>
+                                    <TextField
+                                        id="sourceVertexIndexAtNullShape"
+                                        label="Source Vertex Index at Null Shape"
+                                        value={sourceVertexIndexAtNullShape}
+                                        onChange={this.handleSourceVertexIndexChange}
+                                        type="number"
+                                    />
+                                </FormControl>
+                                <FormControl className={classes.formControlNullShape}>
+                                    <TextField
+                                        id="target1VertexIndexAtNullShape"
+                                        label="1st Target Vertex Index at Null Shape"
+                                        value={target1VertexIndexAtNullShape}
+                                        onChange={this.handleTarget1VertexIndexChange}
+                                        type="number"
+                                    />
+                                </FormControl>
+                                <FormControl className={classes.formControlNullShape}>
+                                    <TextField
+                                        id="target2VertexIndexAtNullShape"
+                                        label="2nd Target Vertex Index at Null Shape"
+                                        value={target2VertexIndexAtNullShape}
+                                        onChange={this.handleTarget2VertexIndexChange}
+                                        type="number"
+                                    />
+                                </FormControl>
+                            </Grid>
+                        </>
                     )}
                     {ASSIGNMENTS[assignment] === ASSIGNMENTS.Geodesic && (
                         <Grid item>
@@ -320,6 +390,18 @@ class ModeChooser extends Component {
                                 variant="contained">
                                 <SaveIcon className={classes.icon} />
                                 Create Matrix
+                            </Button>
+                        </Grid>
+                    )}
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.FarthestPoint && (
+                        <Grid item>
+                            <Button
+                                className={classes.button}
+                                color="secondary"
+                                onClick={this.handleDownloadFarthestPointIndices}
+                                variant="contained">
+                                <SaveIcon className={classes.icon} />
+                                Download Farthest Point Indices
                             </Button>
                         </Grid>
                     )}

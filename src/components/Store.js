@@ -8,6 +8,7 @@ class Store {
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
+    @observable farthestPointIndices = [];
     @observable sourceVertexIndexAtNullShape = 11181;
     @observable target1VertexIndexAtNullShape = 1251;
     @observable target2VertexIndexAtNullShape = 2749;
@@ -58,6 +59,7 @@ class Store {
         this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;
+        this.farthestPointIndices = [];
     }
 
     @action
@@ -124,13 +126,15 @@ class Store {
         this.graph = value;
     }
 
-    @action
-    log(value) {
+    @action setFarthestPointIndices(value) {
+        this.farthestPointIndices = value;
+    }
+
+    @action log(value) {
         this.logs += `${value}\n`;
     }
 
-    @action
-    clear() {
+    @action clear() {
         this.logs = "";
     }
 }

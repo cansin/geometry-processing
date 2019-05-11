@@ -47,9 +47,6 @@ export function farthestPointSampling({ geometry, graph, qType, source, count, l
         });
     });
 
-    logger &&
-        logger.log(`Farthest Point Indices: ${JSON.stringify(farthestPointIndices, null, 1)}`);
-
     return {
         farthestPoints,
         farthestPointIndices,

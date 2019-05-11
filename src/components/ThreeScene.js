@@ -235,7 +235,7 @@ class ThreeScene extends Component {
 
     @autobind
     createFarthestPointScene({ mesh, graph, qType, source, logger }) {
-        const { farthestPoints } = farthestPointSampling({
+        const { farthestPoints, farthestPointIndices } = farthestPointSampling({
             geometry: mesh.geometry,
             graph,
             qType,
@@ -247,6 +247,8 @@ class ThreeScene extends Component {
         farthestPoints.forEach(vertex => {
             this.scene.add(createVertex(vertex));
         });
+
+        this.props.store.setFarthestPointIndices(farthestPointIndices);
     }
 
     @autobind
