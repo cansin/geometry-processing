@@ -202,7 +202,7 @@ class ThreeScene extends Component {
                 cartesian: Scatter,
                 cartesianDataKey: "z",
                 chart: ScatterChart,
-                data: bilateralMap,
+                data: bilateralMap.filter(Boolean),
             });
         });
     }

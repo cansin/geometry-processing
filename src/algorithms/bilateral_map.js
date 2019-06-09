@@ -2,14 +2,19 @@ import { Color } from "three";
 
 import { dijkstra, traverse } from "./geodesic_distance";
 
-export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
+export function findBilateralMap({ geometry, graph, qType, p, q, logger, doFilter = true }) {
     const { distances: distancesP, previous: previousP } = dijkstra({
         graph,
         qType,
         source: p,
         logger,
     });
-    const { distances: distancesQ } = dijkstra({ graph, qType, source: q, logger });
+    const { distances: distancesQ, previous: previousQ } = dijkstra({
+        graph,
+        qType,
+        source: q,
+        logger,
+    });
     const { distance: distancePQ, path: pathPQ } = traverse({
         distances: distancesP,
         previous: previousP,
@@ -39,29 +44,31 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
     elapsedTime = new Date() - startTime;
     logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
-    startTime = new Date();
-    logger && logger.log(`Calculating initial region...`);
+    if (doFilter) {
+        startTime = new Date();
+        logger && logger.log(`Calculating initial region...`);
 
-    G.forEach((distance, x) => {
-        if (distance > 0.3) {
-            G.set(x, Infinity);
-        }
-    });
+        G.forEach((distance, x) => {
+            if (distance > 0.3) {
+                G.set(x, Infinity);
+            }
+        });
 
-    elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
+        elapsedTime = new Date() - startTime;
+        logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
-    startTime = new Date();
-    logger && logger.log(`Calculating filtering region...`);
+        startTime = new Date();
+        logger && logger.log(`Calculating filtering region...`);
 
-    G.forEach((distance, x) => {
-        if (distancesP.get(x) > distancePQ || distancesQ.get(x) > distancePQ) {
-            G.set(x, Infinity);
-        }
-    });
+        G.forEach((distance, x) => {
+            if (distancesP.get(x) > distancePQ || distancesQ.get(x) > distancePQ) {
+                G.set(x, Infinity);
+            }
+        });
 
-    elapsedTime = new Date() - startTime;
-    logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
+        elapsedTime = new Date() - startTime;
+        logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
+    }
 
     startTime = new Date();
     logger && logger.log(`Divide the ROI into bins...`);
@@ -111,5 +118,10 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger }) {
         maxDistance,
         bilateralMap,
         faceMap,
+        distancesP,
+        distancesQ,
+        previousP,
+        previousQ,
+        distancePQ,
     };
 }
