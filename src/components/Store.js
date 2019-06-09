@@ -4,14 +4,14 @@ import { getModelRef, MODELS, NULL_SHAPE } from "../constants";
 
 class Store {
     @observable assignment = "TriangularBilateral";
-    @observable model = MODELS.TriangularBilateral.kid00;
+    @observable model = MODELS.TriangularBilateral.scan000;
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
     @observable farthestPointIndices = [];
-    @observable sourceVertexIndexAtNullShape = 11181;
-    @observable target1VertexIndexAtNullShape = 1251;
-    @observable target2VertexIndexAtNullShape = 2749;
+    @observable sourceVertexIndexAtNullShape = 9367;
+    @observable target1VertexIndexAtNullShape = 6540;
+    @observable target2VertexIndexAtNullShape = 5171;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
     @observable isMouthFixated = "True";

@@ -2,10 +2,14 @@ import React, { Component } from "react";
 import {
     AmbientLight,
     FaceColors,
+    FontLoader,
     Mesh,
+    MeshPhongMaterial,
     PerspectiveCamera,
     PointLight,
     Scene,
+    SphereBufferGeometry,
+    TextGeometry,
     Vector2,
     Vector3,
     WebGLRenderer,
@@ -75,6 +79,11 @@ class ThreeScene extends Component {
         // ADD LOADERS
         this.offLoader = new OFFLoader();
         this.objLoader = new OBJLoader();
+        this.fontLoader = new FontLoader();
+
+        this.fontLoader.load("fonts/helvetiker_regular.typeface.json", font => {
+            this.font = font;
+        });
 
         window.addEventListener("resize", this.handleResize.bind(this));
 
@@ -246,6 +255,17 @@ class ThreeScene extends Component {
 
         farthestPoints.forEach(vertex => {
             this.scene.add(createVertex(vertex));
+        });
+
+        farthestPoints.forEach((vertex, i) => {
+            const material = new MeshPhongMaterial({ color: 0x00ff00 });
+            const geometry = new TextGeometry(`${farthestPointIndices[i]}`, {
+                font: this.font,
+            });
+            geometry.scale(0.02, 0.02, 0.02);
+            geometry.translate(vertex.x, vertex.y, vertex.z);
+
+            this.scene.add(new Mesh(geometry, material));
         });
 
         this.props.store.setFarthestPointIndices(farthestPointIndices);

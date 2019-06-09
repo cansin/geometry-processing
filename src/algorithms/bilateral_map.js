@@ -2,7 +2,7 @@ import { Color } from "three";
 
 import { dijkstra, traverse } from "./geodesic_distance";
 
-export function findBilateralMap({ geometry, graph, qType, p, q, logger, doFilter = true }) {
+export function findBilateralMap({ geometry, graph, qType, p, q, logger, doFilter = true, bucketSize = 20.0 }) {
     const { distances: distancesP, previous: previousP } = dijkstra({
         graph,
         qType,
@@ -83,9 +83,9 @@ export function findBilateralMap({ geometry, graph, qType, p, q, logger, doFilte
         const color = new Color(0xcccccc);
 
         if (G.get(v1) !== Infinity && G.get(v2) !== Infinity && G.get(v3) !== Infinity) {
-            const distance1 = (distancesP.get(v1) * 20.0) / distancePQ,
-                distance2 = (distancesP.get(v2) * 20.0) / distancePQ,
-                distance3 = (distancesP.get(v3) * 20.0) / distancePQ,
+            const distance1 = (distancesP.get(v1) * bucketSize) / distancePQ,
+                distance2 = (distancesP.get(v2) * bucketSize) / distancePQ,
+                distance3 = (distancesP.get(v3) * bucketSize) / distancePQ,
                 hue = Math.floor((distance1 + distance2 + distance3) / 3.0);
 
             color.setHSL((1 - (hue % 2)) * (2.0 / 3.0), 1.0, 0.5);
