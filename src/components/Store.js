@@ -19,6 +19,7 @@ class Store {
     @observable chartData = undefined;
     @observable mesh = undefined;
     @observable graph = undefined;
+    @observable submitCount = 0;
 
     @computed
     get sourceVertexIndexPromise() {
@@ -50,7 +51,6 @@ class Store {
     @action
     setModel(value) {
         this.model = value;
-        this.chartData = undefined;
         this.mesh = undefined;
         this.graph = undefined;
         this.farthestPointIndices = [];
@@ -59,13 +59,11 @@ class Store {
     @action
     setQType(value) {
         this.qType = value;
-        this.chartData = undefined;
     }
 
     @action
     setVertexSelection(value) {
         this.vertexSelection = value;
-        this.chartData = undefined;
     }
 
     @action
@@ -81,25 +79,21 @@ class Store {
     @action
     setVertexCount(value) {
         this.vertexCount = value;
-        this.chartData = undefined;
     }
 
     @action
     setSourceVertexIndex(value) {
         this.sourceVertexIndexAtNullShape = value;
-        this.chartData = undefined;
     }
 
     @action
     setTarget1VertexIndex(value) {
         this.target1VertexIndexAtNullShape = value;
-        this.chartData = undefined;
     }
 
     @action
     setTarget2VertexIndex(value) {
         this.target2VertexIndexAtNullShape = value;
-        this.chartData = undefined;
     }
 
     @action
@@ -130,6 +124,11 @@ class Store {
 
     @action clear() {
         this.logs = "";
+    }
+
+    @action submit() {
+        this.submitCount++;
+        this.chartData = undefined;
     }
 }
 

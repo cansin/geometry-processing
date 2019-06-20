@@ -8,7 +8,6 @@ import {
     PerspectiveCamera,
     PointLight,
     Scene,
-    SphereBufferGeometry,
     TextGeometry,
     Vector2,
     Vector3,
@@ -447,34 +446,10 @@ class ThreeScene extends Component {
     }
 
     render() {
-        const {
-            assignment,
-            model,
-            qType,
-            vertexSelection,
-            vertexCount,
-            weightApproach,
-            boundaryShape,
-            isMouthFixated,
-            sourceVertexIndexAtNullShape,
-            target1VertexIndexAtNullShape,
-            target2VertexIndexAtNullShape,
-        } = this.props.store;
+        const { submitCount } = this.props.store;
         return (
             <div
-                aria-label={`
-                    ${assignment} 
-                    ${model} 
-                    ${qType} 
-                    ${vertexSelection} 
-                    ${vertexCount} 
-                    ${weightApproach} 
-                    ${boundaryShape} 
-                    ${isMouthFixated}
-                    ${sourceVertexIndexAtNullShape}
-                    ${target1VertexIndexAtNullShape}
-                    ${target2VertexIndexAtNullShape}
-                `}
+                aria-label={submitCount}
                 style={{
                     height: "100%",
                     width: "100%",

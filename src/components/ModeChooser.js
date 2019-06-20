@@ -116,6 +116,11 @@ class ModeChooser extends Component {
     }
 
     @autobind
+    handleSubmit() {
+        this.props.store.submit();
+    }
+
+    @autobind
     handleDownloadBilateralDescriptor() {
         const { chartData, model } = this.props.store;
 
@@ -405,6 +410,16 @@ class ModeChooser extends Component {
                             </Button>
                         </Grid>
                     )}
+
+                    <Grid item>
+                        <Button
+                            className={classes.button}
+                            color="primary"
+                            onClick={this.handleSubmit}
+                            variant="contained">
+                            Submit
+                        </Button>
+                    </Grid>
                 </Grid>
             </Paper>
         );
