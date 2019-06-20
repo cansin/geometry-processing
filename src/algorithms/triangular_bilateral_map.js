@@ -24,7 +24,7 @@ export function findTriangularBilateralMap({
         q: sourceVertex,
         logger,
         doFilter: false,
-        bucketSize: 5,
+        bucketSize: 5.0,
     });
 
     const { scalarField: scalarField2, faceMap: faceMap2, path: path2 } = findBilateralMap({
@@ -35,7 +35,7 @@ export function findTriangularBilateralMap({
         q: sourceVertex,
         logger,
         doFilter: false,
-        bucketSize: 5,
+        bucketSize: 5.0,
     });
 
     const { path: path3 } = findGeodesicDistance({

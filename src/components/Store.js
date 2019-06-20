@@ -1,17 +1,17 @@
 import { action, computed, observable } from "mobx";
 
-import { getModelRef, MODELS, NULL_SHAPE } from "../constants";
+import { MODELS } from "../constants";
 
 class Store {
     @observable assignment = "TriangularBilateral";
-    @observable model = MODELS.TriangularBilateral.scan000;
+    @observable model = MODELS.TriangularBilateral.firstNull0;
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
     @observable farthestPointIndices = [];
-    @observable sourceVertexIndexAtNullShape = 9367;
-    @observable target1VertexIndexAtNullShape = 6540;
-    @observable target2VertexIndexAtNullShape = 5171;
+    @observable sourceVertexIndexAtNullShape = 11093;
+    @observable target1VertexIndexAtNullShape = 7928;
+    @observable target2VertexIndexAtNullShape = 21839;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
     @observable isMouthFixated = "True";
@@ -20,25 +20,19 @@ class Store {
     @observable mesh = undefined;
     @observable graph = undefined;
 
-    _getVertexIndexPromise(index) {
-        return this.model !== NULL_SHAPE
-            ? getModelRef(this.model).then(module => module.default.get(index + 1) - 1 || index)
-            : Promise.resolve(index);
-    }
-
     @computed
     get sourceVertexIndexPromise() {
-        return this._getVertexIndexPromise(this.sourceVertexIndexAtNullShape);
+        return Promise.resolve(this.sourceVertexIndexAtNullShape);
     }
 
     @computed
     get target1VertexIndexPromise() {
-        return this._getVertexIndexPromise(this.target1VertexIndexAtNullShape);
+        return Promise.resolve(this.target1VertexIndexAtNullShape);
     }
 
     @computed
     get target2VertexIndexPromise() {
-        return this._getVertexIndexPromise(this.target2VertexIndexAtNullShape);
+        return Promise.resolve(this.target2VertexIndexAtNullShape);
     }
 
     @action
