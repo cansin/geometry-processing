@@ -43,7 +43,7 @@ class Chart extends Component {
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip cursor={{ strokeDasharray: "3 3" }} />
                         <Legend verticalAlign="top" />
-                        <XAxis dataKey="x" />
+                        <XAxis dataKey="x" type="number" />
                         <YAxis dataKey="y" />
                         <ZAxis dataKey="z" range={[10, 100]} />
                         <Cartesian name={name} type="monotone" dataKey={cartesianDataKey}>
