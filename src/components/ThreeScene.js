@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {
     AmbientLight,
     FaceColors,
+    Font,
     FontLoader,
     Mesh,
     MeshPhongMaterial,
@@ -37,6 +38,7 @@ import { createPathAsLine, createPathAsMeshLine, createVertex } from "../objects
 import { generateMeshParameterization } from "../algorithms/mesh_parameterization";
 import { findMultiSeedBilateralMap } from "../algorithms/multi_seed_bilateral_map";
 import { findTriangularBilateralMap } from "../algorithms/triangular_bilateral_map";
+import helvetikerRegularFont from "../../fonts/helvetiker_regular.typeface.json";
 
 @inject("store")
 @observer
@@ -80,9 +82,7 @@ class ThreeScene extends Component {
         this.objLoader = new OBJLoader();
         this.fontLoader = new FontLoader();
 
-        this.fontLoader.load("fonts/helvetiker_regular.typeface.json", font => {
-            this.font = font;
-        });
+        this.font = new Font(helvetikerRegularFont);
 
         window.addEventListener("resize", this.handleResize.bind(this));
 
@@ -259,11 +259,12 @@ class ThreeScene extends Component {
         });
 
         farthestPoints.forEach((vertex, i) => {
-            const material = new MeshPhongMaterial({ color: 0x00ff00 });
+            const material = new MeshPhongMaterial({ color: 0x00ffff });
             const geometry = new TextGeometry(`${farthestPointIndices[i]}`, {
                 font: this.font,
             });
             geometry.scale(0.02, 0.02, 0.02);
+            geometry.rotateX(1.57);
             geometry.translate(vertex.x, vertex.y, vertex.z);
 
             this.scene.add(new Mesh(geometry, material));
