@@ -4,6 +4,9 @@ const HtmlWebpackTemplate = require("html-webpack-template");
 const path = require("path");
 
 module.exports = {
+    devServer: {
+        liveReload: false,
+    },
     entry: {
         index: "./src/index.js",
     },
@@ -48,6 +51,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "build"),
+        filename: "[name].[chunkhash].js",
     },
     plugins: [
         new CleanWebpackPlugin(["build/*"]),
