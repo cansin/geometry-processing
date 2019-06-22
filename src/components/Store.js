@@ -9,9 +9,9 @@ class Store {
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
     @observable farthestPointIndices = [];
-    @observable sourceVertexIndexAtNullShape = 11093;
-    @observable target1VertexIndexAtNullShape = 7928;
-    @observable target2VertexIndexAtNullShape = 21839;
+    @observable sourceVertexIndexAtNullShape = 52261;
+    @observable target1VertexIndexAtNullShape = 34136;
+    @observable target2VertexIndexAtNullShape = 35545;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
     @observable isMouthFixated = "True";
