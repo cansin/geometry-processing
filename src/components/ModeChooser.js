@@ -122,11 +122,11 @@ class ModeChooser extends Component {
 
     @autobind
     handleDownloadBilateralDescriptor() {
-        const { chartData, model } = this.props.store;
+        const { bilateralDescriptor, model } = this.props.store;
 
         const matrixDim = Math.max(
-            Math.floor(chartData.data.length / 1000),
-            chartData.data.length % 1000,
+            Math.floor(bilateralDescriptor.length / 1000),
+            bilateralDescriptor.length % 1000,
         );
 
         const matrix = new Array(matrixDim).fill(0);
@@ -134,7 +134,7 @@ class ModeChooser extends Component {
             matrix[index] = new Array(matrixDim).fill(0);
         });
 
-        chartData.data.forEach(datum => {
+        bilateralDescriptor.filter(Boolean).forEach(datum => {
             matrix[datum.x][datum.y] = datum.z;
         });
 

@@ -2,7 +2,16 @@ import { Color } from "three";
 
 import { dijkstra, traverse } from "./geodesic_distance";
 
-export function findBilateralMap({ geometry, graph, qType, p, q, logger, doFilter = true, bucketSize = 20.0 }) {
+export function findBilateralMap({
+    geometry,
+    graph,
+    qType,
+    p,
+    q,
+    logger,
+    doFilter = true,
+    bucketSize = 20.0,
+}) {
     const { distances: distancesP, previous: previousP } = dijkstra({
         graph,
         qType,

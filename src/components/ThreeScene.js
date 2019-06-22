@@ -205,6 +205,8 @@ class ThreeScene extends Component {
                 isFirst = false;
             });
 
+            this.props.store.setBilateralDescriptor(bilateralMap);
+
             this.props.store.setChartData({
                 name: "Triangular Bilateral Descriptor",
                 cartesian: Scatter,

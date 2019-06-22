@@ -9,9 +9,10 @@ class Store {
     @observable vertexSelection = "FarthestPoint";
     @observable vertexCount = 2;
     @observable farthestPointIndices = [];
-    @observable sourceVertexIndexAtNullShape = 52261;
-    @observable target1VertexIndexAtNullShape = 34136;
-    @observable target2VertexIndexAtNullShape = 35545;
+    @observable bilateralDescriptor = undefined;
+    @observable sourceVertexIndexAtNullShape = 11193;
+    @observable target1VertexIndexAtNullShape = 10282;
+    @observable target2VertexIndexAtNullShape = 8416;
     @observable weightApproach = "Uniform";
     @observable boundaryShape = "Circle";
     @observable isMouthFixated = "True";
@@ -54,6 +55,7 @@ class Store {
         this.mesh = undefined;
         this.graph = undefined;
         this.farthestPointIndices = [];
+        this.bilateralDescriptor = undefined;
     }
 
     @action
@@ -116,6 +118,10 @@ class Store {
 
     @action setFarthestPointIndices(value) {
         this.farthestPointIndices = value;
+    }
+
+    @action setBilateralDescriptor(value) {
+        this.bilateralDescriptor = value;
     }
 
     @action log(value) {

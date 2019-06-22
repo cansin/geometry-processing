@@ -12,6 +12,7 @@ export function findTriangularBilateralMap({
     target1VertexIndex,
     target2VertexIndex,
 }) {
+    const bucketSize = 10;
     const { vertices } = geometry;
     const sourceVertex = vertices[sourceVertexIndex],
         target1Vertex = vertices[target1VertexIndex],
@@ -24,7 +25,7 @@ export function findTriangularBilateralMap({
         q: sourceVertex,
         logger,
         doFilter: false,
-        bucketSize: 10.0,
+        bucketSize,
     });
 
     const { scalarField: scalarField2, faceMap: faceMap2, path: path2 } = findBilateralMap({
@@ -35,7 +36,7 @@ export function findTriangularBilateralMap({
         q: sourceVertex,
         logger,
         doFilter: false,
-        bucketSize: 10.0,
+        bucketSize,
     });
 
     const { path: path3 } = findGeodesicDistance({
@@ -94,7 +95,9 @@ export function findTriangularBilateralMap({
             scalarField2.get(v3) !== Infinity &&
             regionVertices.includes(v1) &&
             regionVertices.includes(v2) &&
-            regionVertices.includes(v3)
+            regionVertices.includes(v3) &&
+            hue1 < bucketSize &&
+            hue2 < bucketSize
         ) {
             let hex;
             if (hue1 % 2 === hue2 % 2 && hue1 % 2 === 0) {
