@@ -9,12 +9,7 @@ export function findNearestNeighbors({ graph, qType, logger, points }) {
 
     while (visited.length !== points.length) {
         const source = visited[visited.length - 1];
-        const { distances, previous } = dijkstra({
-            graph,
-            qType,
-            source,
-            logger,
-        });
+        const { distances, previous } = dijkstra(qType, source);
 
         let closestTarget = undefined;
         let closestDistance = Infinity;
@@ -26,13 +21,7 @@ export function findNearestNeighbors({ graph, qType, logger, points }) {
             }
         });
 
-        const { path: closestPath } = traverse({
-            distances,
-            previous,
-            source,
-            target: closestTarget,
-            logger,
-        });
+        const { path: closestPath } = traverse(distances, previous, source, closestTarget);
 
         path.push(...closestPath);
         visited.push(closestTarget);

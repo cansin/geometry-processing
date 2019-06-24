@@ -1,7 +1,7 @@
 import { dijkstra } from "./geodesic_distance";
 
-export function findIsoCurveSignature({ geometry, graph, qType, source, logger }) {
-    const { distances } = dijkstra({ graph, qType, source, logger });
+export function findIsoCurveSignature({ geometry, qType, source, logger }) {
+    const { distances } = dijkstra(qType, source);
     const maxDistance = Math.max(...distances.values());
 
     let startTime, elapsedTime;

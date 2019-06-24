@@ -1,11 +1,14 @@
 import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 
 import { Q_TYPES } from "../constants";
+import store from "../components/Store";
 
 import MinSet from "./MinSet";
 import MinHeap from "./MinHeap";
 
-export function dijkstra({ graph, qType, source, targets = [], logger }) {
+export const dijkstra = (qType, source, targets = []) => {
+    const logger = store;
+    const { graph } = store;
     let startTime, elapsedTime;
 
     startTime = new Date();
@@ -59,12 +62,16 @@ export function dijkstra({ graph, qType, source, targets = [], logger }) {
     // 14
     // 15          remove u from Q
     let u = undefined;
+    let encounteredTargetsCount = 0;
     while (!Q.isEmpty()) {
-        const node = Q.extractMinimum();
-        u = node.value;
+        const u = Q.extractMinimum().value;
 
-        if (targets.length && targets.includes(u)) {
-            logger && logger.log(`\tTarget given, exiting early...`);
+        if (targets.includes(u)) {
+            encounteredTargetsCount++;
+        }
+
+        if (encounteredTargetsCount > 0 && encounteredTargetsCount === targets.length) {
+            logger && logger.log(`\tAll given targets reached, exiting early...`);
             break;
         }
 
@@ -94,9 +101,10 @@ export function dijkstra({ graph, qType, source, targets = [], logger }) {
         previous,
         target: u,
     };
-}
+};
 
-export function traverse({ distances, previous, source, target, logger }) {
+export const traverse = (distances, previous, source, target) => {
+    const logger = store;
     let startTime, elapsedTime;
 
     // 1  S ← empty sequence
@@ -125,20 +133,20 @@ export function traverse({ distances, previous, source, target, logger }) {
         distance: distances.get(target),
         path: S,
     };
+};
+
+export function findGeodesicDistance({ qType, source, target }) {
+    const { distances, previous } = dijkstra(qType, source, [target]);
+
+    return traverse(distances, previous, source, target);
 }
 
-export function findGeodesicDistance({ graph, qType, source, target, logger }) {
-    const { distances, previous } = dijkstra({ graph, qType, source, targets: [target], logger });
-
-    return traverse({ distances, previous, source, target, logger });
-}
-
-export function populateGeodesicDistanceMatrix({ geometry, graph, qType, logger }) {
+export function populateGeodesicDistanceMatrix({ geometry, qType }) {
     const matrix = new Map();
 
     geometry.vertices.forEach(source => {
         matrix.set(`${source.x}:${source.y}:${source.z}`, new Map());
-        const { distances } = dijkstra({ graph, qType, source, logger });
+        const { distances } = dijkstra(qType, source);
 
         distances.forEach((distance, target) => {
             matrix

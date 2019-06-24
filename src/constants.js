@@ -43,6 +43,7 @@ export const ASSIGNMENTS = Object.freeze({
     IsoCurve: "Iso-Curve Descriptor",
     FarthestPoint: "Farthest Point Sampling",
     MeshParameterization: "Mesh Parameterization",
+    TriangularBilateralRegions: "Triangular Bilateral Regions",
 });
 
 const KIDS = {
@@ -86,6 +87,7 @@ export const MODELS = Object.freeze({
     Bilateral: KIDS,
     MultiSeedBilateral: KIDS,
     TriangularBilateral: KIDS,
+    TriangularBilateralRegions: KIDS,
     FarthestPoint: KIDS,
     MeshParameterization: {
         facemLow,

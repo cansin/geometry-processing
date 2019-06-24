@@ -5,14 +5,7 @@ import { findNearestNeighbors } from "./nearest_neighbor";
 
 export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vertexCount = 3 }) {
     const { vertices } = geometry;
-    const { farthestPoints: points } = farthestPointSampling({
-        geometry,
-        graph,
-        qType,
-        source: vertices[0],
-        count: vertexCount,
-        logger,
-    });
+    const { farthestPoints: points } = farthestPointSampling(qType, vertices[0], vertexCount);
 
     const {
         allGeodesics: allGeodesics1,

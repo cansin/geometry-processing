@@ -3,10 +3,10 @@ import { action, computed, observable } from "mobx";
 import { MODELS } from "../constants";
 
 class Store {
-    @observable assignment = "TriangularBilateral";
-    @observable model = MODELS.TriangularBilateral.firstNull0;
+    @observable assignment = "FarthestPoint";
+    @observable model = MODELS.FarthestPoint.firstNull0;
     @observable qType = "FibonacciHeap";
-    @observable vertexSelection = "FarthestPoint";
+    @observable vertexSelection = "Random";
     @observable vertexCount = 2;
     @observable farthestPointIndices = [];
     @observable bilateralDescriptor = undefined;

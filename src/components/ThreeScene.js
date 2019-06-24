@@ -26,10 +26,11 @@ import ChartLine from "recharts/es6/cartesian/Line";
 import autobind from "autobind-decorator";
 import ScatterChart from "recharts/es6/chart/ScatterChart";
 import Scatter from "recharts/es6/cartesian/Scatter";
+import { FibonacciHeap } from "@tyriar/fibonacci-heap";
 
 import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
-import { findGeodesicDistance } from "../algorithms/geodesic_distance";
+import { dijkstra, findGeodesicDistance, traverse } from "../algorithms/geodesic_distance";
 import { findBilateralMap } from "../algorithms/bilateral_map";
 import { ASSIGNMENTS } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
@@ -218,6 +219,54 @@ class ThreeScene extends Component {
     }
 
     @autobind
+    createTriangularBilateralRegionsScene({ mesh, graph, qType, source, logger }) {
+        const { farthestPoints, farthestPointIndices } = farthestPointSampling(qType, source, 6);
+
+        mesh.material.vertexColors = FaceColors;
+
+        farthestPoints.forEach((source, sourceI) => {
+            const queue = new FibonacciHeap();
+            const sourceIndex = farthestPointIndices[sourceI];
+            const { distances, previous } = dijkstra(qType, source, farthestPoints);
+
+            farthestPoints.forEach((target, targetI) => {
+                if (source !== target) {
+                    const { distance, path } = traverse(distances, previous, source, target);
+
+                    queue.insert(distance, {
+                        target,
+                        targetIndex: farthestPointIndices[targetI],
+                        path,
+                    });
+                }
+            });
+
+            const { targetIndex: target1Index } = queue.extractMinimum().value;
+            const { targetIndex: target2Index } = queue.extractMinimum().value;
+
+            const { paths, points } = findTriangularBilateralMap({
+                geometry: mesh.geometry,
+                graph,
+                qType,
+                logger,
+                sourceVertexIndex: sourceIndex,
+                target1VertexIndex: target1Index,
+                target2VertexIndex: target2Index,
+            });
+
+            paths.filter(Boolean).forEach(path => {
+                this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
+            });
+
+            let isFirst = true;
+            points.filter(Boolean).forEach(vertex => {
+                this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
+                isFirst = false;
+            });
+        });
+    }
+
+    @autobind
     createIsoCurveScene({ mesh, graph, qType, source, logger }) {
         const { isoCurves, isoDescriptor } = findIsoCurveSignature({
             geometry: mesh.geometry,
@@ -244,15 +293,8 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createFarthestPointScene({ mesh, graph, qType, source, logger }) {
-        const { farthestPoints, farthestPointIndices } = farthestPointSampling({
-            geometry: mesh.geometry,
-            graph,
-            qType,
-            source,
-            count: 100,
-            logger,
-        });
+    createFarthestPointScene({ qType, source }) {
+        const { farthestPoints, farthestPointIndices } = farthestPointSampling(qType, source, 6);
 
         farthestPoints.forEach(vertex => {
             this.scene.add(createVertex(vertex));
@@ -377,7 +419,6 @@ class ThreeScene extends Component {
                     startTime = new Date();
                     logger && logger.log(`🌟 Calculating ${ASSIGNMENTS[assignment]}...`);
 
-                    this.props.store.setMesh(mesh);
                     const { graph, source, target } = prepareDataStructures({
                         mesh,
                         qType,
@@ -385,13 +426,14 @@ class ThreeScene extends Component {
                         vertexCount,
                         logger,
                     });
-                    this.props.store.setGraph(graph);
 
                     const createScene = {
                         [ASSIGNMENTS.Geodesic]: this.createGeodesicScene,
                         [ASSIGNMENTS.Bilateral]: this.createBilateralScene,
                         [ASSIGNMENTS.MultiSeedBilateral]: this.createMultiSeedBilateralScene,
                         [ASSIGNMENTS.TriangularBilateral]: this.createTriangularBilateralScene,
+                        [ASSIGNMENTS.TriangularBilateralRegions]: this
+                            .createTriangularBilateralRegionsScene,
                         [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
                         [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
                         [ASSIGNMENTS.MeshParameterization]: this.createMeshParameterizationScene,

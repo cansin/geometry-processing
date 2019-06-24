@@ -12,25 +12,9 @@ export function findBilateralMap({
     doFilter = true,
     bucketSize = 20.0,
 }) {
-    const { distances: distancesP, previous: previousP } = dijkstra({
-        graph,
-        qType,
-        source: p,
-        logger,
-    });
-    const { distances: distancesQ, previous: previousQ } = dijkstra({
-        graph,
-        qType,
-        source: q,
-        logger,
-    });
-    const { distance: distancePQ, path: pathPQ } = traverse({
-        distances: distancesP,
-        previous: previousP,
-        source: p,
-        target: q,
-        logger,
-    });
+    const { distances: distancesP, previous: previousP } = dijkstra(qType, p);
+    const { distances: distancesQ, previous: previousQ } = dijkstra(qType, q);
+    const { distance: distancePQ, path: pathPQ } = traverse(distancesP, previousP, p, q);
 
     const G = new Map();
     let minDistance = Infinity,
