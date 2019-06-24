@@ -49,12 +49,25 @@ import { downloadFile } from "./ModeChooser";
 
 function compareTriangularBilateralDescriptors(sourceVertexDescriptor, targetVertexDescriptor) {
     let distance = 0;
+    let sourceVertexFlatDescriptor = [];
+    let targetVertexFlatDescriptor = [];
 
     for (let i = 0; i < BILATERAL_BUCKET_SIZE; i++) {
         for (let j = 0; j < BILATERAL_BUCKET_SIZE; j++) {
-            distance += Math.pow(sourceVertexDescriptor[i][j] - targetVertexDescriptor[i][j], 2);
+            if (sourceVertexDescriptor[i][j]) {
+                sourceVertexFlatDescriptor.push(sourceVertexDescriptor[i][j]);
+            }
+            if (targetVertexDescriptor[i][j]) {
+                targetVertexFlatDescriptor.push(targetVertexDescriptor[i][j]);
+            }
         }
     }
+
+    sourceVertexFlatDescriptor.forEach(sourceVertexValue => {
+        targetVertexFlatDescriptor.forEach(targetVertexValue => {
+            distance += Math.pow(sourceVertexValue - targetVertexValue, 2);
+        });
+    });
 
     return Math.sqrt(distance);
 }
