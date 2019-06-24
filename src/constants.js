@@ -35,6 +35,10 @@ import secondIsometry14 from "../meshes/0002.isometry.14.off";
 import secondIsometry15 from "../meshes/0002.isometry.15.off";
 import secondNull15 from "../meshes/0002.null.0.off";
 
+export const FARTHEST_POINT_SAMPLING_COUNT = 100;
+
+export const BILATERAL_BUCKET_SIZE = 10;
+
 export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic Distance",
     Bilateral: "Bilateral Descriptor",
@@ -44,6 +48,7 @@ export const ASSIGNMENTS = Object.freeze({
     FarthestPoint: "Farthest Point Sampling",
     MeshParameterization: "Mesh Parameterization",
     TriangularBilateralRegions: "Triangular Bilateral Regions",
+    TriangularBilateralComparison: "Triangular Bilateral Comparison",
 });
 
 const KIDS = {
@@ -88,6 +93,7 @@ export const MODELS = Object.freeze({
     MultiSeedBilateral: KIDS,
     TriangularBilateral: KIDS,
     TriangularBilateralRegions: KIDS,
+    TriangularBilateralComparison: KIDS,
     FarthestPoint: KIDS,
     MeshParameterization: {
         facemLow,

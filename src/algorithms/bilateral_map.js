@@ -1,5 +1,7 @@
 import { Color } from "three";
 
+import { BILATERAL_BUCKET_SIZE } from "../constants";
+
 import { dijkstra, traverse } from "./geodesic_distance";
 
 export function findBilateralMap({
@@ -10,7 +12,7 @@ export function findBilateralMap({
     q,
     logger,
     doFilter = true,
-    bucketSize = 20.0,
+    bucketSize = BILATERAL_BUCKET_SIZE,
 }) {
     const { distances: distancesP, previous: previousP } = dijkstra(qType, p);
     const { distances: distancesQ, previous: previousQ } = dijkstra(qType, q);

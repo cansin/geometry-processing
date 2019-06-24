@@ -3,8 +3,8 @@ import { action, computed, observable } from "mobx";
 import { MODELS } from "../constants";
 
 class Store {
-    @observable assignment = "FarthestPoint";
-    @observable model = MODELS.FarthestPoint.firstNull0;
+    @observable assignment = "TriangularBilateralComparison";
+    @observable model = MODELS.TriangularBilateralComparison.firstNull0;
     @observable qType = "FibonacciHeap";
     @observable vertexSelection = "Random";
     @observable vertexCount = 2;

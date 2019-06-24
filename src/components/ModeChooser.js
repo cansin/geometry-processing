@@ -36,7 +36,7 @@ const styles = theme => ({
     },
 });
 
-function downloadFile(content, filename) {
+export function downloadFile(content, filename) {
     const blob = new Blob([content], { type: "octet/stream" });
     const url = window.URL.createObjectURL(blob);
 

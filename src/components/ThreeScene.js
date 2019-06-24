@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import {
     AmbientLight,
+    BoxBufferGeometry,
+    Color,
     FaceColors,
     Font,
     FontLoader,
@@ -32,7 +34,7 @@ import { OFFLoader } from "../loaders/OFFLoader";
 import { createNormalizedNaiveGeometry, prepareDataStructures } from "../algorithms/helpers";
 import { dijkstra, findGeodesicDistance, traverse } from "../algorithms/geodesic_distance";
 import { findBilateralMap } from "../algorithms/bilateral_map";
-import { ASSIGNMENTS } from "../constants";
+import { ASSIGNMENTS, BILATERAL_BUCKET_SIZE, FARTHEST_POINT_SAMPLING_COUNT } from "../constants";
 import { farthestPointSampling } from "../algorithms/farthest_point_sampling";
 import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
 import { createPathAsLine, createPathAsMeshLine, createVertex } from "../objects";
@@ -40,6 +42,22 @@ import { generateMeshParameterization } from "../algorithms/mesh_parameterizatio
 import { findMultiSeedBilateralMap } from "../algorithms/multi_seed_bilateral_map";
 import { findTriangularBilateralMap } from "../algorithms/triangular_bilateral_map";
 import helvetikerRegularFont from "../../fonts/helvetiker_regular.typeface.json";
+import isometry1AllDescriptors from "../../meshes/meshes_0001.isometry.1_all_bilateral_descriptors.json";
+import null0AllDescriptors from "../../meshes/meshes_0001.null.0_all_bilateral_descriptors";
+
+import { downloadFile } from "./ModeChooser";
+
+function compareTriangularBilateralDescriptors(sourceVertexDescriptor, targetVertexDescriptor) {
+    let distance = 0;
+
+    for (let i = 0; i < BILATERAL_BUCKET_SIZE; i++) {
+        for (let j = 0; j < BILATERAL_BUCKET_SIZE; j++) {
+            distance += Math.pow(sourceVertexDescriptor[i][j] - targetVertexDescriptor[i][j], 2);
+        }
+    }
+
+    return Math.sqrt(distance);
+}
 
 @inject("store")
 @observer
@@ -219,10 +237,16 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createTriangularBilateralRegionsScene({ mesh, graph, qType, source, logger }) {
-        const { farthestPoints, farthestPointIndices } = farthestPointSampling(qType, source, 6);
+    createTriangularBilateralRegionsScene({ model, mesh, graph, qType, source, logger }) {
+        const { farthestPoints, farthestPointIndices } = farthestPointSampling(
+            qType,
+            source,
+            FARTHEST_POINT_SAMPLING_COUNT,
+        );
 
         mesh.material.vertexColors = FaceColors;
+
+        const bilateralDescriptors = {};
 
         farthestPoints.forEach((source, sourceI) => {
             const queue = new FibonacciHeap();
@@ -244,7 +268,7 @@ class ThreeScene extends Component {
             const { targetIndex: target1Index } = queue.extractMinimum().value;
             const { targetIndex: target2Index } = queue.extractMinimum().value;
 
-            const { paths, points } = findTriangularBilateralMap({
+            const { bilateralMap, paths, points } = findTriangularBilateralMap({
                 geometry: mesh.geometry,
                 graph,
                 qType,
@@ -263,6 +287,82 @@ class ThreeScene extends Component {
                 this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
                 isFirst = false;
             });
+
+            const matrixDim = BILATERAL_BUCKET_SIZE;
+
+            const matrix = new Array(matrixDim).fill(0);
+            matrix.map((row, index) => {
+                matrix[index] = new Array(matrixDim).fill(0);
+            });
+
+            bilateralMap.filter(Boolean).forEach(datum => {
+                matrix[datum.x][datum.y] = datum.z;
+            });
+
+            bilateralDescriptors[sourceIndex] = matrix;
+        });
+
+        downloadFile(
+            JSON.stringify(bilateralDescriptors),
+            `${model.slice(0, -4)}_all_bilateral_descriptors.json`,
+        );
+    }
+
+    @autobind
+    createTriangularBilateralComparisonScene({ mesh, logger }) {
+        let colorHue = 0;
+        const alreadyMatchedTargets = new Set();
+        Object.keys(null0AllDescriptors).forEach(sourceVertexIndex => {
+            const sourceVertex = mesh.geometry.vertices[sourceVertexIndex];
+            const sourceVertexDescriptor = null0AllDescriptors[sourceVertexIndex];
+
+            let minDistance = Infinity;
+            let mostSimilarVertexIndex = undefined;
+            Object.keys(isometry1AllDescriptors).forEach(targetVertexIndex => {
+                const targetVertexDescriptor = isometry1AllDescriptors[targetVertexIndex];
+
+                const distance = compareTriangularBilateralDescriptors(
+                    sourceVertexDescriptor,
+                    targetVertexDescriptor,
+                );
+
+                if (distance < minDistance && !alreadyMatchedTargets.has(targetVertexIndex)) {
+                    mostSimilarVertexIndex = targetVertexIndex;
+                    minDistance = distance;
+                }
+            });
+
+            alreadyMatchedTargets.add(mostSimilarVertexIndex);
+            logger &&
+                logger.log(
+                    `Source ${sourceVertexIndex} index matches with target ${mostSimilarVertexIndex} index.`,
+                );
+
+            const mostSimilarVertex = mesh.geometry.vertices[mostSimilarVertexIndex];
+            const color = new Color(`hsl(${colorHue * 3.6}, 100%, 50%)`);
+
+            this.scene.add(createVertex(sourceVertex, color, BoxBufferGeometry));
+
+            this.scene.add(createVertex(mostSimilarVertex, color));
+
+            const material = new MeshPhongMaterial({ color });
+            let geometry = new TextGeometry(`${colorHue}`, {
+                font: this.font,
+            });
+            geometry.scale(0.02, 0.02, 0.02);
+            geometry.rotateX(1.57);
+            geometry.translate(sourceVertex.x, sourceVertex.y, sourceVertex.z);
+            this.scene.add(new Mesh(geometry, material));
+
+            geometry = new TextGeometry(`${colorHue}`, {
+                font: this.font,
+            });
+            geometry.scale(0.02, 0.02, 0.02);
+            geometry.rotateX(1.57);
+            geometry.translate(mostSimilarVertex.x, mostSimilarVertex.y, mostSimilarVertex.z);
+            this.scene.add(new Mesh(geometry, material));
+
+            colorHue++;
         });
     }
 
@@ -294,7 +394,11 @@ class ThreeScene extends Component {
 
     @autobind
     createFarthestPointScene({ qType, source }) {
-        const { farthestPoints, farthestPointIndices } = farthestPointSampling(qType, source, 6);
+        const { farthestPoints, farthestPointIndices } = farthestPointSampling(
+            qType,
+            source,
+            FARTHEST_POINT_SAMPLING_COUNT,
+        );
 
         farthestPoints.forEach(vertex => {
             this.scene.add(createVertex(vertex));
@@ -434,12 +538,15 @@ class ThreeScene extends Component {
                         [ASSIGNMENTS.TriangularBilateral]: this.createTriangularBilateralScene,
                         [ASSIGNMENTS.TriangularBilateralRegions]: this
                             .createTriangularBilateralRegionsScene,
+                        [ASSIGNMENTS.TriangularBilateralComparison]: this
+                            .createTriangularBilateralComparisonScene,
                         [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
                         [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
                         [ASSIGNMENTS.MeshParameterization]: this.createMeshParameterizationScene,
                     };
 
                     createScene[ASSIGNMENTS[assignment]]({
+                        model,
                         mesh,
                         graph,
                         qType,

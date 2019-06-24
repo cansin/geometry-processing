@@ -1,5 +1,7 @@
 import { Color } from "three";
 
+import { BILATERAL_BUCKET_SIZE } from "../constants";
+
 import { findBilateralMap } from "./bilateral_map";
 import { findGeodesicDistance } from "./geodesic_distance";
 
@@ -12,7 +14,7 @@ export function findTriangularBilateralMap({
     target1VertexIndex,
     target2VertexIndex,
 }) {
-    const bucketSize = 10;
+    const bucketSize = BILATERAL_BUCKET_SIZE;
     const { vertices } = geometry;
     const sourceVertex = vertices[sourceVertexIndex],
         target1Vertex = vertices[target1VertexIndex],
