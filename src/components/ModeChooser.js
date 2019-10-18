@@ -343,7 +343,7 @@ class ModeChooser extends Component {
                             </FormControl>
                         </Grid>
                     )}
-                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.TriangularBilateral && (
+                    {ASSIGNMENTS[assignment] === ASSIGNMENTS.Trilateral && (
                         <>
                             <Grid item>
                                 <Button

@@ -40,14 +40,14 @@ import { findIsoCurveSignature } from "../algorithms/iso_curve_signature";
 import { createPathAsLine, createPathAsMeshLine, createVertex } from "../objects";
 import { generateMeshParameterization } from "../algorithms/mesh_parameterization";
 import { findMultiSeedBilateralMap } from "../algorithms/multi_seed_bilateral_map";
-import { findTriangularBilateralMap } from "../algorithms/triangular_bilateral_map";
+import { findTrilateralMap } from "../algorithms/trilateral_map";
 import helvetikerRegularFont from "../../fonts/helvetiker_regular.typeface.json";
 import isometry1AllDescriptors from "../../meshes/meshes_0001.isometry.1_all_bilateral_descriptors.json";
 import null0AllDescriptors from "../../meshes/meshes_0001.null.0_all_bilateral_descriptors";
 
 import { downloadFile } from "./ModeChooser";
 
-function compareTriangularBilateralDescriptors(sourceVertexDescriptor, targetVertexDescriptor) {
+function compareTrilateralDescriptors(sourceVertexDescriptor, targetVertexDescriptor) {
     let distance = 0;
     let sourceVertexFlatDescriptor = [];
     let targetVertexFlatDescriptor = [];
@@ -201,7 +201,7 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createTriangularBilateralScene({
+    createTrilateralScene({
         mesh,
         graph,
         qType,
@@ -217,7 +217,7 @@ class ThreeScene extends Component {
         ]).then(([sourceVertexIndex, target1VertexIndex, target2VertexIndex]) => {
             mesh.material.vertexColors = FaceColors;
 
-            const { bilateralMap, paths, points } = findTriangularBilateralMap({
+            const { bilateralMap, paths, points } = findTrilateralMap({
                 geometry: mesh.geometry,
                 graph,
                 qType,
@@ -240,7 +240,7 @@ class ThreeScene extends Component {
             this.props.store.setBilateralDescriptor(bilateralMap);
 
             this.props.store.setChartData({
-                name: "Triangular Bilateral Descriptor",
+                name: "Trilateral Descriptor",
                 cartesian: Scatter,
                 cartesianDataKey: "z",
                 chart: ScatterChart,
@@ -250,7 +250,7 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createTriangularBilateralRegionsScene({ model, mesh, graph, qType, source, logger }) {
+    createTrilateralRegionsScene({ model, mesh, graph, qType, source, logger }) {
         const { farthestPoints, farthestPointIndices } = farthestPointSampling(
             qType,
             source,
@@ -281,7 +281,7 @@ class ThreeScene extends Component {
             const { targetIndex: target1Index } = queue.extractMinimum().value;
             const { targetIndex: target2Index } = queue.extractMinimum().value;
 
-            const { bilateralMap, paths, points } = findTriangularBilateralMap({
+            const { bilateralMap, paths, points } = findTrilateralMap({
                 geometry: mesh.geometry,
                 graph,
                 qType,
@@ -322,7 +322,7 @@ class ThreeScene extends Component {
     }
 
     @autobind
-    createTriangularBilateralComparisonScene({ mesh, logger }) {
+    createTrilateralComparisonScene({ mesh, logger }) {
         let colorHue = 0;
         const alreadyMatchedTargets = new Set();
         Object.keys(null0AllDescriptors).forEach(sourceVertexIndex => {
@@ -334,7 +334,7 @@ class ThreeScene extends Component {
             Object.keys(isometry1AllDescriptors).forEach(targetVertexIndex => {
                 const targetVertexDescriptor = isometry1AllDescriptors[targetVertexIndex];
 
-                const distance = compareTriangularBilateralDescriptors(
+                const distance = compareTrilateralDescriptors(
                     sourceVertexDescriptor,
                     targetVertexDescriptor,
                 );
@@ -548,11 +548,11 @@ class ThreeScene extends Component {
                         [ASSIGNMENTS.Geodesic]: this.createGeodesicScene,
                         [ASSIGNMENTS.Bilateral]: this.createBilateralScene,
                         [ASSIGNMENTS.MultiSeedBilateral]: this.createMultiSeedBilateralScene,
-                        [ASSIGNMENTS.TriangularBilateral]: this.createTriangularBilateralScene,
-                        [ASSIGNMENTS.TriangularBilateralRegions]: this
-                            .createTriangularBilateralRegionsScene,
-                        [ASSIGNMENTS.TriangularBilateralComparison]: this
-                            .createTriangularBilateralComparisonScene,
+                        [ASSIGNMENTS.Trilateral]: this.createTrilateralScene,
+                        [ASSIGNMENTS.TrilateralRegions]: this
+                            .createTrilateralRegionsScene,
+                        [ASSIGNMENTS.TrilateralComparison]: this
+                            .createTrilateralComparisonScene,
                         [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
                         [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
                         [ASSIGNMENTS.MeshParameterization]: this.createMeshParameterizationScene,

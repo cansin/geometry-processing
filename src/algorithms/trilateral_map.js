@@ -3,9 +3,8 @@ import { Color } from "three";
 import { BILATERAL_BUCKET_SIZE } from "../constants";
 
 import { findBilateralMap } from "./bilateral_map";
-import { findGeodesicDistance } from "./geodesic_distance";
 
-export function findTriangularBilateralMap({
+export function findTrilateralMap({
     geometry,
     graph,
     qType,
@@ -23,59 +22,21 @@ export function findTriangularBilateralMap({
         geometry: geometry,
         graph,
         qType,
-        p: target1Vertex,
-        q: sourceVertex,
-        logger,
-        doFilter: false,
+        p: vertices[target1VertexIndex],
+        q: vertices[sourceVertexIndex],
         bucketSize,
+        logger,
     });
 
     const { scalarField: scalarField2, faceMap: faceMap2, path: path2 } = findBilateralMap({
         geometry: geometry,
         graph,
         qType,
-        p: target2Vertex,
-        q: sourceVertex,
-        logger,
-        doFilter: false,
+        p: vertices[target2VertexIndex],
+        q: vertices[sourceVertexIndex],
         bucketSize,
-    });
-
-    const { path: path3 } = findGeodesicDistance({
-        graph,
-        qType,
-        source: target2Vertex,
-        target: target1Vertex,
         logger,
     });
-
-    const boundaryVertices = [...path1, ...path2.reverse(), ...path3];
-    const visitedVertices = [];
-    const markedVertices = [];
-    const queue = [sourceVertex];
-    while (queue.length) {
-        const initialVertex = queue.shift();
-        graph.neighbors(initialVertex).forEach(neighborVertex => {
-            if (!visitedVertices.includes(neighborVertex)) {
-                visitedVertices.push(neighborVertex);
-                if (!boundaryVertices.includes(neighborVertex)) {
-                    queue.push(neighborVertex);
-                    markedVertices.push(neighborVertex);
-                }
-            }
-        });
-    }
-
-    let regionVertices = [...boundaryVertices];
-    if (markedVertices.length > geometry.vertices.length - markedVertices.length) {
-        geometry.vertices.forEach(vertex => {
-            if (!markedVertices.includes(vertex)) {
-                regionVertices.push(vertex);
-            }
-        });
-    } else {
-        regionVertices = regionVertices.concat(markedVertices);
-    }
 
     const bilateralMap = [];
     geometry.faces.forEach(face => {
@@ -95,9 +56,6 @@ export function findTriangularBilateralMap({
             scalarField2.get(v1) !== Infinity &&
             scalarField2.get(v2) !== Infinity &&
             scalarField2.get(v3) !== Infinity &&
-            regionVertices.includes(v1) &&
-            regionVertices.includes(v2) &&
-            regionVertices.includes(v3) &&
             hue1 < bucketSize &&
             hue2 < bucketSize
         ) {
@@ -133,7 +91,7 @@ export function findTriangularBilateralMap({
 
     return {
         bilateralMap,
-        paths: [path1, path2, path3],
+        paths: [path1, path2],
         points: [sourceVertex, target1Vertex, target2Vertex],
     };
 }

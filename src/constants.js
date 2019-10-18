@@ -43,12 +43,12 @@ export const ASSIGNMENTS = Object.freeze({
     Geodesic: "Geodesic Distance",
     Bilateral: "Bilateral Descriptor",
     MultiSeedBilateral: "Multi-Seed Bilateral Descriptor",
-    TriangularBilateral: "Triangular Bilateral Descriptor",
+    Trilateral: "Trilateral Descriptor",
     IsoCurve: "Iso-Curve Descriptor",
     FarthestPoint: "Farthest Point Sampling",
     MeshParameterization: "Mesh Parameterization",
-    TriangularBilateralRegions: "Triangular Bilateral Regions",
-    TriangularBilateralComparison: "Triangular Bilateral Comparison",
+    TrilateralRegions: "Trilateral Regions",
+    TrilateralComparison: "Trilateral Comparison",
 });
 
 const KIDS = {
@@ -91,9 +91,9 @@ export const MODELS = Object.freeze({
     IsoCurve: KIDS,
     Bilateral: KIDS,
     MultiSeedBilateral: KIDS,
-    TriangularBilateral: KIDS,
-    TriangularBilateralRegions: KIDS,
-    TriangularBilateralComparison: KIDS,
+    Trilateral: KIDS,
+    TrilateralRegions: KIDS,
+    TrilateralComparison: KIDS,
     FarthestPoint: KIDS,
     MeshParameterization: {
         facemLow,
