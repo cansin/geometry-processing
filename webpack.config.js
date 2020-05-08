@@ -1,4 +1,4 @@
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HtmlWebpackTemplate = require("html-webpack-template");
 const path = require("path");
@@ -54,7 +54,7 @@ module.exports = {
         filename: "[name].[chunkhash].js",
     },
     plugins: [
-        new CleanWebpackPlugin(["build/*"]),
+        new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: ["build/*"] }),
         new HtmlWebpackPlugin({
             inject: false,
             template: HtmlWebpackTemplate,

@@ -6,7 +6,7 @@ export default class MinHeap {
     }
 
     decreaseKey({ value }, newKey) {
-        this.heap.removeOne(node => value === node.value);
+        this.heap.removeOne((node) => value === node.value);
         this.heap.add({ key: newKey, value });
     }
 

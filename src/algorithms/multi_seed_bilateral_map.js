@@ -45,7 +45,7 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
     startTime = new Date();
     logger && logger.log(`Finding Fuzzy Geodesic Scalar Field...`);
 
-    graph.vertices.forEach(x => {
+    graph.vertices.forEach((x) => {
         let distance = 0;
         allGeodesics.forEach(({ distances }) => {
             distance += distances.get(x);
@@ -94,7 +94,7 @@ export function findMultiSeedBilateralMap({ geometry, graph, qType, logger, vert
     logger && logger.log(`Divide the ROI into bins...`);
 
     const bilateralMap = [];
-    geometry.faces.forEach(face => {
+    geometry.faces.forEach((face) => {
         const v1 = geometry.vertices[face.a],
             v2 = geometry.vertices[face.b],
             v3 = geometry.vertices[face.c];

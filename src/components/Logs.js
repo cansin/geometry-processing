@@ -5,9 +5,9 @@ import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-const styles = theme => ({
+const styles = (theme) => ({
     paper: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(),
     },
 });
 

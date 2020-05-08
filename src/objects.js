@@ -10,7 +10,7 @@ import { MeshLine } from "three.meshline";
 
 export function createPathAsMeshLine(path, material) {
     const geometry = new Geometry();
-    path.forEach(vertex => {
+    path.forEach((vertex) => {
         geometry.vertices.push(vertex);
     });
 
@@ -22,7 +22,7 @@ export function createPathAsMeshLine(path, material) {
 
 export function createPathAsLine(path, color = 0x0000ff) {
     const geometry = new Geometry();
-    path.forEach(vertex => {
+    path.forEach((vertex) => {
         geometry.vertices.push(vertex);
     });
 

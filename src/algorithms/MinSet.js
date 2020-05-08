@@ -20,7 +20,7 @@ export default class MinSet {
         let u = undefined;
         let minDistance = Infinity;
 
-        this.Q.forEach(v => {
+        this.Q.forEach((v) => {
             const vDistance = this.distances.get(v);
             if (vDistance < minDistance) {
                 minDistance = vDistance;

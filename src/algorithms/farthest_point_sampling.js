@@ -22,10 +22,10 @@ export const farthestPointSampling = (qType, source, count) => {
     for (let i = 0; i < count; i++) {
         const cluster = new FibonacciHeap();
 
-        graph.vertices.forEach(vertex => {
+        graph.vertices.forEach((vertex) => {
             let minDistance = Infinity;
 
-            allDistances.forEach(distances => {
+            allDistances.forEach((distances) => {
                 const distance = distances.get(vertex);
                 if (distance < minDistance) {
                     minDistance = distance;
@@ -47,7 +47,7 @@ export const farthestPointSampling = (qType, source, count) => {
     elapsedTime = new Date() - startTime;
     logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
-    farthestPoints.forEach(point => {
+    farthestPoints.forEach((point) => {
         geometry.vertices.forEach((vertex, index) => {
             if (vertex === point) {
                 farthestPointIndices.push(index);

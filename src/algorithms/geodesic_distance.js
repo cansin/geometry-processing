@@ -43,7 +43,7 @@ export const dijkstra = (qType, source, targets = []) => {
     // 7          prev[v] ← UNDEFINED
     // 8          add v to Q
     // 10      dist[source] ← 0
-    graph.vertices.forEach(v => {
+    graph.vertices.forEach((v) => {
         const vDistance = v === source ? 0 : Infinity;
         distances.set(v, vDistance);
         previous.set(v, undefined);
@@ -81,7 +81,7 @@ export const dijkstra = (qType, source, targets = []) => {
         // 19              if alt < dist[v]:
         // 20                  dist[v] ← alt
         // 21                  prev[v] ← u
-        graph.neighbors(u).forEach(v => {
+        graph.neighbors(u).forEach((v) => {
             const alt = distances.get(u) + graph.edge(u, v);
             if (alt < distances.get(v)) {
                 Q.decreaseKey(nodeMapping.get(v), alt);
@@ -144,7 +144,7 @@ export function findGeodesicDistance({ qType, source, target }) {
 export function populateGeodesicDistanceMatrix({ geometry, qType }) {
     const matrix = new Map();
 
-    geometry.vertices.forEach(source => {
+    geometry.vertices.forEach((source) => {
         matrix.set(`${source.x}:${source.y}:${source.z}`, new Map());
         const { distances } = dijkstra(qType, source);
 

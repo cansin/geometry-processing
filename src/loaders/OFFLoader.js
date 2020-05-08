@@ -13,14 +13,16 @@ function OFFLoader(manager) {
 }
 
 Object.assign(OFFLoader.prototype, {
-    load: function(url, onLoad, onProgress, onError) {
+    load: function (url, onLoad, onProgress, onError) {
         const loader = new FileLoader(this.manager);
+        // eslint-disable-next-line no-unused-vars
         let areColorsExist = false;
+        // eslint-disable-next-line no-unused-vars
         let areNonTriangularFacesExist = false;
 
         loader.load(
             url,
-            function(rawData) {
+            function (rawData) {
                 const [off, counts, ...data] = rawData.split(/\r\n?|\n/);
 
                 // Line 1

@@ -63,7 +63,7 @@ function generateGraph({ geometry, logger }) {
 
     const graph = new UndirectedWeightedGraph();
 
-    vertices.forEach(v => {
+    vertices.forEach((v) => {
         graph.addVertex(v);
     });
 

@@ -12,9 +12,9 @@ import Cell from "recharts/es6/component/Cell";
 import { withStyles } from "@material-ui/core";
 import ZAxis from "recharts/es6/cartesian/ZAxis";
 
-const styles = theme => ({
+const styles = (theme) => ({
     paper: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(),
     },
 });
 

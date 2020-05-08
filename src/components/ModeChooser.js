@@ -10,29 +10,29 @@ import { inject, observer } from "mobx-react";
 import autobind from "autobind-decorator";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { Button } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/SaveAlt";
-import TextField from "@material-ui/core/es/TextField";
+import TextField from "@material-ui/core/TextField";
 
 import { ASSIGNMENTS, BOUNDARY_SHAPES, MOUTH_FIXATIONS, WEIGHT_APPROACHES } from "../constants";
 import { MODELS, Q_TYPES, VERTEX_SELECTIONS } from "../constants";
 import { populateGeodesicDistanceMatrix } from "../algorithms/geodesic_distance";
 
-const styles = theme => ({
+const styles = (theme) => ({
     button: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(),
         minWidth: 110,
     },
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(),
         minWidth: 125,
     },
     formControlNullShape: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(),
         minWidth: 270,
     },
     icon: {
-        marginRight: theme.spacing.unit,
+        marginRight: theme.spacing(),
     },
 });
 
@@ -134,7 +134,7 @@ class ModeChooser extends Component {
             matrix[index] = new Array(matrixDim).fill(0);
         });
 
-        bilateralDescriptor.filter(Boolean).forEach(datum => {
+        bilateralDescriptor.filter(Boolean).forEach((datum) => {
             matrix[datum.x][datum.y] = datum.z;
         });
 
@@ -167,7 +167,7 @@ class ModeChooser extends Component {
         });
 
         let data = "";
-        matrix.forEach(row => {
+        matrix.forEach((row) => {
             data += Array.from(row.values()).join(" ") + "\n";
         });
 

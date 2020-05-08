@@ -63,8 +63,8 @@ function compareTrilateralDescriptors(sourceVertexDescriptor, targetVertexDescri
         }
     }
 
-    sourceVertexFlatDescriptor.forEach(sourceVertexValue => {
-        targetVertexFlatDescriptor.forEach(targetVertexValue => {
+    sourceVertexFlatDescriptor.forEach((sourceVertexValue) => {
+        targetVertexFlatDescriptor.forEach((targetVertexValue) => {
             distance += Math.pow(sourceVertexValue - targetVertexValue, 2);
         });
     });
@@ -186,7 +186,7 @@ class ThreeScene extends Component {
         this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
 
         let isFirst = true;
-        points.filter(Boolean).forEach(vertex => {
+        points.filter(Boolean).forEach((vertex) => {
             this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
             isFirst = false;
         });
@@ -227,12 +227,12 @@ class ThreeScene extends Component {
                 target2VertexIndex,
             });
 
-            paths.filter(Boolean).forEach(path => {
+            paths.filter(Boolean).forEach((path) => {
                 this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
             });
 
             let isFirst = true;
-            points.filter(Boolean).forEach(vertex => {
+            points.filter(Boolean).forEach((vertex) => {
                 this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
                 isFirst = false;
             });
@@ -291,12 +291,12 @@ class ThreeScene extends Component {
                 target2VertexIndex: target2Index,
             });
 
-            paths.filter(Boolean).forEach(path => {
+            paths.filter(Boolean).forEach((path) => {
                 this.scene.add(createPathAsMeshLine(path, this.meshLineMaterial));
             });
 
             let isFirst = true;
-            points.filter(Boolean).forEach(vertex => {
+            points.filter(Boolean).forEach((vertex) => {
                 this.scene.add(createVertex(vertex, isFirst ? 0x00ff00 : 0xff0000));
                 isFirst = false;
             });
@@ -308,7 +308,7 @@ class ThreeScene extends Component {
                 matrix[index] = new Array(matrixDim).fill(0);
             });
 
-            bilateralMap.filter(Boolean).forEach(datum => {
+            bilateralMap.filter(Boolean).forEach((datum) => {
                 matrix[datum.x][datum.y] = datum.z;
             });
 
@@ -325,13 +325,13 @@ class ThreeScene extends Component {
     createTrilateralComparisonScene({ mesh, logger }) {
         let colorHue = 0;
         const alreadyMatchedTargets = new Set();
-        Object.keys(null0AllDescriptors).forEach(sourceVertexIndex => {
+        Object.keys(null0AllDescriptors).forEach((sourceVertexIndex) => {
             const sourceVertex = mesh.geometry.vertices[sourceVertexIndex];
             const sourceVertexDescriptor = null0AllDescriptors[sourceVertexIndex];
 
             let minDistance = Infinity;
             let mostSimilarVertexIndex = undefined;
-            Object.keys(isometry1AllDescriptors).forEach(targetVertexIndex => {
+            Object.keys(isometry1AllDescriptors).forEach((targetVertexIndex) => {
                 const targetVertexDescriptor = isometry1AllDescriptors[targetVertexIndex];
 
                 const distance = compareTrilateralDescriptors(
@@ -390,7 +390,7 @@ class ThreeScene extends Component {
         });
 
         this.scene.add(createVertex(source));
-        isoCurves.forEach(edges => {
+        isoCurves.forEach((edges) => {
             edges.forEach(({ vertices }) => {
                 this.scene.add(createPathAsMeshLine(vertices, this.meshLineMaterial));
             });
@@ -413,7 +413,7 @@ class ThreeScene extends Component {
             FARTHEST_POINT_SAMPLING_COUNT,
         );
 
-        farthestPoints.forEach(vertex => {
+        farthestPoints.forEach((vertex) => {
             this.scene.add(createVertex(vertex));
         });
 
@@ -458,7 +458,7 @@ class ThreeScene extends Component {
         const moveToRight = new Vector3(80, 0, 0),
             moveToLeft = new Vector3(-80, 0, 0);
 
-        initialBoundaryVertices.forEach(vertex => {
+        initialBoundaryVertices.forEach((vertex) => {
             this.scene.add(createVertex(new Vector3().addVectors(vertex, moveToLeft), 0x00ff00));
         });
 
@@ -474,7 +474,7 @@ class ThreeScene extends Component {
             );
         });
 
-        finalBoundaryVertices.forEach(vertex => {
+        finalBoundaryVertices.forEach((vertex) => {
             this.scene.add(createVertex(new Vector3().addVectors(vertex, moveToRight), 0x00ff00));
         });
 
@@ -514,7 +514,7 @@ class ThreeScene extends Component {
         startTime = new Date();
         logger && logger.clear();
         logger && logger.log(`Loading Object...`);
-        loader.load(model, object => {
+        loader.load(model, (object) => {
             while (this.scene.children.length > 0) {
                 this.scene.remove(this.scene.children[0]);
             }
@@ -525,7 +525,7 @@ class ThreeScene extends Component {
             totalTime += elapsedTime;
             logger && logger.log(`\tdone in ${elapsedTime.toLocaleString()}ms.`);
 
-            object.traverse(mesh => {
+            object.traverse((mesh) => {
                 if (mesh instanceof Mesh) {
                     mesh.geometry = createNormalizedNaiveGeometry({ mesh: mesh, logger });
 
@@ -549,10 +549,8 @@ class ThreeScene extends Component {
                         [ASSIGNMENTS.Bilateral]: this.createBilateralScene,
                         [ASSIGNMENTS.MultiSeedBilateral]: this.createMultiSeedBilateralScene,
                         [ASSIGNMENTS.Trilateral]: this.createTrilateralScene,
-                        [ASSIGNMENTS.TrilateralRegions]: this
-                            .createTrilateralRegionsScene,
-                        [ASSIGNMENTS.TrilateralComparison]: this
-                            .createTrilateralComparisonScene,
+                        [ASSIGNMENTS.TrilateralRegions]: this.createTrilateralRegionsScene,
+                        [ASSIGNMENTS.TrilateralComparison]: this.createTrilateralComparisonScene,
                         [ASSIGNMENTS.IsoCurve]: this.createIsoCurveScene,
                         [ASSIGNMENTS.FarthestPoint]: this.createFarthestPointScene,
                         [ASSIGNMENTS.MeshParameterization]: this.createMeshParameterizationScene,
@@ -620,7 +618,7 @@ class ThreeScene extends Component {
                     width: "100%",
                     minHeight: 600,
                 }}
-                ref={mount => {
+                ref={(mount) => {
                     this.mount = mount;
                 }}
             />

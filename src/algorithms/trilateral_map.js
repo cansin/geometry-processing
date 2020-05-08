@@ -39,7 +39,7 @@ export function findTrilateralMap({
     });
 
     const bilateralMap = [];
-    geometry.faces.forEach(face => {
+    geometry.faces.forEach((face) => {
         const v1 = geometry.vertices[face.a],
             v2 = geometry.vertices[face.b],
             v3 = geometry.vertices[face.c];

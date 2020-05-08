@@ -13,7 +13,7 @@ export function findNearestNeighbors({ graph, qType, logger, points }) {
 
         let closestTarget = undefined;
         let closestDistance = Infinity;
-        points.forEach(target => {
+        points.forEach((target) => {
             const targetDistance = distances.get(target);
             if (targetDistance < closestDistance && !visited.includes(target)) {
                 closestDistance = targetDistance;

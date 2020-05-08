@@ -13,7 +13,7 @@ class App extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Grid container spacing={16}>
+                <Grid container spacing={10}>
                     <Grid item xs={12}>
                         <ModeChooser />
                     </Grid>
@@ -23,7 +23,7 @@ class App extends Component {
                     <Grid item xs={4}>
                         <Grid
                             container
-                            spacing={16}
+                            spacing={10}
                             direction="column"
                             justify="center"
                             alignItems="stretch">

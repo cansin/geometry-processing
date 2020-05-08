@@ -14,7 +14,7 @@ export function findIsoCurveSignature({ geometry, qType, source, logger }) {
         isoCurves.set(i, []);
     }
 
-    geometry.faces.forEach(face => {
+    geometry.faces.forEach((face) => {
         const vertices = [
             geometry.vertices[face.a],
             geometry.vertices[face.b],
@@ -38,10 +38,10 @@ export function findIsoCurveSignature({ geometry, qType, source, logger }) {
 
         isoCurves.forEach((isoCurve, isoDistance) => {
             if (
-                Math.min(isoDistance, ...vertices.map(v => distances.get(v))) !== isoDistance &&
-                Math.max(isoDistance, ...vertices.map(v => distances.get(v))) !== isoDistance
+                Math.min(isoDistance, ...vertices.map((v) => distances.get(v))) !== isoDistance &&
+                Math.max(isoDistance, ...vertices.map((v) => distances.get(v))) !== isoDistance
             ) {
-                edges.forEach(edge => {
+                edges.forEach((edge) => {
                     if (
                         (distances.get(edge.vertices[0]) < isoDistance &&
                             distances.get(edge.vertices[1]) > isoDistance) ||
@@ -52,7 +52,7 @@ export function findIsoCurveSignature({ geometry, qType, source, logger }) {
                     }
                 });
 
-                edges.forEach(edge => {
+                edges.forEach((edge) => {
                     if (
                         !edge.isIntersected &&
                         distances.get(edge.vertices[0]) < isoDistance &&
@@ -67,7 +67,7 @@ export function findIsoCurveSignature({ geometry, qType, source, logger }) {
 
     const isoDescriptor = [];
     let x = 0;
-    isoCurves.forEach(isoCurve => {
+    isoCurves.forEach((isoCurve) => {
         isoDescriptor.push({
             x: x++,
             y: isoCurve.reduce(

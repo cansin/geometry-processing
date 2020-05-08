@@ -1,4 +1,4 @@
-import math from "mathjs";
+import { acos, cot, min, max, sqrt, tan } from "mathjs";
 import { CircleGeometry, Vector3 } from "three";
 import { inverse, Matrix } from "ml-matrix";
 
@@ -9,14 +9,14 @@ function calculateAngle(vertex1, vertex2) {
     const dot12 = vertex1.dot(vertex2);
     const dot11 = vertex1.dot(vertex1);
     const dot22 = vertex2.dot(vertex2);
-    return math.acos(dot12 / math.sqrt(dot11 * dot22));
+    return acos(dot12 / sqrt(dot11 * dot22));
 }
 
 function findClosestVertex(source, targets) {
     let closest = undefined;
     let minDistance = Infinity;
 
-    targets.forEach(target => {
+    targets.forEach((target) => {
         const currentDistance = target.distanceTo(source);
         if (currentDistance < minDistance) {
             closest = target;
@@ -56,11 +56,15 @@ export function generateMeshParameterization({
     logger && logger.log(`Finding boundary vertices...`);
 
     const edgeCounts = new Map();
-    geometry.faces.forEach(face => {
-        const edges = [[face.a, face.b], [face.a, face.c], [face.b, face.c]];
+    geometry.faces.forEach((face) => {
+        const edges = [
+            [face.a, face.b],
+            [face.a, face.c],
+            [face.b, face.c],
+        ];
         edges.forEach(([vertexIndex1, vertexIndex2]) => {
-            let minIndex = Math.min(vertexIndex1, vertexIndex2),
-                maxIndex = Math.max(vertexIndex1, vertexIndex2),
+            let minIndex = min(vertexIndex1, vertexIndex2),
+                maxIndex = max(vertexIndex1, vertexIndex2),
                 identifier = `${minIndex},${maxIndex}`;
             edgeCounts.set(identifier, (edgeCounts.get(identifier) || 0) + 1);
         });
@@ -93,7 +97,7 @@ export function generateMeshParameterization({
     const bx = Matrix.zeros(length, 1);
     const by = Matrix.zeros(length, 1);
 
-    geometry.faces.forEach(face => {
+    geometry.faces.forEach((face) => {
         const edges = [
             [face.a, face.b, face.c],
             [face.a, face.c, face.b],
@@ -113,13 +117,13 @@ export function generateMeshParameterization({
                     new Vector3().subVectors(vertex1, otherVertex),
                     new Vector3().subVectors(vertex2, otherVertex),
                 );
-                value = math.cot(angle) / 2;
+                value = cot(angle) / 2;
             } else if (WEIGHT_APPROACHES[weightApproach] === WEIGHT_APPROACHES.MeanValue) {
                 const angle = calculateAngle(
                     new Vector3().subVectors(otherVertex, vertex1),
                     new Vector3().subVectors(vertex2, vertex1),
                 );
-                value = math.tan(angle / 2) / (2 * vertex1.distanceTo(vertex2));
+                value = tan(angle / 2) / (2 * vertex1.distanceTo(vertex2));
             }
 
             if (!shouldPin(vertex1, initialBoundaryVertices, isMouthFixated)) {
@@ -140,7 +144,7 @@ export function generateMeshParameterization({
         if (!shouldPin(vertex, initialBoundaryVertices, isMouthFixated)) {
             const row = W.getRow(index);
             let value = 0;
-            row.forEach(cur => {
+            row.forEach((cur) => {
                 value = value - cur;
             });
 
@@ -197,8 +201,12 @@ export function generateMeshParameterization({
     logger && logger.log(`Creating parameterization edges...`);
 
     const allEdges = new Set();
-    geometry.faces.forEach(face => {
-        const edges = [[face.a, face.b], [face.a, face.c], [face.b, face.c]];
+    geometry.faces.forEach((face) => {
+        const edges = [
+            [face.a, face.b],
+            [face.a, face.c],
+            [face.b, face.c],
+        ];
 
         edges.forEach(([vertexIndex1, vertexIndex2]) => {
             allEdges.add({

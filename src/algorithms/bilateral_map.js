@@ -27,7 +27,7 @@ export function findBilateralMap({
     startTime = new Date();
     logger && logger.log(`Finding Fuzzy Geodesic Scalar Field...`);
 
-    graph.vertices.forEach(x => {
+    graph.vertices.forEach((x) => {
         const distance = Math.abs(distancesP.get(x) + distancesQ.get(x) - distancePQ) / distancePQ;
 
         minDistance = Math.min(distance, minDistance);
@@ -70,7 +70,7 @@ export function findBilateralMap({
 
     const bilateralMap = [];
     const faceMap = new Map();
-    geometry.faces.forEach(face => {
+    geometry.faces.forEach((face) => {
         const v1 = geometry.vertices[face.a],
             v2 = geometry.vertices[face.b],
             v3 = geometry.vertices[face.c];
