@@ -18,7 +18,7 @@
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "recharts": "^1.8.5",
-        "three": "^0.116.1",
+        "three": "^0.125.0",
         "three.meshline": "^1.2.0"
     },
     "devDependencies": {
