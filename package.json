@@ -10,7 +10,7 @@
         "@tyriar/fibonacci-heap": "^2.0.9",
         "autobind-decorator": "^2.4.0",
         "fastpriorityqueue": "^0.6.3",
-        "mathjs": "^7.0.0",
+        "mathjs": "^7.5.1",
         "ml-matrix": "^6.5.0",
         "mobx": "^5.15.4",
         "mobx-react": "^6.2.2",
